@@ -1,130 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Engineering Portal</title>
+  <meta charset="UTF-8">
+  <title>Custom 20-Field Form</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f4f4;
-      color: #333;
-    }
-
-    nav {
-      background-color: #003366;
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      padding: 1rem;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      padding: 10px 20px;
-      transition: background-color 0.3s ease;
-    }
-
-    nav a:hover {
-      background-color: #005599;
-      border-radius: 8px;
-    }
-
-    .tab {
-      display: none;
-      padding: 40px 20px;
-    }
-
-    .active {
-      display: block;
-    }
-
-    #home {
-      background: url('https://images.unsplash.com/photo-1581091012184-5c8b52d2df55?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
-      height: 100vh;
-      color: white;
-      text-align: center;
-      padding-top: 100px;
-      position: relative;
-    }
-
-    #home h1 {
-      font-size: 3.5rem;
-      text-shadow: 2px 2px 6px #000;
-      margin-bottom: 20px;
-    }
-
-    .news {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 40px;
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
       padding: 2rem;
     }
 
-    .gear-frame {
-      position: relative;
-      width: 200px;
-      height: 200px;
+    form {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 700px;
+      margin: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
       text-align: center;
+      margin-bottom: 1.5rem;
     }
 
-    .gear-frame img.news-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      transition: transform 0.3s ease;
+    .form-group {
+      margin-bottom: 1.2rem;
     }
 
-    .gear-frame img.gear-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 200px;
-      height: 200px;
-      pointer-events: none;
-    }
-
-    .gear-frame:hover img.news-img {
-      transform: scale(1.05) rotate(5deg);
-    }
-
-    .gear-frame p {
-      margin-top: 1rem;
+    label {
+      display: block;
+      margin-bottom: 0.4rem;
       font-weight: bold;
-      color: #003366;
     }
 
-    textarea {
+    input[type="text"], select {
       width: 100%;
-      height: 300px;
-      margin-top: 20px;
-      font-family: monospace;
-      font-size: 16px;
-      padding: 10px;
+      padding: 0.5rem;
+      border-radius: 5px;
       border: 1px solid #ccc;
-      border-radius: 8px;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.5rem;
     }
 
     button {
-      padding: 10px 20px;
+      padding: 0.7rem 1.5rem;
       background-color: #003366;
-      color: white;
+      color: #fff;
       border: none;
-      cursor: pointer;
-      margin-top: 20px;
       border-radius: 5px;
-      transition: background-color 0.3s ease;
+      cursor: pointer;
+      margin-top: 1rem;
+      display: block;
+      margin-left: auto;
     }
 
     button:hover {
@@ -134,60 +66,59 @@
 </head>
 <body>
 
-  <nav>
-    <a href="#" onclick="showTab('home')">Home</a>
-    <a href="#" onclick="showTab('code')">Code Editor</a>
-    <a href="#" onclick="showTab('booking')">Book Order</a>
-  </nav>
+  <form>
+    <h2>Custom Engineering Form</h2>
 
-  <!-- HOME -->
-  <div id="home" class="tab active">
-    <h1>Engineering with Solutions & Hope</h1>
-    <div class="news">
-      <div class="gear-frame">
-        <img class="news-img" src="https://source.unsplash.com/300x200/?engineering,technology" alt="Engineering Tech" />
-        <img class="gear-overlay" src="A_2D_vector_graphic_design_features_three_interloc.png" alt="Gear Overlay" />
-        <p>Engineering Tech</p>
-      </div>
-      <div class="gear-frame">
-        <img class="news-img" src="https://source.unsplash.com/300x200/?mechanical,engineer" alt="Mechanical" />
-        <img class="gear-overlay" src="A_2D_vector_graphic_design_features_three_interloc.png" alt="Gear Overlay" />
-        <p>Mechanical Engineering</p>
-      </div>
-      <div class="gear-frame">
-        <img class="news-img" src="https://source.unsplash.com/300x200/?innovation,robotics" alt="Innovation" />
-        <img class="gear-overlay" src="A_2D_vector_graphic_design_features_three_interloc.png" alt="Gear Overlay" />
-        <p>Innovation</p>
+    <!-- Example Text Input -->
+    <div class="form-group">
+      <label for="field1">Label 1</label>
+      <input type="text" id="field1" name="field1" placeholder="Enter value">
+    </div>
+
+    <!-- Example Dropdown -->
+    <div class="form-group">
+      <label for="field2">Label 2 (Dropdown)</label>
+      <select id="field2" name="field2">
+        <option value="">-- Select --</option>
+        <option value="Option1">Option 1</option>
+        <option value="Option2">Option 2</option>
+        <option value="Option3">Option 3</option>
+      </select>
+    </div>
+
+    <!-- Example Radio Buttons -->
+    <div class="form-group">
+      <label>Label 3 (Radio)</label>
+      <div class="radio-group">
+        <label><input type="radio" name="field3" value="Yes"> Yes</label>
+        <label><input type="radio" name="field3" value="No"> No</label>
       </div>
     </div>
-  </div>
 
-  <!-- CODE EDITOR -->
-  <div id="code" class="tab">
-    <h2>Code Editor Area</h2>
-    <p>Paste your HTML form code or script here:</p>
-    <textarea placeholder="Enter your code here..."></textarea>
-  </div>
+    <!-- Repeat similar blocks -->
+    <!-- Label 4 to 20 -->
+    <!-- Just copy/paste or edit the type below -->
 
-  <!-- BOOKING -->
-  <div id="booking" class="tab">
-    <h2>Book a New Order</h2>
-    <p>Click below to send a booking request:</p>
-    <button onclick="sendEmail()">Send Booking Email</button>
-  </div>
+    <div class="form-group"><label for="field4">Label 4</label><input type="text" id="field4" name="field4"></div>
+    <div class="form-group"><label for="field5">Label 5</label><input type="text" id="field5" name="field5"></div>
+    <div class="form-group"><label for="field6">Label 6</label><input type="text" id="field6" name="field6"></div>
+    <div class="form-group"><label for="field7">Label 7</label><input type="text" id="field7" name="field7"></div>
+    <div class="form-group"><label for="field8">Label 8</label><input type="text" id="field8" name="field8"></div>
+    <div class="form-group"><label for="field9">Label 9</label><input type="text" id="field9" name="field9"></div>
+    <div class="form-group"><label for="field10">Label 10</label><input type="text" id="field10" name="field10"></div>
+    <div class="form-group"><label for="field11">Label 11</label><input type="text" id="field11" name="field11"></div>
+    <div class="form-group"><label for="field12">Label 12</label><input type="text" id="field12" name="field12"></div>
+    <div class="form-group"><label for="field13">Label 13</label><input type="text" id="field13" name="field13"></div>
+    <div class="form-group"><label for="field14">Label 14</label><input type="text" id="field14" name="field14"></div>
+    <div class="form-group"><label for="field15">Label 15</label><input type="text" id="field15" name="field15"></div>
+    <div class="form-group"><label for="field16">Label 16</label><input type="text" id="field16" name="field16"></div>
+    <div class="form-group"><label for="field17">Label 17</label><input type="text" id="field17" name="field17"></div>
+    <div class="form-group"><label for="field18">Label 18</label><input type="text" id="field18" name="field18"></div>
+    <div class="form-group"><label for="field19">Label 19</label><input type="text" id="field19" name="field19"></div>
+    <div class="form-group"><label for="field20">Label 20</label><input type="text" id="field20" name="field20"></div>
 
-  <script>
-    function showTab(tabId) {
-      document.querySelectorAll('.tab').forEach(tab => {
-        tab.classList.remove('active');
-      });
-      document.getElementById(tabId).classList.add('active');
-    }
-
-    function sendEmail() {
-      window.location.href = "mailto:abdul.rehman@mahykhoory.com?subject=New Order Booking&body=Hello, I would like to book a new order. Please contact me back.";
-    }
-  </script>
+    <button type="submit">Submit</button>
+  </form>
 
 </body>
 </html>
