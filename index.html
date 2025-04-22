@@ -1,124 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Custom 20-Field Form</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Engineering Form Page</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f2f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    header {
+      background: url('https://images.unsplash.com/photo-1581090700227-1d222f1e88ff?auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover;
+      height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+    }
+
+    header h1 {
+      font-size: 3rem;
+    }
+
+    .booking-section {
+      background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .form-container {
+      background-color: rgba(0, 51, 102, 0.85);
       padding: 2rem;
-    }
-
-    form {
-      background: #fff;
-      padding: 2rem;
-      border-radius: 10px;
-      max-width: 700px;
-      margin: auto;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .form-group {
-      margin-bottom: 1.2rem;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 0.4rem;
-      font-weight: bold;
-    }
-
-    input[type="text"], select {
+      border-radius: 12px;
+      max-width: 1000px;
       width: 100%;
-      padding: 0.5rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+      color: white;
+    }
+
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 15px;
+    }
+
+    .form-container input,
+    .form-container select {
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
     }
 
     .radio-group {
       display: flex;
-      gap: 1rem;
-      margin-top: 0.5rem;
+      flex-direction: column;
+      gap: 5px;
+      padding: 10px;
+      background-color: rgba(255,255,255,0.1);
+      border-radius: 8px;
+    }
+
+    .form-buttons {
+      text-align: center;
+      margin-top: 20px;
     }
 
     button {
-      padding: 0.7rem 1.5rem;
-      background-color: #003366;
-      color: #fff;
+      padding: 12px 25px;
+      background-color: #00aaff;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
+      color: white;
+      font-size: 1rem;
       cursor: pointer;
-      margin-top: 1rem;
-      display: block;
-      margin-left: auto;
+      transition: background-color 0.3s ease;
+      margin: 0 10px;
     }
 
     button:hover {
-      background-color: #005599;
+      background-color: #0077cc;
     }
   </style>
 </head>
 <body>
 
-  <form>
-    <h2>Custom Engineering Form</h2>
+  <header>
+    <h1>Engineering with Solutions & Hope</h1>
+  </header>
 
-    <!-- Example Text Input -->
-    <div class="form-group">
-      <label for="field1">Label 1</label>
-      <input type="text" id="field1" name="field1" placeholder="Enter value">
+  <div class="booking-section" id="booking">
+    <div class="form-container">
+      <h2>Book a New Order</h2>
+      <form id="orderForm">
+        <div class="form-grid">
+          <!-- Replace with your own field names -->
+          <input type="text" placeholder="Full Name" />
+          <input type="email" placeholder="Email Address" />
+          <select><option>Select Category</option></select>
+          <div class="radio-group">
+            <label><input type="radio" name="service" /> Basic</label>
+            <label><input type="radio" name="service" /> Premium</label>
+          </div>
+          <input type="text" placeholder="Phone Number" />
+          <input type="text" placeholder="Company Name" />
+          <input type="text" placeholder="Project Title" />
+          <input type="text" placeholder="Project Type" />
+          <input type="text" placeholder="City" />
+          <input type="text" placeholder="Country" />
+          <input type="text" placeholder="Field 11" />
+          <input type="text" placeholder="Field 12" />
+          <input type="text" placeholder="Field 13" />
+          <input type="text" placeholder="Field 14" />
+          <input type="text" placeholder="Field 15" />
+          <input type="text" placeholder="Field 16" />
+          <input type="text" placeholder="Field 17" />
+          <input type="text" placeholder="Field 18" />
+          <input type="text" placeholder="Field 19" />
+          <input type="text" placeholder="Field 20" />
+        </div>
+        <div class="form-buttons">
+          <button type="submit">Submit</button>
+          <button type="button" onclick="generatePDF()">Send PDF to Email</button>
+        </div>
+      </form>
     </div>
+  </div>
 
-    <!-- Example Dropdown -->
-    <div class="form-group">
-      <label for="field2">Label 2 (Dropdown)</label>
-      <select id="field2" name="field2">
-        <option value="">-- Select --</option>
-        <option value="Option1">Option 1</option>
-        <option value="Option2">Option 2</option>
-        <option value="Option3">Option 3</option>
-      </select>
-    </div>
+  <!-- jsPDF for PDF generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    async function generatePDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.setFontSize(16);
+      doc.text("Order Booking Details", 10, 20);
 
-    <!-- Example Radio Buttons -->
-    <div class="form-group">
-      <label>Label 3 (Radio)</label>
-      <div class="radio-group">
-        <label><input type="radio" name="field3" value="Yes"> Yes</label>
-        <label><input type="radio" name="field3" value="No"> No</label>
-      </div>
-    </div>
+      const inputs = document.querySelectorAll('#orderForm input, #orderForm select');
+      let y = 30;
+      inputs.forEach(input => {
+        if (input.type === "radio" && !input.checked) return;
+        const value = input.type === "radio" ? input.nextSibling.textContent.trim() : input.value;
+        const label = input.placeholder || input.name || input.parentNode.textContent.trim();
+        doc.text(`${label}: ${value}`, 10, y);
+        y += 10;
+      });
 
-    <!-- Repeat similar blocks -->
-    <!-- Label 4 to 20 -->
-    <!-- Just copy/paste or edit the type below -->
+      doc.save('order-booking.pdf');
 
-    <div class="form-group"><label for="field4">Label 4</label><input type="text" id="field4" name="field4"></div>
-    <div class="form-group"><label for="field5">Label 5</label><input type="text" id="field5" name="field5"></div>
-    <div class="form-group"><label for="field6">Label 6</label><input type="text" id="field6" name="field6"></div>
-    <div class="form-group"><label for="field7">Label 7</label><input type="text" id="field7" name="field7"></div>
-    <div class="form-group"><label for="field8">Label 8</label><input type="text" id="field8" name="field8"></div>
-    <div class="form-group"><label for="field9">Label 9</label><input type="text" id="field9" name="field9"></div>
-    <div class="form-group"><label for="field10">Label 10</label><input type="text" id="field10" name="field10"></div>
-    <div class="form-group"><label for="field11">Label 11</label><input type="text" id="field11" name="field11"></div>
-    <div class="form-group"><label for="field12">Label 12</label><input type="text" id="field12" name="field12"></div>
-    <div class="form-group"><label for="field13">Label 13</label><input type="text" id="field13" name="field13"></div>
-    <div class="form-group"><label for="field14">Label 14</label><input type="text" id="field14" name="field14"></div>
-    <div class="form-group"><label for="field15">Label 15</label><input type="text" id="field15" name="field15"></div>
-    <div class="form-group"><label for="field16">Label 16</label><input type="text" id="field16" name="field16"></div>
-    <div class="form-group"><label for="field17">Label 17</label><input type="text" id="field17" name="field17"></div>
-    <div class="form-group"><label for="field18">Label 18</label><input type="text" id="field18" name="field18"></div>
-    <div class="form-group"><label for="field19">Label 19</label><input type="text" id="field19" name="field19"></div>
-    <div class="form-group"><label for="field20">Label 20</label><input type="text" id="field20" name="field20"></div>
-
-    <button type="submit">Submit</button>
-  </form>
+      // 📨 Optional: Hook here to send PDF via backend email
+      alert('PDF generated. To send via email, integrate backend (e.g., Node.js, PHP).');
+    }
+  </script>
 
 </body>
 </html>
