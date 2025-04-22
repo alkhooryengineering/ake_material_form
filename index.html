@@ -174,7 +174,131 @@
     <div class="card">
       <h2>Code Editor</h2>
       <p>Paste your HTML or JavaScript code below:</p>
-      <textarea placeholder="Start typing your code here..."></textarea>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Custom 20-Field Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      padding: 2rem;
+    }
+
+    form {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 700px;
+      margin: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-weight: bold;
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    button {
+      padding: 0.7rem 1.5rem;
+      background-color: #003366;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 1rem;
+      display: block;
+      margin-left: auto;
+    }
+
+    button:hover {
+      background-color: #005599;
+    }
+  </style>
+</head>
+<body>
+
+  <form>
+    <h2>Custom Engineering Form</h2>
+
+    <!-- Example Text Input -->
+    <div class="form-group">
+      <label for="field1">Label 1</label>
+      <input type="text" id="field1" name="field1" placeholder="Enter value">
+    </div>
+
+    <!-- Example Dropdown -->
+    <div class="form-group">
+      <label for="field2">Label 2 (Dropdown)</label>
+      <select id="field2" name="field2">
+        <option value="">-- Select --</option>
+        <option value="Option1">Option 1</option>
+        <option value="Option2">Option 2</option>
+        <option value="Option3">Option 3</option>
+      </select>
+    </div>
+
+    <!-- Example Radio Buttons -->
+    <div class="form-group">
+      <label>Label 3 (Radio)</label>
+      <div class="radio-group">
+        <label><input type="radio" name="field3" value="Yes"> Yes</label>
+        <label><input type="radio" name="field3" value="No"> No</label>
+      </div>
+    </div>
+
+    <!-- Repeat similar blocks -->
+    <!-- Label 4 to 20 -->
+    <!-- Just copy/paste or edit the type below -->
+
+    <div class="form-group"><label for="field4">Label 4</label><input type="text" id="field4" name="field4"></div>
+    <div class="form-group"><label for="field5">Label 5</label><input type="text" id="field5" name="field5"></div>
+    <div class="form-group"><label for="field6">Label 6</label><input type="text" id="field6" name="field6"></div>
+    <div class="form-group"><label for="field7">Label 7</label><input type="text" id="field7" name="field7"></div>
+    <div class="form-group"><label for="field8">Label 8</label><input type="text" id="field8" name="field8"></div>
+    <div class="form-group"><label for="field9">Label 9</label><input type="text" id="field9" name="field9"></div>
+    <div class="form-group"><label for="field10">Label 10</label><input type="text" id="field10" name="field10"></div>
+    <div class="form-group"><label for="field11">Label 11</label><input type="text" id="field11" name="field11"></div>
+    <div class="form-group"><label for="field12">Label 12</label><input type="text" id="field12" name="field12"></div>
+    <div class="form-group"><label for="field13">Label 13</label><input type="text" id="field13" name="field13"></div>
+    <div class="form-group"><label for="field14">Label 14</label><input type="text" id="field14" name="field14"></div>
+    <div class="form-group"><label for="field15">Label 15</label><input type="text" id="field15" name="field15"></div>
+    <div class="form-group"><label for="field16">Label 16</label><input type="text" id="field16" name="field16"></div>
+    <div class="form-group"><label for="field17">Label 17</label><input type="text" id="field17" name="field17"></div>
+    <div class="form-group"><label for="field18">Label 18</label><input type="text" id="field18" name="field18"></div>
+    <div class="form-group"><label for="field19">Label 19</label><input type="text" id="field19" name="field19"></div>
+    <div class="form-group"><label for="field20">Label 20</label><input type="text" id="field20" name="field20"></div>
+
+    <button type="submit">Submit</button>
+  </form>
+
+</body>
+</html>
+      
     </div>
   </section>
 
