@@ -5,132 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Engineering Portal</title>
   <style>
-    body {
+    /* Reset and Base Styles */
+    * {
+      box-sizing: border-box;
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
+      padding: 0;
     }
 
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f4;
+      line-height: 1.6;
+    }
+
+    /* Navigation */
     nav {
       background-color: #003366;
       display: flex;
-      justify-content: space-around;
+      justify-content: center;
+      gap: 2rem;
       padding: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
 
     nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      padding: 10px 15px;
-    }
-
-    nav a:hover {
-      background-color: #005599;
-      border-radius: 5px;
-    }
-
-    .tab {
-      display: none;
-      padding: 20px;
-    }
-
-    .active {
-      display: block;
-    }
-
-    #home {
-      background: url('https://images.unsplash.com/photo-1581091012184-5c8b52d2df55?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
-      height: 100vh;
-      color: white;
-      padding-top: 80px;
-      text-align: center;
-    }
-
-    #home h1 {
-      font-size: 3em;
-      text-shadow: 2px 2px 5px #000;
-    }
-
-    .news {
-      margin-top: 40px;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .news img {
-      width: 300px;
-      height: 200px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    }
-
-    textarea {
-      width: 100%;
-      height: 300px;
-      margin-top: 20px;
-      font-family: monospace;
-      font-size: 16px;
-    }
-
-    button {
-      padding: 10px 20px;
-      background-color: #003366;
-      color: white;
-      border: none;
-      cursor: pointer;
-      margin-top: 15px;
-      border-radius: 5px;
-    }
-
-    button:hover {
-      background-color: #005599;
-    }
-  </style>
-</head>
-<body>
-
-  <nav>
-    <a href="#" onclick="showTab('home')">Home</a>
-    <a href="#" onclick="showTab('code')">Code Editor</a>
-    <a href="#" onclick="showTab('booking')">Book Order</a>
-  </nav>
-
-  <div id="home" class="tab active">
-    <h1>Welcome to Engineering World</h1>
-    <div class="news">
-      <img src="https://source.unsplash.com/300x200/?engineering,technology" alt="News 1" />
-      <img src="https://source.unsplash.com/300x200/?mechanical,engineer" alt="News 2" />
-      <img src="https://source.unsplash.com/300x200/?electronics,hardware" alt="News 3" />
-    </div>
-  </div>
-
-  <div id="code" class="tab">
-    <h2>Code Editor Area</h2>
-    <p>Paste your HTML form code or script here:</p>
-    <textarea placeholder="Enter your code here..."></textarea>
-  </div>
-
-  <div id="booking" class="tab">
-    <h2>Book a New Order</h2>
-    <p>Click below to send a booking request:</p>
-    <button onclick="sendEmail()">Send Booking Email</button>
-  </div>
-
-  <script>
-    function showTab(tabId) {
-      document.querySelectorAll('.tab').forEach(tab => {
-        tab.classList.remove('active');
-      });
-      document.getElementById(tabId).classList.add('active');
-    }
-
-    function sendEmail() {
-      window.location.href = "mailto:abdul.rehman@mahykhoory.com?subject=New Order Booking&body=Hello, I would like to book a new order. Please contact me back.";
-    }
-  </script>
-
-</body>
-</html>
+      color: #fff
