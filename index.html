@@ -45,11 +45,10 @@
     button:hover {
       background-color: #005599;
     }
-    #message {
-      margin-top: 20px;
+    .message {
+      margin-top: 15px;
       font-weight: bold;
       color: green;
-      display: none;
     }
   </style>
 </head>
@@ -58,8 +57,7 @@
     <img class="logo" src="https://via.placeholder.com/150x50.png?text=Logo" alt="Company Logo" />
     <h1>Order Form</h1>
 
-    <form id="orderForm" enctype="multipart/form-data">
-      <!-- Dropdown with conditional field -->
+    <form id="orderForm">
       <label for="company">Company Name:</label>
       <select id="company" name="company">
         <option value="Company A">Company A</option>
@@ -68,12 +66,10 @@
       </select>
       <input type="text" id="otherCompany" name="otherCompany" placeholder="Enter company name" style="display:none;" />
 
-      <!-- Example fields -->
       <input type="text" name="field1" placeholder="Field 1" />
       <input type="text" name="field2" placeholder="Field 2" />
       <input type="text" name="field3" placeholder="Field 3" />
-      <!-- Add remaining up to field20 -->
-      <!-- You can continue adding more fields similarly -->
+      <!-- Add more fields as needed -->
 
       <label for="photo">Upload or Take a Photo:</label>
       <input type="file" id="photo" name="photo" accept="image/*" capture="environment" />
@@ -82,9 +78,8 @@
       <canvas id="signature" class="signature-pad"></canvas>
 
       <button type="button" onclick="submitForm()">Submit</button>
+      <div id="message" class="message"></div>
     </form>
-    
-    <div id="message">✅ Email Delivered Successfully!</div>
   </div>
 
   <script>
@@ -146,11 +141,9 @@
 
       const messageDiv = document.getElementById("message");
       if (response.ok) {
-        messageDiv.style.display = "block";
-        messageDiv.textContent = "✅ Email Delivered Successfully!";
+        messageDiv.textContent = "✅ Email Delivered";
       } else {
-        messageDiv.style.display = "block";
-        messageDiv.textContent = "❌ Failed to send email.";
+        messageDiv.textContent = "❌ Submission failed. Please try again.";
         messageDiv.style.color = "red";
       }
     }
