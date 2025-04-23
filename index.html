@@ -103,7 +103,18 @@
       z-index: 1;
       position: relative;
     }
-
+    .radio-group {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .radio-group label {
+      font-weight: normal;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
     @media (max-width: 768px) {
       .container {
         margin: 30px 15px;
@@ -140,18 +151,15 @@
       </select>
       <input type="text" id="otherCompany" name="otherCompany" placeholder="Enter company name" style="display:none;" />
 
-      
       <!-- AKE Department Radio Buttons -->
-<label>AKE Department:</label>
-<div>
-  <label><input type="radio" name="ake department" value="P&SS" onclick="toggleOtherCompany(false)"> P&SS</label><br>
-  <label><input type="radio" name="ake department" value="M.S" onclick="toggleOtherCompany(false)"> M.S</label><br>
-  <label><input type="radio" name="ake department" value="Other" onclick="toggleOtherCompany(true)"> Other</label>
-</div>
-<input type="text" id="otherCompany" name="otherCompany" placeholder="Enter company name" style="display:none;" />
+      <label>AKE Department:</label>
+      <div class="radio-group">
+        <label><input type="radio" name="akeDepartment" value="P&SS" onclick="toggleOtherDepartment(false)"> P&SS</label>
+        <label><input type="radio" name="akeDepartment" value="M.S" onclick="toggleOtherDepartment(false)"> M.S</label>
+        <label><input type="radio" name="akeDepartment" value="Other" onclick="toggleOtherDepartment(true)"> Other</label>
+      </div>
+      <input type="text" id="otherDepartment" name="otherDepartment" placeholder="Enter department name" style="display:none;" />
 
-
-      
       <!-- Material Dropdown -->
       <label for="material">Material Description:</label>
       <select id="material" name="material">
@@ -174,10 +182,9 @@
         <option value="4">4</option>
         <option value="5">5</option>
         <option value="Other">Other</option>
-        </select>
+      </select>
       <input type="text" id="otherQuantity" name="otherQuantity" placeholder="Enter material quantity" style="display:none;" />
 
-        
       <!-- Date Field -->
       <label for="dateField">Date:</label>
       <input type="date" id="dateField" name="dateField" required />
@@ -224,7 +231,10 @@
       ctx.moveTo(e.offsetX, e.offsetY);
     }
 
-    // Show/hide logic for company
+    function toggleOtherDepartment(show) {
+      document.getElementById("otherDepartment").style.display = show ? "block" : "none";
+    }
+
     document.getElementById("company").addEventListener("change", function() {
       const otherInput = document.getElementById("otherCompany");
       if (this.value === "Other") {
@@ -235,7 +245,6 @@
       }
     });
 
-    // Show/hide logic for material
     document.getElementById("material").addEventListener("change", function() {
       const otherInput = document.getElementById("otherMaterial");
       if (this.value === "Other") {
@@ -246,8 +255,6 @@
       }
     });
 
-
-     // Show/hide logic for quantity
     document.getElementById("Quantity").addEventListener("change", function() {
       const otherInput = document.getElementById("otherQuantity");
       if (this.value === "Other") {
