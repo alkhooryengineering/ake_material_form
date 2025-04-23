@@ -66,6 +66,15 @@
       padding: 20px;
       border-radius: 10px;
       text-align: center;
+      position: relative;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+    #authModalContent::before {
+      content: '\2699'; /* Unicode gear symbol */
+      font-size: 48px;
+      color: #003366;
+      display: block;
+      margin-bottom: 10px;
     }
   </style>
 </head>
@@ -81,7 +90,7 @@
 
   <div class="container" style="display:none;">
     <img class="logo" src="https://github.com/alkhooryengineering/ake/blob/main/AKE%20LOGO.png"/>
-    <h1>AKE Test Website</h1> </center>
+    <h1>AKE Test Website</h1>
 
     <form id="orderForm">
       <label for="company">Company Name:</label>
@@ -110,7 +119,7 @@
   <script>
     function checkPassword() {
       const entered = document.getElementById("authPassword").value;
-      const correct = "ake@123"; // Change to your secure password
+      const correct = "ake123"; // Change to your secure password
       if (entered === correct) {
         document.getElementById("authModal").style.display = "none";
         document.querySelector(".container").style.display = "block";
