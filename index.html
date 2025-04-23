@@ -1,10 +1,9 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Engineering Order Form</title>
-  <!-- Favicon -->
   <link rel="icon" href="https://github.com/alkhooryengineering/ake/blob/main/AKE%20LOGO.png?raw=true" type="image/png" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
@@ -134,27 +133,18 @@
 </head>
 <body>
   <script>
-    // Check if user is already authenticated
     if (!localStorage.getItem("authenticated")) {
-      // Prompt for password
       const password = prompt("Please enter the password:");
-      const correctPassword = "ake@123"; // Set the password here
-
-      // Validate the entered password
+      const correctPassword = "ake@123";
       if (password !== correctPassword) {
         alert("Incorrect password. Access denied.");
-        // Optionally, you can redirect to another page or close the window
-        window.location.href = "https://www.google.com"; // Redirecting user to another page if incorrect
+        window.location.href = "https://www.google.com";
         return;
       }
-
-      // If the password is correct, set the flag in localStorage
       localStorage.setItem("authenticated", "true");
     }
 
-    // If the user is authenticated, show the form
     document.addEventListener("DOMContentLoaded", function() {
-      // Add the form HTML here
       const formHtml = `
         <div class="container">
           <img class="header-image" src="https://github.com/alkhooryengineering/ake/blob/main/AKE%20LOGO%20(1).jpg" alt="Header" />
@@ -225,7 +215,35 @@
           </footer>
         </div>
       `;
-      document.body.innerHTML = formHtml; // Inject form HTML
+      document.body.innerHTML = formHtml;
+
+      const signatureCanvas = document.getElementById("signature");
+      const ctx = signatureCanvas.getContext("2d");
+
+      signatureCanvas.width = 300;
+      signatureCanvas.height = 150;
+
+      let isDrawing = false;
+
+      signatureCanvas.addEventListener("mousedown", (e) => {
+        isDrawing = true;
+        ctx.moveTo(e.offsetX, e.offsetY);
+      });
+
+      signatureCanvas.addEventListener("mousemove", (e) => {
+        if (isDrawing) {
+          ctx.lineTo(e.offsetX, e.offsetY);
+          ctx.stroke();
+        }
+      });
+
+      signatureCanvas.addEventListener("mouseup", () => {
+        isDrawing = false;
+      });
+
+      signatureCanvas.addEventListener("mouseleave", () => {
+        isDrawing = false;
+      });
     });
 
     function toggleOtherDepartment(show) {
