@@ -140,6 +140,18 @@
       </select>
       <input type="text" id="otherCompany" name="otherCompany" placeholder="Enter company name" style="display:none;" />
 
+      
+      <!-- AKE Department Radio Buttons -->
+<label>AKE Department:</label>
+<div>
+  <label><input type="radio" name="ake department" value="P&SS" onclick="toggleOtherCompany(false)"> P&SS</label><br>
+  <label><input type="radio" name="ake department" value="M.S" onclick="toggleOtherCompany(false)"> M.S</label><br>
+  <label><input type="radio" name="ake department" value="Other" onclick="toggleOtherCompany(true)"> Other</label>
+</div>
+<input type="text" id="otherCompany" name="otherCompany" placeholder="Enter company name" style="display:none;" />
+
+
+      
       <!-- Material Dropdown -->
       <label for="material">Material Description:</label>
       <select id="material" name="material">
