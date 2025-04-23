@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Engineering Order Form</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
@@ -127,19 +127,22 @@
 
   <div class="container">
     <img class="header-image" src="https://github.com/alkhooryengineering/ake/blob/main/AKE%20LOGO%20(1).jpg" alt="Header" />
-    <h1>AKE Material in/out Form</h1>
+
+    <h1>AKE Material In/Out Form</h1>
 
     <form id="orderForm">
-      <label for="companySelect">Company Name:</label>
-      <select id="companySelect" name="company">
+      <!-- Company Dropdown -->
+      <label for="company">Company Name:</label>
+      <select id="company" name="company">
         <option value="Company A">Company A</option>
         <option value="Company B">Company B</option>
         <option value="Other">Other</option>
       </select>
-      <input type="text" id="companyOther" name="companyOther" placeholder="Enter company name" style="display:none;" />
+      <input type="text" id="otherCompany" name="otherCompany" placeholder="Enter company name" style="display:none;" />
 
-      <label for="materialSelect">Material Description:</label>
-      <select id="materialSelect" name="material">
+      <!-- Material Dropdown -->
+      <label for="material">Material Description:</label>
+      <select id="material" name="material">
         <option value="Pump">Pump</option>
         <option value="Motor">Motor</option>
         <option value="Aerator">Aerator</option>
@@ -148,17 +151,24 @@
         <option value="3in1 Heat Pump">3in1 Heat Pump</option>
         <option value="Other">Other</option>
       </select>
-      <input type="text" id="materialOther" name="materialOther" placeholder="Describe other material" style="display:none;" />
+      <input type="text" id="otherMaterial" name="otherMaterial" placeholder="Enter material description" style="display:none;" />
 
+      <!-- Field 2 -->
       <input type="text" name="field2" placeholder="Field 2" />
-      <input type="text" name="field3" placeholder="Field 3" />
 
+      <!-- Date Field -->
+      <label for="dateField">Date:</label>
+      <input type="date" id="dateField" name="dateField" required />
+
+      <!-- Uploads -->
       <label for="photo">Upload or Take Photos (up to 5):</label>
       <input type="file" id="photo" name="photo" accept="image/*" multiple />
 
+      <!-- Signature -->
       <label for="signature">Signature:</label>
       <canvas id="signature" class="signature-pad"></canvas>
 
+      <!-- Submit -->
       <button id="submitBtn" type="button" onclick="submitForm()">Submit</button>
       <div id="message" class="message"></div>
     </form>
@@ -192,43 +202,38 @@
       ctx.moveTo(e.offsetX, e.offsetY);
     }
 
-    function setupDynamicOther(selectId, inputId) {
-      const select = document.getElementById(selectId);
-      const input = document.getElementById(inputId);
-      select.addEventListener("change", function () {
-        if (this.value === "Other") {
-          input.style.display = "block";
-          select.style.display = "none";
-        } else {
-          input.style.display = "none";
-          select.style.display = "block";
-        }
-      });
-    }
+    // Show/hide logic for company
+    document.getElementById("company").addEventListener("change", function() {
+      const otherInput = document.getElementById("otherCompany");
+      if (this.value === "Other") {
+        otherInput.style.display = "block";
+        this.style.display = "none";
+      } else {
+        otherInput.style.display = "none";
+      }
+    });
 
-    setupDynamicOther("companySelect", "companyOther");
-    setupDynamicOther("materialSelect", "materialOther");
+    // Show/hide logic for material
+    document.getElementById("material").addEventListener("change", function() {
+      const otherInput = document.getElementById("otherMaterial");
+      if (this.value === "Other") {
+        otherInput.style.display = "block";
+        this.style.display = "none";
+      } else {
+        otherInput.style.display = "none";
+      }
+    });
 
     async function submitForm() {
-      const formData = new FormData();
-      const company = document.getElementById("companyOther").style.display === "block"
-        ? document.getElementById("companyOther").value
-        : document.getElementById("companySelect").value;
-      formData.append("Company Name", company);
-
-      const material = document.getElementById("materialOther").style.display === "block"
-        ? document.getElementById("materialOther").value
-        : document.getElementById("materialSelect").value;
-      formData.append("Material Description", material);
-
-      formData.append("Field 2", document.querySelector('[name="field2"]').value);
-      formData.append("Field 3", document.querySelector('[name="field3"]').value);
-
+      const form = document.getElementById("orderForm");
+      const formData = new FormData(form);
       const photos = document.getElementById("photo").files;
+
       if (photos.length > 5) {
         alert("You can upload a maximum of 5 photos.");
         return;
       }
+
       for (let i = 0; i < photos.length; i++) {
         formData.append("photo" + i, photos[i]);
       }
@@ -240,6 +245,7 @@
       let y = 30;
 
       for (let [key, value] of formData.entries()) {
+        if (key.startsWith("photo") || key === "pdf" || key === "signature") continue;
         if (value instanceof Blob) continue;
         if (value) {
           doc.text(`${key}: ${value}`, 10, y);
