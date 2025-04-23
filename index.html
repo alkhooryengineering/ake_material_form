@@ -154,7 +154,7 @@
       <input type="text" id="otherMaterial" name="otherMaterial" placeholder="Enter material description" style="display:none;" />
 
       <!-- Quantity -->
-      <label for="Quantity">Quantity:</label>
+      <label for="Quantity">Material Quantity:</label>
       <select id="Quantity" name="Quantity">
         <option value="1">1</option>
         <option value="2">2</option>
@@ -236,7 +236,7 @@
 
 
      // Show/hide logic for quantity
-    document.getElementById("quantity").addEventListener("change", function() {
+    document.getElementById("Quantity").addEventListener("change", function() {
       const otherInput = document.getElementById("otherQuantity");
       if (this.value === "Other") {
         otherInput.style.display = "block";
