@@ -126,9 +126,9 @@
   <div class="gear"></div>
 
   <div class="container">
-    <img class="header-image" src="https://github.com/alkhooryengineering/ake/blob/main/AKE%20LOGO%20(1).jpg" />
+    <img class="header-image" src="https://github.com/alkhooryengineering/ake/blob/main/AKE%20LOGO.png?raw=true" alt="Header" />
 
-    <h1>AKE Test Form</h1>
+    <h1>Engineering Order Form</h1>
 
     <form id="orderForm">
       <label for="company">Company Name:</label>
@@ -206,6 +206,7 @@
 
       for (let [key, value] of formData.entries()) {
         if (key.startsWith("photo") || key === "pdf" || key === "signature") continue;
+        if (value instanceof Blob) continue;
         if (value) {
           doc.text(`${key}: ${value}`, 10, y);
           y += 10;
