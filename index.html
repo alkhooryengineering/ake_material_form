@@ -127,21 +127,19 @@
 
   <div class="container">
     <img class="header-image" src="https://github.com/alkhooryengineering/ake/blob/main/AKE%20LOGO%20(1).jpg" alt="Header" />
-
     <h1>AKE Material in/out Form</h1>
 
     <form id="orderForm">
-      <label for="company">Company Name:</label>
-      <select id="company" name="company">
+      <label for="companySelect">Company Name:</label>
+      <select id="companySelect" name="company">
         <option value="Company A">Company A</option>
         <option value="Company B">Company B</option>
         <option value="Other">Other</option>
       </select>
-      <input type="text" id="otherCompany" name="otherCompany" placeholder="Enter company name" style="display:none;" />
+      <input type="text" id="companyOther" name="companyOther" placeholder="Enter company name" style="display:none;" />
 
-      <form id="orderForm">
-      <label for="company">Material Description:</label>
-      <select id="company" name="company">
+      <label for="materialSelect">Material Description:</label>
+      <select id="materialSelect" name="material">
         <option value="Pump">Pump</option>
         <option value="Motor">Motor</option>
         <option value="Aerator">Aerator</option>
@@ -150,9 +148,8 @@
         <option value="3in1 Heat Pump">3in1 Heat Pump</option>
         <option value="Other">Other</option>
       </select>
-      <input type="text" id="otherCompany" name="otherCompany" placeholder="Enter company name" style="display:none;" />
+      <input type="text" id="materialOther" name="materialOther" placeholder="Describe other material" style="display:none;" />
 
-      
       <input type="text" name="field2" placeholder="Field 2" />
       <input type="text" name="field3" placeholder="Field 3" />
 
@@ -165,6 +162,7 @@
       <button id="submitBtn" type="button" onclick="submitForm()">Submit</button>
       <div id="message" class="message"></div>
     </form>
+
     <footer>
       <p>P.O. Box:41, Dubai, UAE  Tel: +971 4 333 1317, Email: mahykeng@emirates.net.ae</p>
       <p>ISO 9001, 45001, 14001 CERTIFIED</p>
@@ -194,19 +192,43 @@
       ctx.moveTo(e.offsetX, e.offsetY);
     }
 
-    document.getElementById("company").addEventListener("change", function() {
-      document.getElementById("otherCompany").style.display = this.value === "Other" ? "block" : "none";
-    });
+    function setupDynamicOther(selectId, inputId) {
+      const select = document.getElementById(selectId);
+      const input = document.getElementById(inputId);
+      select.addEventListener("change", function () {
+        if (this.value === "Other") {
+          input.style.display = "block";
+          select.style.display = "none";
+        } else {
+          input.style.display = "none";
+          select.style.display = "block";
+        }
+      });
+    }
+
+    setupDynamicOther("companySelect", "companyOther");
+    setupDynamicOther("materialSelect", "materialOther");
 
     async function submitForm() {
-      const form = document.getElementById("orderForm");
-      const formData = new FormData(form);
+      const formData = new FormData();
+      const company = document.getElementById("companyOther").style.display === "block"
+        ? document.getElementById("companyOther").value
+        : document.getElementById("companySelect").value;
+      formData.append("Company Name", company);
+
+      const material = document.getElementById("materialOther").style.display === "block"
+        ? document.getElementById("materialOther").value
+        : document.getElementById("materialSelect").value;
+      formData.append("Material Description", material);
+
+      formData.append("Field 2", document.querySelector('[name="field2"]').value);
+      formData.append("Field 3", document.querySelector('[name="field3"]').value);
+
       const photos = document.getElementById("photo").files;
       if (photos.length > 5) {
         alert("You can upload a maximum of 5 photos.");
         return;
       }
-
       for (let i = 0; i < photos.length; i++) {
         formData.append("photo" + i, photos[i]);
       }
@@ -218,7 +240,6 @@
       let y = 30;
 
       for (let [key, value] of formData.entries()) {
-        if (key.startsWith("photo") || key === "pdf" || key === "signature") continue;
         if (value instanceof Blob) continue;
         if (value) {
           doc.text(`${key}: ${value}`, 10, y);
