@@ -62,26 +62,34 @@
       z-index: 9999;
     }
     #authModalContent {
+      width: 200px;
+      height: 200px;
       background: white;
-      padding: 20px;
-      border-radius: 10px;
+      border-radius: 50%;
       text-align: center;
-      position: relative;
       box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
     }
     #authModalContent::before {
       content: '\2699'; /* Unicode gear symbol */
       font-size: 48px;
       color: #003366;
-      display: block;
       margin-bottom: 10px;
+    }
+    #authModalContent input,
+    #authModalContent button {
+      width: 80%;
+      margin: 5px auto;
     }
   </style>
 </head>
 <body>
   <div id="authModal">
     <div id="authModalContent">
-      <h2>Enter Password</h2>
       <input type="password" id="authPassword" placeholder="Password" />
       <button onclick="checkPassword()">Enter</button>
       <p id="authError" style="color:red;"></p>
