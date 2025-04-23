@@ -9,26 +9,41 @@
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: url('https://github.com/alkhooryengineering/ake-landing-page/blob/main/AKE%20Street%20View.png?raw=true') no-repeat center center/cover;
-      backdrop-filter: blur(3px);
+      background: linear-gradient(135deg, #003366 0%, #005580 100%);
+      overflow-x: hidden;
     }
+    .gear {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background-image: url('https://cdn-icons-png.flaticon.com/512/2942/2942935.png');
+      background-size: cover;
+      animation: floatGear 12s infinite ease-in-out;
+      opacity: 0.15;
+    }
+    .gear:nth-child(1) { top: 10%; left: 20%; animation-delay: 0s; }
+    .gear:nth-child(2) { top: 40%; left: 70%; animation-delay: 3s; }
+    .gear:nth-child(3) { top: 70%; left: 10%; animation-delay: 6s; }
+    .gear:nth-child(4) { top: 30%; left: 40%; animation-delay: 9s; }
+
+    @keyframes floatGear {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+
     .container {
-      background-color: rgba(255, 255, 255, 0.85);
-      margin: 50px auto;
+      background-color: rgba(255, 255, 255, 0.9);
+      margin: 60px auto;
       max-width: 800px;
-      padding: 30px;
+      padding: 40px;
       border-radius: 20px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-      transition: all 0.3s ease-in-out;
-    }
-    .logo {
-      max-width: 150px;
-      display: block;
-      margin: 0 auto 20px auto;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 2;
     }
     h1 {
       text-align: center;
-      color: #003366;
+      color: #002244;
     }
     .signature-pad {
       border: 2px dashed #ccc;
@@ -36,7 +51,7 @@
       width: 100%;
       height: 150px;
       cursor: crosshair;
-      background-color: #f9f9f9;
+      background-color: #f4f4f4;
     }
     label {
       margin-top: 15px;
@@ -46,84 +61,65 @@
     select, input {
       display: block;
       margin: 10px 0;
-      padding: 10px;
+      padding: 12px;
       width: 100%;
-      border-radius: 8px;
+      border-radius: 10px;
       border: 1px solid #ccc;
       box-sizing: border-box;
+      font-size: 15px;
     }
     button {
-      padding: 12px 25px;
-      background-color: #003366;
+      padding: 14px;
+      background-color: #004488;
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
       margin-top: 20px;
       width: 100%;
-      font-size: 16px;
+      font-size: 17px;
+      transition: background 0.3s;
     }
     button:hover {
-      background-color: #005599;
+      background-color: #0066aa;
     }
     .message {
       margin-top: 15px;
       font-weight: bold;
       text-align: center;
     }
-    #authModal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.7);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
-    #authModalContent {
-      width: 200px;
-      height: 200px;
-      background: white;
-      border-radius: 50%;
+    footer {
       text-align: center;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      font-size: 12px;
+      color: #eee;
+      margin-top: 40px;
+      z-index: 1;
       position: relative;
     }
-    #authModalContent::before {
-      content: '\2699'; /* Unicode gear symbol */
-      font-size: 48px;
-      color: #003366;
-      margin-bottom: 10px;
-    }
-    #authModalContent input,
-    #authModalContent button {
-      width: 80%;
-      margin: 5px auto;
-      padding: 8px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+
+    @media (max-width: 768px) {
+      .container {
+        margin: 30px 15px;
+        padding: 20px;
+      }
+      h1 {
+        font-size: 24px;
+      }
+      select, input, button {
+        font-size: 14px;
+        padding: 10px;
+      }
     }
   </style>
 </head>
 <body>
-  <div id="authModal">
-    <div id="authModalContent">
-      <input type="password" id="authPassword" placeholder="Password" />
-      <button onclick="checkPassword()">Enter</button>
-      <p id="authError" style="color:red;"></p>
-    </div>
-  </div>
+  <div class="gear"></div>
+  <div class="gear"></div>
+  <div class="gear"></div>
+  <div class="gear"></div>
 
-  <div class="container" style="display:none;">
-    <img class="logo" src="https://github.com/alkhooryengineering/ake/blob/main/AKE%20LOGO.png"/>
-    <h1>AKE Test Website</h1>
+  <div class="container">
+    <h1>Engineering Order Form</h1>
 
     <form id="orderForm">
       <label for="company">Company Name:</label>
@@ -147,20 +143,13 @@
       <button id="submitBtn" type="button" onclick="submitForm()">Submit</button>
       <div id="message" class="message"></div>
     </form>
+    <footer>
+      <p>P.O. Box:41, Dubai, UAE  Tel: +971 4 333 1317, Email: mahykeng@emirates.net.ae</p>
+      <p>ISO 9001, 45001, 14001 CERTIFIED</p>
+    </footer>
   </div>
 
   <script>
-    function checkPassword() {
-      const entered = document.getElementById("authPassword").value;
-      const correct = "ake123"; // Change to your secure password
-      if (entered === correct) {
-        document.getElementById("authModal").style.display = "none";
-        document.querySelector(".container").style.display = "block";
-      } else {
-        document.getElementById("authError").innerText = "Incorrect password. Please try again.";
-      }
-    }
-
     const signatureCanvas = document.getElementById("signature");
     const ctx = signatureCanvas.getContext("2d");
     let drawing = false;
@@ -207,9 +196,7 @@
       let y = 30;
 
       for (let [key, value] of formData.entries()) {
-        if (key.startsWith("photo")) continue;
-        if (key === "pdf") continue;
-        if (key === "signature") continue;
+        if (key.startsWith("photo") || key === "pdf" || key === "signature") continue;
         if (value) {
           doc.text(`${key}: ${value}`, 10, y);
           y += 10;
