@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post('/submit-form', upload.single('photo'), async (req, res) => {
+app.post('/send-pdf', upload.single('photo'), async (req, res) => {
   try {
     const formData = req.body;
     const photoPath = req.file ? req.file.path : null;
