@@ -8,39 +8,60 @@
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: url('https://github.com/alkhooryengineering/ake-landing-page/blob/main/AKE%20Street%20View.png?raw=true') no-repeat center center/cover;
+      backdrop-filter: blur(3px);
     }
     .container {
-      background-color: rgba(255, 255, 255, 0.95);
+      background-color: rgba(255, 255, 255, 0.85);
       margin: 50px auto;
       max-width: 800px;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      transition: all 0.3s ease-in-out;
     }
     .logo {
       max-width: 150px;
+      display: block;
+      margin: 0 auto 20px auto;
+    }
+    h1 {
+      text-align: center;
+      color: #003366;
     }
     .signature-pad {
-      border: 1px solid #ccc;
+      border: 2px dashed #ccc;
+      border-radius: 10px;
       width: 100%;
       height: 150px;
       cursor: crosshair;
+      background-color: #f9f9f9;
     }
-    label, select, input {
+    label {
+      margin-top: 15px;
+      font-weight: bold;
+      display: block;
+    }
+    select, input {
       display: block;
       margin: 10px 0;
+      padding: 10px;
       width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
     }
     button {
-      padding: 10px 20px;
+      padding: 12px 25px;
       background-color: #003366;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
-      margin-top: 15px;
+      margin-top: 20px;
+      width: 100%;
+      font-size: 16px;
     }
     button:hover {
       background-color: #005599;
@@ -48,6 +69,7 @@
     .message {
       margin-top: 15px;
       font-weight: bold;
+      text-align: center;
     }
     #authModal {
       position: fixed;
@@ -84,6 +106,9 @@
     #authModalContent button {
       width: 80%;
       margin: 5px auto;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
     }
   </style>
 </head>
