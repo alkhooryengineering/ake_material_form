@@ -15,10 +15,14 @@ app.use(cors());
 
 // Session setup
 app.use(session({
-  secret: 'your-secret-key',  // A strong secret key for session encryption
+  secret: process.env.SESSION_SECRET,  // Use secret from .env
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: flase }  // Set 'secure: true' if you're using HTTPS
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',  // Use secure cookies in production only
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24,  // 1 day expiration
+  }
 }));
 
 // Middleware to parse JSON and URL-encoded form data
@@ -32,7 +36,7 @@ const upload = multer({
 
 // Dummy user data for authentication (this could be replaced by a database)
 const users = [
-  { username: 'admin', password: 'password123' }
+  { username: 'admin', password: 'ake@123' }
 ];
 
 // Authentication check middleware
@@ -48,7 +52,7 @@ function isAuthenticated(req, res, next) {
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
   const user = users.find(u => u.username === username && u.password === password);
-  
+
   if (user) {
     req.session.user = user;  // Store user info in session
     res.status(200).json({ message: 'Logged in successfully' });
@@ -105,6 +109,15 @@ app.post('/logout', (req, res) => {
     }
     res.status(200).json({ message: 'Logged out successfully' });
   });
+});
+
+// Check if user is logged in
+app.get('/check-login', (req, res) => {
+  if (req.session.user) {
+    return res.status(200).json({ message: 'Logged in' });
+  } else {
+    return res.status(401).json({ message: 'Not logged in' });
+  }
 });
 
 // Start server
