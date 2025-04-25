@@ -18,7 +18,7 @@ app.use(session({
   secret: 'your-secret-key',  // A strong secret key for session encryption
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: true }  // Set 'secure: true' if you're using HTTPS
+  cookie: { secure: flase }  // Set 'secure: true' if you're using HTTPS
 }));
 
 // Middleware to parse JSON and URL-encoded form data
