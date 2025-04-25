@@ -55,8 +55,10 @@ app.post('/login', (req, res) => {
 
   if (user) {
     req.session.user = user;  // Store user info in session
+    console.log("User logged in:", username); // Debugging line
     res.status(200).json({ message: 'Logged in successfully' });
   } else {
+    console.log("Invalid login attempt:", username); // Debugging line
     res.status(401).json({ message: 'Invalid credentials' });
   }
 });
@@ -107,15 +109,19 @@ app.post('/logout', (req, res) => {
     if (err) {
       return res.status(500).json({ message: 'Failed to log out' });
     }
+    console.log("User logged out"); // Debugging line
     res.status(200).json({ message: 'Logged out successfully' });
   });
 });
 
 // Check if user is logged in
 app.get('/check-login', (req, res) => {
+  console.log("Checking login status...");  // Debugging line
   if (req.session.user) {
+    console.log("User is logged in");  // Debugging line
     return res.status(200).json({ message: 'Logged in' });
   } else {
+    console.log("User is not logged in");  // Debugging line
     return res.status(401).json({ message: 'Not logged in' });
   }
 });
