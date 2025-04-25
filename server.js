@@ -3,8 +3,7 @@ const multer = require('multer');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
-const session = require('express-session');
-const bodyParser = require('body-parser');
+const session = require('express-session');  // Import session
 
 dotenv.config();
 
@@ -12,58 +11,53 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Enable CORS
-app.use(cors({
-  origin: true,
-  credentials: true
-}));
+app.use(cors());
 
-// Body parser for login form
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
-// Set up session middleware
+// Session setup
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'supersecretkey',
+  secret: 'your-secret-key',  // A strong secret key for session encryption
   resave: false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    secure: false, // set to true if using HTTPS
-    maxAge: 1 * 60 * 60 * 1000 // 1 hour
-  }
+  saveUninitialized: true,
+  cookie: { secure: false }  // Set 'secure: true' if you're using HTTPS
 }));
 
-// Simple login route
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-
-  // You can use environment variables for better security
-  const VALID_USER = process.env.LOGIN_USER || 'admin';
-  const VALID_PASS = process.env.LOGIN_PASS || 'password123';
-
-  if (username === VALID_USER && password === VALID_PASS) {
-    req.session.authenticated = true;
-    res.status(200).json({ message: 'Logged in successfully' });
-  } else {
-    res.status(401).json({ message: 'Invalid credentials' });
-  }
-});
-
-// Middleware to protect routes
-function isAuthenticated(req, res, next) {
-  if (req.session.authenticated) {
-    return next();
-  } else {
-    res.status(401).json({ message: 'Unauthorized' });
-  }
-}
+// Middleware to parse JSON and URL-encoded form data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Set up Multer for file uploads
 const upload = multer({
   limits: { fileSize: 20 * 1024 * 1024 }, // 20MB limit
 });
 
-// Protected POST endpoint
+// Dummy user data for authentication (this could be replaced by a database)
+const users = [
+  { username: 'admin', password: 'password123' }
+];
+
+// Authentication check middleware
+function isAuthenticated(req, res, next) {
+  if (req.session.user) {
+    return next();
+  } else {
+    res.status(401).send('You are not logged in.');
+  }
+}
+
+// POST endpoint to handle login
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  const user = users.find(u => u.username === username && u.password === password);
+  
+  if (user) {
+    req.session.user = user;  // Store user info in session
+    res.status(200).json({ message: 'Logged in successfully' });
+  } else {
+    res.status(401).json({ message: 'Invalid credentials' });
+  }
+});
+
+// POST endpoint to handle form submission (only accessible if logged in)
 app.post('/send-pdf', isAuthenticated, upload.any(), async (req, res) => {
   try {
     const pdfFile = req.files.find(f => f.originalname.endsWith('.pdf'));
@@ -88,12 +82,10 @@ app.post('/send-pdf', isAuthenticated, upload.any(), async (req, res) => {
           filename: 'order.pdf',
           content: pdfFile.buffer,
         },
-        ...(imageFile
-          ? [{
-              filename: imageFile.originalname,
-              content: imageFile.buffer,
-            }]
-          : []),
+        ...(imageFile ? [{
+          filename: imageFile.originalname,
+          content: imageFile.buffer,
+        }] : []),
       ],
     };
 
@@ -105,6 +97,17 @@ app.post('/send-pdf', isAuthenticated, upload.any(), async (req, res) => {
   }
 });
 
+// POST endpoint to handle logout and destroy session
+app.post('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ message: 'Failed to log out' });
+    }
+    res.status(200).json({ message: 'Logged out successfully' });
+  });
+});
+
+// Start server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
