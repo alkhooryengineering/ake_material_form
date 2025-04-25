@@ -3,7 +3,6 @@ const multer = require('multer');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
-const session = require('express-session');  // Import session
 
 dotenv.config();
 
@@ -13,62 +12,17 @@ const port = process.env.PORT || 3000;
 // Enable CORS
 app.use(cors());
 
-// Session setup
-app.use(session({
-  secret: process.env.SESSION_SECRET,  // Use secret from .env
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',  // Use secure cookies in production only
-    httpOnly: true,
-    maxAge: 1000 * 60 * 60 * 24,  // 1 day expiration
-  }
-}));
-
-// Middleware to parse JSON and URL-encoded form data
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 // Set up Multer for file uploads
 const upload = multer({
   limits: { fileSize: 20 * 1024 * 1024 }, // 20MB limit
 });
 
-// Dummy user data for authentication (this could be replaced by a database)
-const users = [
-  { username: 'admin', password: 'ake@123' }
-];
-
-// Authentication check middleware
-function isAuthenticated(req, res, next) {
-  if (req.session.user) {
-    return next();
-  } else {
-    res.status(401).send('You are not logged in.');
-  }
-}
-
-// POST endpoint to handle login
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  const user = users.find(u => u.username === username && u.password === password);
-
-  if (user) {
-    req.session.user = user;  // Store user info in session
-    console.log("User logged in:", username); // Debugging line
-    res.status(200).json({ message: 'Logged in successfully' });
-  } else {
-    console.log("Invalid login attempt:", username); // Debugging line
-    res.status(401).json({ message: 'Invalid credentials' });
-  }
-});
-
-// POST endpoint to handle form submission (only accessible if logged in)
-app.post('/send-pdf', isAuthenticated, upload.any(), async (req, res) => {
+// POST endpoint to receive the form
+app.post('/send-pdf', upload.any(), async (req, res) => {
   try {
     const pdfFile = req.files.find(f => f.originalname.endsWith('.pdf'));
     const imageFile = req.files.find(f => f.mimetype.startsWith('image/'));
-    const companyName = req.body.company || 'Unknown Company';
+    const companyName = req.body.company || 'Unknown Company'; // Get the company name from form data
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -79,19 +33,21 @@ app.post('/send-pdf', isAuthenticated, upload.any(), async (req, res) => {
     });
 
     const mailOptions = {
-      from: `"${companyName}" <${process.env.EMAIL_USER}>`,
+      from: "${companyName}" <${process.env.EMAIL_USER}>, // Set display name to company name
       to: process.env.RECEIVER_EMAIL,
       subject: 'New Order Form Submission',
-      text: `A new order form has been submitted by ${companyName}.`,
+      text: A new order form has been submitted by ${companyName}.,
       attachments: [
         {
           filename: 'order.pdf',
           content: pdfFile.buffer,
         },
-        ...(imageFile ? [{
-          filename: imageFile.originalname,
-          content: imageFile.buffer,
-        }] : []),
+        ...(imageFile
+          ? [{
+              filename: imageFile.originalname,
+              content: imageFile.buffer,
+            }]
+          : []),
       ],
     };
 
@@ -103,30 +59,7 @@ app.post('/send-pdf', isAuthenticated, upload.any(), async (req, res) => {
   }
 });
 
-// POST endpoint to handle logout and destroy session
-app.post('/logout', (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.status(500).json({ message: 'Failed to log out' });
-    }
-    console.log("User logged out"); // Debugging line
-    res.status(200).json({ message: 'Logged out successfully' });
-  });
-});
-
-// Check if user is logged in
-app.get('/check-login', (req, res) => {
-  console.log("Checking login status...");  // Debugging line
-  if (req.session.user) {
-    console.log("User is logged in");  // Debugging line
-    return res.status(200).json({ message: 'Logged in' });
-  } else {
-    console.log("User is not logged in");  // Debugging line
-    return res.status(401).json({ message: 'Not logged in' });
-  }
-});
-
 // Start server
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(Server is running on port ${port});
 });
