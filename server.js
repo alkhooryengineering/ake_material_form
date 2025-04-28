@@ -22,11 +22,18 @@ const upload = multer({
 app.post('/send-pdf', upload.any(), async (req, res) => {
   try {
     const pdfFile = req.files.find(f => f.originalname.endsWith('.pdf'));
+    const headerImageFile = req.files.find(f => f.originalname === 'header.jpg');
+    const footerImageFile = req.files.find(f => f.originalname === 'footer.jpg');
     const imageFile = req.files.find(f => f.mimetype.startsWith('image/'));
-    
+
     // Check if the PDF file is received
     if (!pdfFile) {
       return res.status(400).send('PDF file is missing');
+    }
+
+    // Check if the header and footer images are provided
+    if (!headerImageFile || !footerImageFile) {
+      return res.status(400).send('Header and Footer images are missing');
     }
 
     // Get the company name from the form data
@@ -46,12 +53,30 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     // Load and modify the PDF
     const pdfDoc = await PDFDocument.load(pdfFile.buffer);
 
-    // Add header and footer to the PDF
+    // Embed header and footer images
+    const headerImage = await pdfDoc.embedJpg(headerImageFile.buffer);
+    const footerImage = await pdfDoc.embedJpg(footerImageFile.buffer);
+
+    // Add header and footer to each page of the PDF
     const pages = pdfDoc.getPages();
     pages.forEach(page => {
       const { width, height } = page.getSize();
-      page.drawText('Your Company Header', { x: 50, y: height - 50, size: 12, color: rgb(0, 0, 0) });
-      page.drawText('Your Company Footer', { x: 50, y: 30, size: 12, color: rgb(0, 0, 0) });
+
+      // Place the header image at the top of the page
+      page.drawImage(headerImage, {
+        x: 0,
+        y: height - headerImage.height,
+        width: width,  // Ensure it spans the full page width
+        height: headerImage.height,
+      });
+
+      // Place the footer image at the bottom of the page
+      page.drawImage(footerImage, {
+        x: 0,
+        y: 0,
+        width: width,  // Ensure it spans the full page width
+        height: footerImage.height,
+      });
     });
 
     // Save the modified PDF
