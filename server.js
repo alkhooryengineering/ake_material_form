@@ -22,6 +22,12 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
   try {
     const pdfFile = req.files.find(f => f.originalname.endsWith('.pdf'));
     const imageFile = req.files.find(f => f.mimetype.startsWith('image/'));
+    
+    // Get the company name from the form data
+    const { company, otherCompany } = req.body;
+
+    // Determine the display name for the sender (Company Name)
+    const displayName = company === 'Other' ? otherCompany : company;
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -31,11 +37,12 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
       },
     });
 
+    // Set up email options
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: `"${displayName}" <${process.env.EMAIL_USER}>`, // Set display name with email
       to: process.env.RECEIVER_EMAIL,
       subject: 'New Order Form Submission',
-      text: 'A new order form has been submitted.',
+      text: `A new order form has been submitted by ${displayName}.`,
       attachments: [
         {
           filename: 'order.pdf',
@@ -50,6 +57,7 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
       ],
     };
 
+    // Send the email
     await transporter.sendMail(mailOptions);
     res.status(200).send('Email sent successfully');
   } catch (error) {
