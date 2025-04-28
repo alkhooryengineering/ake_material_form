@@ -95,17 +95,17 @@
       font-weight: bold;
       text-align: center;
     }
-    footer {
-      text-align: center;
-      font-size: 12px;
-      color: white;
-      margin-top: 40px;
-      z-index: 1;
-      position: relative;
-      background-color: #003366;
-      padding: 10px 0;
+      footer {
+  text-align: center;
+  font-size: 12px;
+  color: white; /* White text color */
+  margin-top: 40px;
+  z-index: 1;
+  position: relative;
+  background-color: #003366; /* Dark blue background */
+  padding: 10px 0; /* Add some padding for better spacing; */      
     }
-
+    
     .radio-group {
       display: flex;
       gap: 20px;
@@ -234,29 +234,51 @@
       ctx.lineWidth = 2;
       ctx.lineCap = "round";
       ctx.strokeStyle = "#000";
-      ctx.lineTo(e.clientX - signatureCanvas.offsetLeft, e.clientY - signatureCanvas.offsetTop);
+      ctx.lineTo(e.offsetX, e.offsetY);
       ctx.stroke();
       ctx.beginPath();
-      ctx.moveTo(e.clientX - signatureCanvas.offsetLeft, e.clientY - signatureCanvas.offsetTop);
+      ctx.moveTo(e.offsetX, e.offsetY);
     }
 
     function toggleOtherDepartment(show) {
       document.getElementById("otherDepartment").style.display = show ? "block" : "none";
     }
-    function toggleOtherMaterial(show) {
-      document.getElementById("otherMaterial").style.display = show ? "block" : "none";
-    }
-    function toggleOtherQuantity(show) {
-      document.getElementById("otherQuantity").style.display = show ? "block" : "none";
-    }
+
+    document.getElementById("company").addEventListener("change", function() {
+      const otherInput = document.getElementById("otherCompany");
+      if (this.value === "Other") {
+        otherInput.style.display = "block";
+        this.style.display = "none";
+      } else {
+        otherInput.style.display = "none";
+      }
+    });
+
+    document.getElementById("material").addEventListener("change", function() {
+      const otherInput = document.getElementById("otherMaterial");
+      if (this.value === "Other") {
+        otherInput.style.display = "block";
+        this.style.display = "none";
+      } else {
+        otherInput.style.display = "none";
+      }
+    });
+
+    document.getElementById("Quantity").addEventListener("change", function() {
+      const otherInput = document.getElementById("otherQuantity");
+      if (this.value === "Other") {
+        otherInput.style.display = "block";
+        this.style.display = "none";
+      } else {
+        otherInput.style.display = "none";
+      }
+    });
 
     async function submitForm() {
       const form = document.getElementById("orderForm");
       const formData = new FormData(form);
-      const companyName = document.getElementById("company").value;
-      formData.append("companyName", companyName);
-
       const photos = document.getElementById("photo").files;
+
       if (photos.length > 5) {
         alert("You can upload a maximum of 5 photos.");
         return;
