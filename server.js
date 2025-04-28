@@ -3,6 +3,7 @@ const multer = require('multer');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
+const { PDFDocument } = require('pdf-lib'); // Import PDF-lib
 
 dotenv.config();
 
@@ -29,6 +30,34 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     // Determine the display name for the sender (Company Name)
     const displayName = company === 'Other' ? otherCompany : company;
 
+    // Load the existing PDF document
+    const pdfDoc = await PDFDocument.load(pdfFile.buffer);
+
+    // Add header and footer (adjust as necessary)
+    const pages = pdfDoc.getPages();
+    pages.forEach(page => {
+      const { width, height } = page.getSize();
+
+      // Header
+      page.drawText('Your Company Header', {
+        x: 50,
+        y: height - 50,
+        size: 12,
+        color: rgb(0, 0, 0),
+      });
+
+      // Footer
+      page.drawText('Your Company Footer', {
+        x: 50,
+        y: 30,
+        size: 12,
+        color: rgb(0, 0, 0),
+      });
+    });
+
+    // Serialize the PDF with the header and footer added
+    const modifiedPdfBytes = await pdfDoc.save();
+
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -46,7 +75,7 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
       attachments: [
         {
           filename: 'order.pdf',
-          content: pdfFile.buffer,
+          content: modifiedPdfBytes, // Use the modified PDF
         },
         ...(imageFile
           ? [{
