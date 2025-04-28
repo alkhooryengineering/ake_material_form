@@ -22,7 +22,6 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
   try {
     const pdfFile = req.files.find(f => f.originalname.endsWith('.pdf'));
     const imageFile = req.files.find(f => f.mimetype.startsWith('image/'));
-    const companyName = req.body.company || 'Unknown Company'; // Get the company name from form data
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -33,10 +32,10 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     });
 
     const mailOptions = {
-      from: `"${companyName}" <${process.env.EMAIL_USER}>`, // Corrected
+      from: process.env.EMAIL_USER,
       to: process.env.RECEIVER_EMAIL,
       subject: 'New Order Form Submission',
-      text: `A new order form has been submitted by ${companyName}.`, // Corrected
+      text: 'A new order form has been submitted.',
       attachments: [
         {
           filename: 'order.pdf',
@@ -55,3 +54,11 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     res.status(200).send('Email sent successfully');
   } catch (error) {
     console.error('Email sending failed:', error);
+    res.status(500).send('Email sending failed');
+  }
+});
+
+// Start server
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
