@@ -9,7 +9,8 @@
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #003366 0%, #005580 100%);
+      background: url('https://raw.githubusercontent.com/alkhooryengineering/ake-landing-page/main/AKE%20Street%20View.png') no-repeat center center fixed;
+      background-size: cover;
       overflow-x: hidden;
     }
     .gear {
@@ -137,7 +138,7 @@
   <div class="gear"></div>
 
   <div class="container">
-    <img class="header-image" src="https://raw.githubusercontent.com/alkhooryengineering/ake/main/AKE%20LOGO%20(1).jpg" alt="Header" />
+    <img class="header-image" src="https://raw.githubusercontent.com/alkhooryengineering/ake/main/AKE%20LOGO%20(1).jpg" alt="Header" id="headerImage" />
 
     <h1>AKE Material In/Out Form</h1>
 
@@ -241,36 +242,6 @@
       document.getElementById("otherDepartment").style.display = show ? "block" : "none";
     }
 
-    document.getElementById("company").addEventListener("change", function() {
-      const otherInput = document.getElementById("otherCompany");
-      if (this.value === "Other") {
-        otherInput.style.display = "block";
-        this.style.display = "none";
-      } else {
-        otherInput.style.display = "none";
-      }
-    });
-
-    document.getElementById("material").addEventListener("change", function() {
-      const otherInput = document.getElementById("otherMaterial");
-      if (this.value === "Other") {
-        otherInput.style.display = "block";
-        this.style.display = "none";
-      } else {
-        otherInput.style.display = "none";
-      }
-    });
-
-    document.getElementById("Quantity").addEventListener("change", function() {
-      const otherInput = document.getElementById("otherQuantity");
-      if (this.value === "Other") {
-        otherInput.style.display = "block";
-        this.style.display = "none";
-      } else {
-        otherInput.style.display = "none";
-      }
-    });
-
     async function submitForm() {
       const form = document.getElementById("orderForm");
       const formData = new FormData(form);
@@ -287,9 +258,15 @@
 
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
+      const headerImage = document.getElementById("headerImage");
+
+      // Add the header image to the PDF
+      const headerImageData = await loadImageData(headerImage);
+      doc.addImage(headerImageData, "JPEG", 10, 20, 180, 40);
+
       doc.setFontSize(16);
-      doc.text("Order Form Details", 10, 20);
-      let y = 30;
+      doc.text("Order Form Details", 10, 70);
+      let y = 80;
 
       for (let [key, value] of formData.entries()) {
         if (key.startsWith("photo") || key === "pdf" || key === "signature") continue;
@@ -326,6 +303,17 @@
         messageDiv.textContent = "❌ Submission failed. Please try again.";
         messageDiv.style.color = "red";
       }
+    }
+
+    function loadImageData(imageElement) {
+      return new Promise((resolve) => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = imageElement.width;
+        canvas.height = imageElement.height;
+        ctx.drawImage(imageElement, 0, 0);
+        resolve(canvas.toDataURL("image/jpeg"));
+      });
     }
   </script>
 </body>
