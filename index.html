@@ -21,7 +21,7 @@
       box-shadow: 0 12px 35px rgba(0,0,0,0.3);
       position: relative;
       z-index: 2;
-      display: none; /* Hide initially until password is correct */
+      display: none; /* Hide initially */
     }
     .password-container {
       text-align: center;
@@ -55,6 +55,21 @@
       z-index: 1;
       position: relative;
     }
+    input[type="text"], input[type="email"], input[type="number"] {
+      width: 95%;
+      padding: 10px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    .header-image {
+      width: 200px;
+      display: block;
+      margin: 0 auto 20px auto;
+    }
   </style>
 </head>
 <body>
@@ -69,20 +84,23 @@
 
   <!-- Order Form -->
   <div class="container" id="orderFormContainer">
-    <img class="header-image" src="https://github.com/alkhooryengineering/ake/blob/main/AKE%20LOGO%20(1).jpg" alt="Header" />
+    <img class="header-image" src="https://raw.githubusercontent.com/alkhooryengineering/ake/main/AKE%20LOGO%20(1).jpg" alt="Header" />
 
     <h1>AKE Material In/Out Form</h1>
 
     <form id="orderForm">
-      <!-- Your existing form code goes here -->
-      <label for="name">Name:</label>
+      <label for="name">Name:</label><br>
       <input type="text" id="name" name="name" required><br><br>
-      <label for="email">Email:</label>
+
+      <label for="email">Email:</label><br>
       <input type="email" id="email" name="email" required><br><br>
-      <label for="item">Item:</label>
+
+      <label for="item">Item:</label><br>
       <input type="text" id="item" name="item" required><br><br>
-      <label for="quantity">Quantity:</label>
+
+      <label for="quantity">Quantity:</label><br>
       <input type="number" id="quantity" name="quantity" required><br><br>
+
       <button type="submit">Submit Order</button>
     </form>
 
@@ -93,7 +111,6 @@
   </div>
 
   <script>
-    // The client password (you can change this to something more secure)
     const correctPassword = 'ake123';
 
     function validatePassword() {
@@ -104,7 +121,7 @@
       if (passwordInput.value === correctPassword) {
         passwordMessage.textContent = '';
         orderFormContainer.style.display = 'block'; // Show the form
-        document.querySelector('.password-container').style.display = 'none'; // Hide the password prompt
+        document.querySelector('.password-container').style.display = 'none'; // Hide password prompt
       } else {
         passwordMessage.textContent = 'Incorrect password. Please try again.';
       }
