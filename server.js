@@ -33,10 +33,10 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     });
 
     const mailOptions = {
-      from: "${companyName}" <${process.env.EMAIL_USER}>, // Set display name to company name
+      from: `"${companyName}" <${process.env.EMAIL_USER}>`, // Corrected
       to: process.env.RECEIVER_EMAIL,
       subject: 'New Order Form Submission',
-      text: A new order form has been submitted by ${companyName}.,
+      text: `A new order form has been submitted by ${companyName}.`, // Corrected
       attachments: [
         {
           filename: 'order.pdf',
@@ -55,11 +55,3 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     res.status(200).send('Email sent successfully');
   } catch (error) {
     console.error('Email sending failed:', error);
-    res.status(500).send('Email sending failed');
-  }
-});
-
-// Start server
-app.listen(port, () => {
-  console.log(Server is running on port ${port});
-});
