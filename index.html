@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -47,9 +47,11 @@
       border: 2px dashed #ccc;
       border-radius: 10px;
       width: 100%;
-      height: 80px;
+      height: auto;
+      max-height: 150px; /* Ensures the canvas doesn't grow too large */
       cursor: crosshair;
       background-color: #f4f4f4;
+      box-sizing: border-box; /* Ensures padding/border doesn't affect width */
     }
 
     label {
