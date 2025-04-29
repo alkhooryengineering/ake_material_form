@@ -9,8 +9,20 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Enable CORS
-app.use(cors());
+// ✅ Enable CORS for GitHub Pages frontend
+const allowedOrigins = ['https://alkhooryengineering.github.io'];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type']
+}));
 
 // Set up Multer for file uploads
 const upload = multer({
@@ -22,11 +34,8 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
   try {
     const pdfFile = req.files.find(f => f.originalname.endsWith('.pdf'));
     const imageFile = req.files.find(f => f.mimetype.startsWith('image/'));
-    
-    // Get the company name from the form data
-    const { company, otherCompany } = req.body;
 
-    // Determine the display name for the sender (Company Name)
+    const { company, otherCompany } = req.body;
     const displayName = company === 'Other' ? otherCompany : company;
 
     const transporter = nodemailer.createTransport({
@@ -37,9 +46,8 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
       },
     });
 
-    // Set up email options
     const mailOptions = {
-      from: `"${displayName}" <${process.env.EMAIL_USER}>`, // Set display name with email
+      from: `"${displayName}" <${process.env.EMAIL_USER}>`,
       to: process.env.RECEIVER_EMAIL,
       subject: 'New Order Form Submission',
       text: `A new order form has been submitted by ${displayName}.`,
@@ -57,7 +65,6 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
       ],
     };
 
-    // Send the email
     await transporter.sendMail(mailOptions);
     res.status(200).send('Email sent successfully');
   } catch (error) {
