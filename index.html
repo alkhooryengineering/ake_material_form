@@ -114,6 +114,13 @@
       gap: 5px;
     }
 
+    #photoPreview img {
+      width: 100px;
+      margin: 5px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
     @media print {
       body {
         background: white !important;
@@ -208,8 +215,9 @@
       <input type="date" id="dateField" name="dateField" required />
 
       <!-- Uploads -->
-      <label for="photo">Upload or Take Photos (up to 5):</label>
-      <input type="file" id="photo" name="photo" accept="image/*" multiple />
+      <label for="photosInput">Upload or Take Photos (up to 5):</label>
+      <input type="file" id="photosInput" accept="image/*" multiple />
+      <div id="photoPreview" style="display: flex; flex-wrap: wrap;"></div>
 
       <!-- Signature -->
       <label for="signature">Signature:</label>
@@ -275,6 +283,36 @@
       return true;
     }
 
+    // Handle multiple image selection
+    let selectedPhotos = [];
+
+    document.getElementById("photosInput").addEventListener("change", function (e) {
+      const files = Array.from(e.target.files);
+
+      if (selectedPhotos.length + files.length > 5) {
+        alert("You can upload a maximum of 5 photos.");
+        e.target.value = '';
+        return;
+      }
+
+      selectedPhotos = selectedPhotos.concat(files);
+      showPreviews();
+      e.target.value = '';
+    });
+
+    function showPreviews() {
+      const previewContainer = document.getElementById("photoPreview");
+      previewContainer.innerHTML = '';
+      selectedPhotos.forEach(file => {
+        const img = document.createElement("img");
+        img.src = URL.createObjectURL(file);
+        img.style.width = "100px";
+        img.style.margin = "5px";
+        img.style.objectFit = "cover";
+        previewContainer.appendChild(img);
+      });
+    }
+
     async function submitForm() {
       if (!validateForm()) {
         return;
@@ -282,16 +320,15 @@
 
       const form = document.getElementById("orderForm");
       const formData = new FormData(form);
-      const photos = document.getElementById("photo").files;
 
-      if (photos.length > 5) {
-        alert("You can upload a maximum of 5 photos.");
+      if (selectedPhotos.length === 0) {
+        alert("Please upload at least one photo.");
         return;
       }
 
-      for (let i = 0; i < photos.length; i++) {
-        formData.append("photo" + i, photos[i]);
-      }
+      selectedPhotos.forEach((photo, index) => {
+        formData.append("photo" + index, photo);
+      });
 
       const opt = {
         margin: 0,
