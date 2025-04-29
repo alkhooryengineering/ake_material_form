@@ -17,58 +17,60 @@
       background-repeat: no-repeat;
       background-attachment: fixed;
     }
-    .scale-wrapper {
-      transform: scale(0.85);
-      transform-origin: top left;
-      width: 118%;
-      overflow: hidden;
-    }
+
     .container {
-      background-color: rgba(255, 255, 255, 0.9);
-      margin: 60px auto;
+      background-color: rgba(255, 255, 255, 0.95);
+      margin: 20px auto;
       max-width: 800px;
-      padding: 40px;
+      padding: 20px;
       border-radius: 20px;
-      box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
       position: relative;
       z-index: 2;
     }
+
     .header-image {
       width: 100%;
-      max-height: 150px;
-      object-fit: cover;
-      border-radius: 15px;
-      margin-bottom: 20px;
+      max-height: 80px;
+      object-fit: contain;
+      margin-bottom: 10px;
     }
+
     h1 {
       text-align: center;
       color: #002244;
+      margin-bottom: 10px;
+      font-size: 22px;
     }
+
     .signature-pad {
       border: 2px dashed #ccc;
       border-radius: 10px;
       width: 100%;
-      height: 150px;
+      height: 80px;
       cursor: crosshair;
       background-color: #f4f4f4;
     }
+
     label {
-      margin-top: 15px;
+      margin-top: 10px;
       font-weight: bold;
       display: block;
     }
+
     select, input {
       display: block;
-      margin: 10px 0;
-      padding: 12px;
+      margin: 8px 0;
+      padding: 10px;
       width: 100%;
-      border-radius: 10px;
+      border-radius: 8px;
       border: 1px solid #ccc;
       box-sizing: border-box;
-      font-size: 15px;
+      font-size: 14px;
     }
+
     button {
-      padding: 14px;
+      padding: 12px;
       background-color: #004488;
       color: white;
       border: none;
@@ -76,117 +78,149 @@
       cursor: pointer;
       margin-top: 20px;
       width: 100%;
-      font-size: 17px;
-      transition: background 0.3s;
+      font-size: 16px;
     }
+
     button:hover {
       background-color: #0066aa;
     }
+
     .message {
       margin-top: 15px;
       font-weight: bold;
       text-align: center;
     }
+
     footer {
       text-align: center;
-      font-size: 12px;
+      font-size: 11px;
       color: white;
-      margin-top: 40px;
+      margin-top: 20px;
       background-color: #003366;
-      padding: 10px 0;
+      padding: 8px 0;
     }
+
     .radio-group {
       display: flex;
-      gap: 20px;
+      gap: 15px;
       flex-wrap: wrap;
-      margin-top: 10px;
+      margin-top: 5px;
     }
+
     .radio-group label {
       font-weight: normal;
       display: flex;
       align-items: center;
       gap: 5px;
     }
+
+    @media print {
+      body {
+        background: white !important;
+        background-image: none !important;
+      }
+
+      .container {
+        margin: 0 !important;
+        padding: 10px !important;
+        background: white !important;
+        box-shadow: none !important;
+      }
+
+      .header-image {
+        display: none;
+      }
+
+      .signature-pad {
+        height: 80px !important;
+      }
+
+      button, #message {
+        display: none !important;
+      }
+
+      footer {
+        color: black !important;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="scale-wrapper">
-    <div class="container" id="formToPDF">
-      <img class="header-image" src="https://raw.githubusercontent.com/alkhooryengineering/ake/main/AKE%20LOGO%20(1).jpg" alt="Header" />
-      <h1>AKE Material In/Out Form</h1>
+  <div class="container" id="formToPDF">
+    <img class="header-image" src="https://raw.githubusercontent.com/alkhooryengineering/ake/main/AKE%20LOGO%20(1).jpg" alt="Header" />
+    <h1>AKE Material In/Out Form</h1>
 
-      <form id="orderForm">
-        <!-- Company Dropdown -->
-        <label for="company">Company Name:</label>
-        <select id="company" name="company" onchange="toggleOtherField(this, 'otherCompany')">
-          <option value="E.O">E.O</option>
-          <option value="Diwan">Diwan</option>
-          <option value="D.P World">D.P World</option>
-          <option value="Green Concept">Green Concept</option>
-          <option value="Right Way">Right Way</option>
-          <option value="UPM">UPM</option>
-          <option value="NPI">NPI</option>
-          <option value="ADPMCL">ADPMCL</option>
-          <option value="Other">Other</option>
-        </select>
-        <input type="text" id="otherCompany" name="otherCompany" placeholder="Enter company name" style="display:none;" />
+    <form id="orderForm">
+      <!-- Company Dropdown -->
+      <label for="company">Company Name:</label>
+      <select id="company" name="company" onchange="toggleOtherField(this, 'otherCompany')">
+        <option value="E.O">E.O</option>
+        <option value="Diwan">Diwan</option>
+        <option value="D.P World">D.P World</option>
+        <option value="Green Concept">Green Concept</option>
+        <option value="Right Way">Right Way</option>
+        <option value="UPM">UPM</option>
+        <option value="NPI">NPI</option>
+        <option value="ADPMCL">ADPMCL</option>
+        <option value="Other">Other</option>
+      </select>
+      <input type="text" id="otherCompany" name="otherCompany" placeholder="Enter company name" style="display:none;" />
 
-        <!-- AKE Department Radio Buttons -->
-        <label>AKE Department:</label>
-        <div class="radio-group">
-          <label><input type="radio" name="akeDepartment" value="P&SS" onclick="toggleOtherDepartment(false)"> P&SS</label>
-          <label><input type="radio" name="akeDepartment" value="M.S" onclick="toggleOtherDepartment(false)"> M.S</label>
-          <label><input type="radio" name="akeDepartment" value="Other" onclick="toggleOtherDepartment(true)"> Other</label>
-        </div>
-        <input type="text" id="otherDepartment" name="otherDepartment" placeholder="Enter department name" style="display:none;" />
+      <!-- AKE Department -->
+      <label>AKE Department:</label>
+      <div class="radio-group">
+        <label><input type="radio" name="akeDepartment" value="P&SS" onclick="toggleOtherDepartment(false)"> P&SS</label>
+        <label><input type="radio" name="akeDepartment" value="M.S" onclick="toggleOtherDepartment(false)"> M.S</label>
+        <label><input type="radio" name="akeDepartment" value="Other" onclick="toggleOtherDepartment(true)"> Other</label>
+      </div>
+      <input type="text" id="otherDepartment" name="otherDepartment" placeholder="Enter department name" style="display:none;" />
 
-        <!-- Material Dropdown -->
-        <label for="material">Material Description:</label>
-        <select id="material" name="material" onchange="toggleOtherField(this, 'otherMaterial')">
-          <option value="Pump">Pump</option>
-          <option value="Motor">Motor</option>
-          <option value="Aerator">Aerator</option>
-          <option value="Booster Set">Booster Set</option>
-          <option value="Pipe/Threading">Pipe/Threading</option>
-          <option value="3in1 Heat Pump">3in1 Heat Pump</option>
-          <option value="Other">Other</option>
-        </select>
-        <input type="text" id="otherMaterial" name="otherMaterial" placeholder="Enter material description" style="display:none;" />
+      <!-- Material -->
+      <label for="material">Material Description:</label>
+      <select id="material" name="material" onchange="toggleOtherField(this, 'otherMaterial')">
+        <option value="Pump">Pump</option>
+        <option value="Motor">Motor</option>
+        <option value="Aerator">Aerator</option>
+        <option value="Booster Set">Booster Set</option>
+        <option value="Pipe/Threading">Pipe/Threading</option>
+        <option value="3in1 Heat Pump">3in1 Heat Pump</option>
+        <option value="Other">Other</option>
+      </select>
+      <input type="text" id="otherMaterial" name="otherMaterial" placeholder="Enter material description" style="display:none;" />
 
-        <!-- Quantity -->
-        <label for="Quantity">Material Quantity:</label>
-        <select id="Quantity" name="Quantity" onchange="toggleOtherField(this, 'otherQuantity')">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="Other">Other</option>
-        </select>
-        <input type="text" id="otherQuantity" name="otherQuantity" placeholder="Enter material quantity" style="display:none;" />
+      <!-- Quantity -->
+      <label for="Quantity">Material Quantity:</label>
+      <select id="Quantity" name="Quantity" onchange="toggleOtherField(this, 'otherQuantity')">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="Other">Other</option>
+      </select>
+      <input type="text" id="otherQuantity" name="otherQuantity" placeholder="Enter material quantity" style="display:none;" />
 
-        <!-- Date Field -->
-        <label for="dateField">Date:</label>
-        <input type="date" id="dateField" name="dateField" required />
+      <!-- Date -->
+      <label for="dateField">Date:</label>
+      <input type="date" id="dateField" name="dateField" required />
 
-        <!-- Uploads -->
-        <label for="photo">Upload or Take Photos (up to 5):</label>
-        <input type="file" id="photo" name="photo" accept="image/*" multiple />
+      <!-- Uploads -->
+      <label for="photo">Upload or Take Photos (up to 5):</label>
+      <input type="file" id="photo" name="photo" accept="image/*" multiple />
 
-        <!-- Signature -->
-        <label for="signature">Signature:</label>
-        <canvas id="signature" class="signature-pad"></canvas>
+      <!-- Signature -->
+      <label for="signature">Signature:</label>
+      <canvas id="signature" class="signature-pad"></canvas>
 
-        <!-- Submit -->
-        <button id="submitBtn" type="button" onclick="submitForm()">Submit</button>
-        <div id="message" class="message"></div>
-      </form>
+      <!-- Submit -->
+      <button id="submitBtn" type="button" onclick="submitForm()">Submit</button>
+      <div id="message" class="message"></div>
+    </form>
 
-      <footer>
-        <p>P.O. Box:41, Dubai, UAE  Tel: +971 4 333 1317, Email: mahykeng@emirates.net.ae</p>
-        <p>ISO 9001, 45001, 14001 CERTIFIED</p>
-      </footer>
-    </div>
+    <footer>
+      <p>P.O. Box:41, Dubai, UAE  Tel: +971 4 333 1317, Email: mahykeng@emirates.net.ae</p>
+      <p>ISO 9001, 45001, 14001 CERTIFIED</p>
+    </footer>
   </div>
 
   <script>
@@ -239,7 +273,7 @@
         margin: 0,
         filename: 'order_form.pdf',
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 1, useCORS: true },
+        html2canvas: { scale: 2, useCORS: true },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
       };
