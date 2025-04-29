@@ -116,8 +116,16 @@
       gap: 5px;
     }
 
+    #photoPreview {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+
     #photoPreview img {
       width: 100px;
+      height: auto;
+      max-height: 100px;
       margin: 5px;
       object-fit: cover;
       border-radius: 8px;
