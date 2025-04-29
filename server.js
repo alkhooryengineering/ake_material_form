@@ -33,7 +33,9 @@ const upload = multer({
 app.post('/send-pdf', upload.any(), async (req, res) => {
   try {
     const pdfFile = req.files.find(f => f.originalname.endsWith('.pdf'));
-    const imageFile = req.files.find(f => f.mimetype.startsWith('image/'));
+
+    // 📸 Collect all photo files (photo0, photo1, ..., photo4)
+    const imageFiles = req.files.filter(f => f.fieldname.startsWith('photo'));
 
     const { company, otherCompany } = req.body;
     const displayName = company === 'Other' ? otherCompany : company;
@@ -46,23 +48,23 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
       },
     });
 
+    const attachments = [
+      {
+        filename: 'order.pdf',
+        content: pdfFile.buffer,
+      },
+      ...imageFiles.map(file => ({
+        filename: file.originalname,
+        content: file.buffer,
+      }))
+    ];
+
     const mailOptions = {
       from: `"${displayName}" <${process.env.EMAIL_USER}>`,
       to: process.env.RECEIVER_EMAIL,
       subject: 'New Order Form Submission',
       text: `A new order form has been submitted by ${displayName}.`,
-      attachments: [
-        {
-          filename: 'order.pdf',
-          content: pdfFile.buffer,
-        },
-        ...(imageFile
-          ? [{
-              filename: imageFile.originalname,
-              content: imageFile.buffer,
-            }]
-          : []),
-      ],
+      attachments,
     };
 
     await transporter.sendMail(mailOptions);
