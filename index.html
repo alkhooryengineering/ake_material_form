@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>  
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -116,8 +116,10 @@
       gap: 5px;
     }
 
+    /* Thumbnail size updated */
     #photoPreview img {
-      width: 100px;
+      width: 40px;
+      height: 40px;
       margin: 5px;
       object-fit: cover;
       border-radius: 8px;
@@ -241,7 +243,6 @@
     const ctx = signatureCanvas.getContext("2d");
     let drawing = false;
 
-    // Mouse events
     signatureCanvas.addEventListener("mousedown", () => drawing = true);
     signatureCanvas.addEventListener("mouseup", () => {
       drawing = false;
@@ -249,21 +250,18 @@
     });
     signatureCanvas.addEventListener("mousemove", draw);
 
-    // Touch events for mobile
     signatureCanvas.addEventListener("touchstart", (e) => {
-      e.preventDefault(); // Prevent default touch behavior
+      e.preventDefault();
       drawing = true;
-      const touch = e.touches[0];
-      drawTouch(touch);
+      drawTouch(e.touches[0]);
     });
     signatureCanvas.addEventListener("touchend", () => {
       drawing = false;
       ctx.beginPath();
     });
     signatureCanvas.addEventListener("touchmove", (e) => {
-      e.preventDefault(); // Prevent default touch behavior
-      const touch = e.touches[0];
-      drawTouch(touch);
+      e.preventDefault();
+      drawTouch(e.touches[0]);
     });
 
     function draw(e) {
@@ -317,12 +315,10 @@
       return true;
     }
 
-    // Handle multiple image selection
     let selectedPhotos = [];
 
     document.getElementById("photosInput").addEventListener("change", function (e) {
       const files = Array.from(e.target.files);
-
       if (selectedPhotos.length + files.length > 5) {
         alert("You can upload a maximum of 5 photos.");
         e.target.value = '';
@@ -340,17 +336,12 @@
       selectedPhotos.forEach(file => {
         const img = document.createElement("img");
         img.src = URL.createObjectURL(file);
-        img.style.width = "100px";
-        img.style.margin = "5px";
-        img.style.objectFit = "cover";
         previewContainer.appendChild(img);
       });
     }
 
     async function submitForm() {
-      if (!validateForm()) {
-        return;
-      }
+      if (!validateForm()) return;
 
       const form = document.getElementById("orderForm");
       const formData = new FormData(form);
