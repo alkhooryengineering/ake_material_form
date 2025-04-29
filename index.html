@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -29,12 +29,6 @@
       z-index: 2;
     }
 
-    #formToPDF {
-      background: white;
-      padding: 20px;
-      overflow: hidden;
-    }
-
     .header-image {
       width: 100%;
       max-height: 80px;
@@ -54,10 +48,10 @@
       border-radius: 10px;
       width: 100%;
       height: auto;
-      max-height: 150px;
+      max-height: 150px; /* Ensures the canvas doesn't grow too large */
       cursor: crosshair;
       background-color: #f4f4f4;
-      box-sizing: border-box;
+      box-sizing: border-box; /* Ensures padding/border doesn't affect width */
     }
 
     label {
@@ -123,8 +117,7 @@
     }
 
     #photoPreview img {
-      width: 80px;
-      height: 80px;
+      width: 100px;
       margin: 5px;
       object-fit: cover;
       border-radius: 8px;
@@ -143,14 +136,16 @@
         box-shadow: none !important;
       }
 
-      .header-image,
-      button,
-      #message {
-        display: none !important;
+      .header-image {
+        display: none;
       }
 
       .signature-pad {
         height: 80px !important;
+      }
+
+      button, #message {
+        display: none !important;
       }
 
       footer {
@@ -160,74 +155,80 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <div id="formToPDF">
-      <img class="header-image" src="https://raw.githubusercontent.com/alkhooryengineering/ake/main/AKE%20LOGO%20(1).jpg" alt="Header" />
-      <h1>AKE Material In/Out Form</h1>
+  <div class="container" id="formToPDF">
+    <img class="header-image" src="https://raw.githubusercontent.com/alkhooryengineering/ake/main/AKE%20LOGO%20(1).jpg" alt="Header" />
+    <h1>AKE Material In/Out Form</h1>
 
-      <form id="orderForm">
-        <label for="company">Company Name:</label>
-        <select id="company" name="company" onchange="toggleOtherField(this, 'otherCompany')" required>
-          <option value="">Select Company</option>
-          <option value="E.O">E.O</option>
-          <option value="Diwan">Diwan</option>
-          <option value="D.P World">D.P World</option>
-          <option value="Green Concept">Green Concept</option>
-          <option value="Right Way">Right Way</option>
-          <option value="UPM">UPM</option>
-          <option value="NPI">NPI</option>
-          <option value="ADPMCL">ADPMCL</option>
-          <option value="Other">Other</option>
-        </select>
-        <input type="text" id="otherCompany" name="otherCompany" placeholder="Enter company name" style="display:none;" />
+    <form id="orderForm">
+      <!-- Company Dropdown -->
+      <label for="company">Company Name:</label>
+      <select id="company" name="company" onchange="toggleOtherField(this, 'otherCompany')" required>
+        <option value="">Select Company</option>
+        <option value="E.O">E.O</option>
+        <option value="Diwan">Diwan</option>
+        <option value="D.P World">D.P World</option>
+        <option value="Green Concept">Green Concept</option>
+        <option value="Right Way">Right Way</option>
+        <option value="UPM">UPM</option>
+        <option value="NPI">NPI</option>
+        <option value="ADPMCL">ADPMCL</option>
+        <option value="Other">Other</option>
+      </select>
+      <input type="text" id="otherCompany" name="otherCompany" placeholder="Enter company name" style="display:none;" />
 
-        <label>AKE Department:</label>
-        <div class="radio-group">
-          <label><input type="radio" name="akeDepartment" value="P&SS" onclick="toggleOtherDepartment(false)" required> P&SS</label>
-          <label><input type="radio" name="akeDepartment" value="M.S" onclick="toggleOtherDepartment(false)" required> M.S</label>
-          <label><input type="radio" name="akeDepartment" value="Other" onclick="toggleOtherDepartment(true)" required> Other</label>
-        </div>
-        <input type="text" id="otherDepartment" name="otherDepartment" placeholder="Enter department name" style="display:none;" />
+      <!-- AKE Department -->
+      <label>AKE Department:</label>
+      <div class="radio-group">
+        <label><input type="radio" name="akeDepartment" value="P&SS" onclick="toggleOtherDepartment(false)" required> P&SS</label>
+        <label><input type="radio" name="akeDepartment" value="M.S" onclick="toggleOtherDepartment(false)" required> M.S</label>
+        <label><input type="radio" name="akeDepartment" value="Other" onclick="toggleOtherDepartment(true)" required> Other</label>
+      </div>
+      <input type="text" id="otherDepartment" name="otherDepartment" placeholder="Enter department name" style="display:none;" />
 
-        <label for="material">Material Description:</label>
-        <select id="material" name="material" onchange="toggleOtherField(this, 'otherMaterial')" required>
-          <option value="">Select Material</option>
-          <option value="Pump">Pump</option>
-          <option value="Motor">Motor</option>
-          <option value="Aerator">Aerator</option>
-          <option value="Booster Set">Booster Set</option>
-          <option value="Pipe/Threading">Pipe/Threading</option>
-          <option value="3in1 Heat Pump">3in1 Heat Pump</option>
-          <option value="Other">Other</option>
-        </select>
-        <input type="text" id="otherMaterial" name="otherMaterial" placeholder="Enter material description" style="display:none;" />
+      <!-- Material -->
+      <label for="material">Material Description:</label>
+      <select id="material" name="material" onchange="toggleOtherField(this, 'otherMaterial')" required>
+        <option value="">Select Material</option>
+        <option value="Pump">Pump</option>
+        <option value="Motor">Motor</option>
+        <option value="Aerator">Aerator</option>
+        <option value="Booster Set">Booster Set</option>
+        <option value="Pipe/Threading">Pipe/Threading</option>
+        <option value="3in1 Heat Pump">3in1 Heat Pump</option>
+        <option value="Other">Other</option>
+      </select>
+      <input type="text" id="otherMaterial" name="otherMaterial" placeholder="Enter material description" style="display:none;" />
 
-        <label for="Quantity">Material Quantity:</label>
-        <select id="Quantity" name="Quantity" onchange="toggleOtherField(this, 'otherQuantity')" required>
-          <option value="">Select Quantity</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="Other">Other</option>
-        </select>
-        <input type="text" id="otherQuantity" name="otherQuantity" placeholder="Enter material quantity" style="display:none;" />
+      <!-- Quantity -->
+      <label for="Quantity">Material Quantity:</label>
+      <select id="Quantity" name="Quantity" onchange="toggleOtherField(this, 'otherQuantity')" required>
+        <option value="">Select Quantity</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="Other">Other</option>
+      </select>
+      <input type="text" id="otherQuantity" name="otherQuantity" placeholder="Enter material quantity" style="display:none;" />
 
-        <label for="dateField">Date:</label>
-        <input type="date" id="dateField" name="dateField" required />
+      <!-- Date -->
+      <label for="dateField">Date:</label>
+      <input type="date" id="dateField" name="dateField" required />
 
-        <label for="photosInput">Upload or Take Photos (up to 5):</label>
-        <input type="file" id="photosInput" accept="image/*" multiple />
-        <div id="photoPreview" style="display: flex; flex-wrap: wrap;"></div>
+      <!-- Uploads -->
+      <label for="photosInput">Upload or Take Photos (up to 5):</label>
+      <input type="file" id="photosInput" accept="image/*" multiple />
+      <div id="photoPreview" style="display: flex; flex-wrap: wrap;"></div>
 
-        <label for="signature">Signature:</label>
-        <canvas id="signature" class="signature-pad" required></canvas>
+      <!-- Signature -->
+      <label for="signature">Signature:</label>
+      <canvas id="signature" class="signature-pad" required></canvas>
 
-        <button id="submitBtn" type="button" onclick="submitForm()">Submit</button>
-        <div id="message" class="message"></div>
-      </form>
-    </div>
+      <!-- Submit -->
+      <button id="submitBtn" type="button" onclick="submitForm()">Submit</button>
+      <div id="message" class="message"></div>
+    </form>
 
     <footer>
       <p>P.O. Box:41, Dubai, UAE  Tel: +971 4 333 1317, Email: mahykeng@emirates.net.ae</p>
@@ -241,32 +242,21 @@
     let drawing = false;
 
     signatureCanvas.addEventListener("mousedown", () => drawing = true);
-    signatureCanvas.addEventListener("mouseup", () => { drawing = false; ctx.beginPath(); });
+    signatureCanvas.addEventListener("mouseup", () => {
+      drawing = false;
+      ctx.beginPath();
+    });
     signatureCanvas.addEventListener("mousemove", draw);
-
-    signatureCanvas.addEventListener("touchstart", (e) => {
-      e.preventDefault(); drawing = true;
-      drawTouch(e.touches[0]);
-    });
-    signatureCanvas.addEventListener("touchend", () => { drawing = false; ctx.beginPath(); });
-    signatureCanvas.addEventListener("touchmove", (e) => {
-      e.preventDefault(); drawTouch(e.touches[0]);
-    });
 
     function draw(e) {
       if (!drawing) return;
-      ctx.lineWidth = 2; ctx.lineCap = "round"; ctx.strokeStyle = "#000";
-      ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); ctx.beginPath();
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "#000";
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+      ctx.beginPath();
       ctx.moveTo(e.offsetX, e.offsetY);
-    }
-
-    function drawTouch(touch) {
-      if (!drawing) return;
-      const rect = signatureCanvas.getBoundingClientRect();
-      const x = touch.clientX - rect.left;
-      const y = touch.clientY - rect.top;
-      ctx.lineWidth = 2; ctx.lineCap = "round"; ctx.strokeStyle = "#000";
-      ctx.lineTo(x, y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x, y);
     }
 
     function toggleOtherDepartment(show) {
@@ -278,14 +268,35 @@
       input.style.display = (select.value === "Other") ? "block" : "none";
     }
 
+    function validateForm() {
+      const form = document.getElementById("orderForm");
+      const signature = document.getElementById("signature");
+
+      if (!form.company.value || !form.akeDepartment.value || !form.material.value || !form.Quantity.value || !form.dateField.value) {
+        alert("Please fill in all the required fields.");
+        return false;
+      }
+
+      if (signature.width === 0 || signature.height === 0) {
+        alert("Please provide a signature.");
+        return false;
+      }
+
+      return true;
+    }
+
+    // Handle multiple image selection
     let selectedPhotos = [];
 
     document.getElementById("photosInput").addEventListener("change", function (e) {
       const files = Array.from(e.target.files);
+
       if (selectedPhotos.length + files.length > 5) {
         alert("You can upload a maximum of 5 photos.");
-        return e.target.value = '';
+        e.target.value = '';
+        return;
       }
+
       selectedPhotos = selectedPhotos.concat(files);
       showPreviews();
       e.target.value = '';
@@ -297,22 +308,29 @@
       selectedPhotos.forEach(file => {
         const img = document.createElement("img");
         img.src = URL.createObjectURL(file);
+        img.style.width = "100px";
+        img.style.margin = "5px";
+        img.style.objectFit = "cover";
         previewContainer.appendChild(img);
       });
     }
 
     async function submitForm() {
+      if (!validateForm()) {
+        return;
+      }
+
       const form = document.getElementById("orderForm");
-      if (!form.reportValidity()) return;
+      const formData = new FormData(form);
 
       if (selectedPhotos.length === 0) {
         alert("Please upload at least one photo.");
         return;
       }
 
-      document.getElementById("photoPreview").style.display = "none";
-      document.getElementById("submitBtn").style.display = "none";
-      document.getElementById("message").style.display = "none";
+      selectedPhotos.forEach((photo, index) => {
+        formData.append("photo" + index, photo);
+      });
 
       const opt = {
         margin: 0,
@@ -320,14 +338,10 @@
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['avoid-all'] }
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
       };
 
       html2pdf().set(opt).from(document.getElementById('formToPDF')).toPdf().get('pdf').then(async function(pdf) {
-        const formData = new FormData(form);
-        selectedPhotos.forEach((photo, index) => {
-          formData.append("photo" + index, photo);
-        });
         const pdfBlob = pdf.output("blob");
         formData.append("pdf", pdfBlob, "order_form.pdf");
 
@@ -341,19 +355,16 @@
           if (response.ok) {
             messageDiv.textContent = "✅ Email Delivered";
             messageDiv.style.color = "green";
+            document.getElementById("submitBtn").style.display = "none";
           } else {
             messageDiv.textContent = "❌ Submission failed. Please try again.";
             messageDiv.style.color = "red";
           }
         } catch (error) {
-          console.error("Error:", error);
+          console.error("Error during submission:", error);
           messageDiv.textContent = "❌ Submission failed. Please try again.";
           messageDiv.style.color = "red";
         }
-
-        messageDiv.style.display = "block";
-        document.getElementById("submitBtn").style.display = "block";
-        document.getElementById("photoPreview").style.display = "flex";
       });
     }
   </script>
