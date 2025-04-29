@@ -269,6 +269,12 @@
       html2pdf().set(opt).from(formElement).toPdf().get('pdf').then(async function(pdf) {
         formElement.classList.remove('shrink'); // Reset shrink
 
+        // Make sure the header image is included
+        const img = document.querySelector(".header-image");
+        if (img) {
+          pdf.addImage(img.src, 'JPEG', 15, 10, 180, 60);
+        }
+
         const pdfBlob = pdf.output("blob");
         formData.append("pdf", pdfBlob, "order_form.pdf");
 
