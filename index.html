@@ -102,20 +102,6 @@
       padding: 8px 0;
     }
 
-    .radio-group {
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-      margin-top: 5px;
-    }
-
-    .radio-group label {
-      font-weight: normal;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
     #photoPreview img {
       width: 40px;
       height: 40px;
@@ -161,7 +147,7 @@
     <h1>AKE Material In/Out Form</h1>
 
     <form id="orderForm">
-      <!-- Company Dropdown -->
+      <!-- Company Name -->
       <label for="company">Company Name:</label>
       <select id="company" name="company" onchange="toggleOtherField(this)" required>
         <option value="">Select Company</option>
@@ -177,15 +163,15 @@
       </select>
 
       <!-- AKE Department -->
-      <label>AKE Department:</label>
-      <div class="radio-group">
-        <label><input type="radio" name="akeDepartment" value="P&SS" onclick="toggleOtherDepartment(false)" required> P&SS</label>
-        <label><input type="radio" name="akeDepartment" value="M.S" onclick="toggleOtherDepartment(false)" required> M.S</label>
-        <label><input type="radio" name="akeDepartment" value="Other" onclick="toggleOtherDepartment(true)" required> Other</label>
-      </div>
-      <input type="text" id="otherDepartment" name="otherDepartment" placeholder="Enter department name" style="display:none;" />
+      <label for="akeDepartment">AKE Department:</label>
+      <select id="akeDepartment" name="akeDepartment" onchange="toggleOtherField(this)" required>
+        <option value="">Select Department</option>
+        <option value="P&SS">P&SS</option>
+        <option value="M.S">M.S</option>
+        <option value="Other">Other</option>
+      </select>
 
-      <!-- Material -->
+      <!-- Material Description -->
       <label for="material">Material Description:</label>
       <select id="material" name="material" onchange="toggleOtherField(this)" required>
         <option value="">Select Material</option>
@@ -214,7 +200,7 @@
       <label for="dateField">Date:</label>
       <input type="date" id="dateField" name="dateField" required />
 
-      <!-- Uploads -->
+      <!-- Upload -->
       <label for="photosInput">Upload or Take Photos (up to 5):</label>
       <input type="file" id="photosInput" accept="image/*" multiple />
       <div id="photoPreview" style="display: flex; flex-wrap: wrap;"></div>
@@ -223,7 +209,6 @@
       <label for="signature">Signature:</label>
       <canvas id="signature" class="signature-pad" required></canvas>
 
-      <!-- Submit -->
       <button id="submitBtn" type="button" onclick="submitForm()">Submit</button>
       <div id="message" class="message"></div>
     </form>
@@ -283,10 +268,6 @@
       ctx.stroke();
       ctx.beginPath();
       ctx.moveTo(x, y);
-    }
-
-    function toggleOtherDepartment(show) {
-      document.getElementById("otherDepartment").style.display = show ? "block" : "none";
     }
 
     function toggleOtherField(selectElement) {
