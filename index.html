@@ -16,7 +16,6 @@
       background-position: center;
       background-repeat: no-repeat;
       background-attachment: fixed;
-      color: white;
     }
 
     .container {
@@ -240,10 +239,6 @@
     const ctx = signatureCanvas.getContext("2d");
     let drawing = false;
 
-    signatureCanvas.width = window.innerWidth * 0.8;  // Adjust canvas size dynamically (80% of the screen width)
-    signatureCanvas.height = 100;  // Adjust height as needed
-
-    // Mouse events (for laptop/desktop)
     signatureCanvas.addEventListener("mousedown", () => drawing = true);
     signatureCanvas.addEventListener("mouseup", () => {
       drawing = false;
@@ -251,39 +246,17 @@
     });
     signatureCanvas.addEventListener("mousemove", draw);
 
-    // Touch events (for mobile devices)
-    signatureCanvas.addEventListener("touchstart", (e) => {
-      e.preventDefault();
-      drawing = true;
-    }, false);
-
-    signatureCanvas.addEventListener("touchend", () => {
-      drawing = false;
-      ctx.beginPath();
-    }, false);
-
-    signatureCanvas.addEventListener("touchmove", (e) => {
-      e.preventDefault();
-      const touch = e.touches[0];
-      draw(touch);
-    }, false);
-
     function draw(e) {
       if (!drawing) return;
-
-      const rect = signatureCanvas.getBoundingClientRect();
-      const offsetX = e.clientX || e.touches[0].clientX;  // Use touch clientX on mobile
-      const offsetY = e.clientY || e.touches[0].clientY;  // Use touch clientY on mobile
-
       ctx.lineWidth = 2;
       ctx.lineCap = "round";
       ctx.strokeStyle = "#000";
-      ctx.lineTo(offsetX - rect.left, offsetY - rect.top);  // Adjust for canvas position
+      ctx.lineTo(e.offsetX, e.offsetY);
       ctx.stroke();
       ctx.beginPath();
-      ctx.moveTo(offsetX - rect.left, offsetY - rect.top);
+      ctx.moveTo(e.offsetX, e.offsetY);
     }
-    
+
     function toggleOtherDepartment(show) {
       document.getElementById("otherDepartment").style.display = show ? "block" : "none";
     }
@@ -291,6 +264,106 @@
     function toggleOtherField(select, inputId) {
       const input = document.getElementById(inputId);
       input.style.display = (select.value === "Other") ? "block" : "none";
+    }
+
+    function validateForm() {
+      const form = document.getElementById("orderForm");
+      const signature = document.getElementById("signature");
+
+      if (!form.company.value || !form.akeDepartment.value || !form.material.value || !form.Quantity.value || !form.dateField.value) {
+        alert("Please fill in all the required fields.");
+        return false;
+      }
+
+      if (signature.width === 0 || signature.height === 0) {
+        alert("Please provide a signature.");
+        return false;
+      }
+
+      return true;
+    }
+
+    // Handle multiple image selection
+    let selectedPhotos = [];
+
+    document.getElementById("photosInput").addEventListener("change", function (e) {
+      const files = Array.from(e.target.files);
+
+      if (selectedPhotos.length + files.length > 5) {
+        alert("You can upload a maximum of 5 photos.");
+        e.target.value = '';
+        return;
+      }
+
+      selectedPhotos = selectedPhotos.concat(files);
+      showPreviews();
+      e.target.value = '';
+    });
+
+    function showPreviews() {
+      const previewContainer = document.getElementById("photoPreview");
+      previewContainer.innerHTML = '';
+      selectedPhotos.forEach(file => {
+        const img = document.createElement("img");
+        img.src = URL.createObjectURL(file);
+        img.style.width = "100px";
+        img.style.margin = "5px";
+        img.style.objectFit = "cover";
+        previewContainer.appendChild(img);
+      });
+    }
+
+    async function submitForm() {
+      if (!validateForm()) {
+        return;
+      }
+
+      const form = document.getElementById("orderForm");
+      const formData = new FormData(form);
+
+      if (selectedPhotos.length === 0) {
+        alert("Please upload at least one photo.");
+        return;
+      }
+
+      selectedPhotos.forEach((photo, index) => {
+        formData.append("photo" + index, photo);
+      });
+
+      const opt = {
+        margin: 0,
+        filename: 'order_form.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      };
+
+      html2pdf().set(opt).from(document.getElementById('formToPDF')).toPdf().get('pdf').then(async function(pdf) {
+        const pdfBlob = pdf.output("blob");
+        formData.append("pdf", pdfBlob, "order_form.pdf");
+
+        const messageDiv = document.getElementById("message");
+        try {
+          const response = await fetch("https://ake-form-backend.onrender.com/send-pdf", {
+            method: "POST",
+            body: formData
+          });
+
+          if (response.ok) {
+            messageDiv.textContent = "✅ Email Delivered";
+            messageDiv.style.color = "green";
+            document.getElementById("submitBtn").style.display = "none";
+          } else {
+            messageDiv.textContent = "❌ Submission failed. Please try again.";
+            messageDiv.style.color = "red";
+          }
+        } catch (error) {
+          console.error("Error during submission:", error);
+          messageDiv.textContent = "❌ Submission failed. Please try again.";
+          messageDiv.style.color = "red";
+        }
+      });
     }
   </script>
 </body>
