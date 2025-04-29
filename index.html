@@ -1,4 +1,3 @@
-<!-- Changes marked with 🔥 comments -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,29 +6,134 @@
   <title>Engineering Order Form</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    /* All your styles same as before... */
-    body { /* your styling */ }
-    .gear { /* your styling */ }
-    /* ... rest of styles unchanged ... */
-    footer {
-      text-align: center;
-      margin-top: 40px;
-      z-index: 1;
-      position: relative;
-      background-color: #003366;
-      padding: 10px 0;
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #003366 0%, #005580 100%);
+      overflow-x: hidden;
     }
-    .footer-img { /* 🔥 New styling for footer image */
+    .gear {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background-image: url('https://github.com/alkhooryengineering/ake-landing-page/blob/main/AKE%20Street%20View.png');
+      background-size: cover;
+      animation: floatGear 12s infinite ease-in-out;
+      opacity: 0.15;
+    }
+    .gear:nth-child(1) { top: 10%; left: 20%; animation-delay: 0s; }
+    .gear:nth-child(2) { top: 40%; left: 70%; animation-delay: 3s; }
+    .gear:nth-child(3) { top: 70%; left: 10%; animation-delay: 6s; }
+    .gear:nth-child(4) { top: 30%; left: 40%; animation-delay: 9s; }
+
+    @keyframes floatGear {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.9);
+      margin: 60px auto;
+      max-width: 800px;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 2;
+    }
+    .header-image {
       width: 100%;
-      max-width: 600px;
-      height: auto;
-      margin: 20px auto 0;
+      max-height: 150px;
+      object-fit: cover;
+      border-radius: 15px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #002244;
+    }
+    .signature-pad {
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      width: 100%;
+      height: 150px;
+      cursor: crosshair;
+      background-color: #f4f4f4;
+    }
+    label {
+      margin-top: 15px;
+      font-weight: bold;
       display: block;
+    }
+    select, input {
+      display: block;
+      margin: 10px 0;
+      padding: 12px;
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      font-size: 15px;
+    }
+    button {
+      padding: 14px;
+      background-color: #004488;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 20px;
+      width: 100%;
+      font-size: 17px;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #0066aa;
+    }
+    .message {
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: center;
+    }
+      footer {
+  text-align: center;
+  font-size: 12px;
+  color: white; /* White text color */
+  margin-top: 40px;
+  z-index: 1;
+  position: relative;
+  background-color: #003366; /* Dark blue background */
+  padding: 10px 0; /* Add some padding for better spacing; */      
+    }
+    
+    .radio-group {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .radio-group label {
+      font-weight: normal;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    @media (max-width: 768px) {
+      .container {
+        margin: 30px 15px;
+        padding: 20px;
+      }
+      h1 {
+        font-size: 24px;
+      }
+      select, input, button {
+        font-size: 14px;
+        padding: 10px;
+      }
     }
   </style>
 </head>
 <body>
-
   <div class="gear"></div>
   <div class="gear"></div>
   <div class="gear"></div>
@@ -37,18 +141,79 @@
 
   <div class="container">
     <img class="header-image" src="https://raw.githubusercontent.com/alkhooryengineering/ake/main/AKE%20LOGO%20(1).jpg" alt="Header" />
+
     <h1>AKE Material In/Out Form</h1>
 
     <form id="orderForm">
-      <!-- All your form fields same as before ... -->
-      <!-- Including photo upload, signature pad, etc. -->
+      <!-- Company Dropdown -->
+      <label for="company">Company Name:</label>
+      <select id="company" name="company">
+        <option value="E.O">E.O</option>
+        <option value="Diwan">Diwan</option>
+        <option value="D.P World">D.P World</option>
+        <option value="Green Concept">Green Concept</option>
+        <option value="Right Way">Right Way</option>
+        <option value="UPM">UPM</option>
+        <option value="NPI">NPI</option>
+        <option value="ADPMCL">ADPMCL</option>
+        <option value="Other">Other</option>
+      </select>
+      <input type="text" id="otherCompany" name="otherCompany" placeholder="Enter company name" style="display:none;" />
+
+      <!-- AKE Department Radio Buttons -->
+      <label>AKE Department:</label>
+      <div class="radio-group">
+        <label><input type="radio" name="akeDepartment" value="P&SS" onclick="toggleOtherDepartment(false)"> P&SS</label>
+        <label><input type="radio" name="akeDepartment" value="M.S" onclick="toggleOtherDepartment(false)"> M.S</label>
+        <label><input type="radio" name="akeDepartment" value="Other" onclick="toggleOtherDepartment(true)"> Other</label>
+      </div>
+      <input type="text" id="otherDepartment" name="otherDepartment" placeholder="Enter department name" style="display:none;" />
+
+      <!-- Material Dropdown -->
+      <label for="material">Material Description:</label>
+      <select id="material" name="material">
+        <option value="Pump">Pump</option>
+        <option value="Motor">Motor</option>
+        <option value="Aerator">Aerator</option>
+        <option value="Booster Set">Booster Set</option>
+        <option value="Pipe/Threading">Pipe/Threading</option>
+        <option value="3in1 Heat Pump">3in1 Heat Pump</option>
+        <option value="Other">Other</option>
+      </select>
+      <input type="text" id="otherMaterial" name="otherMaterial" placeholder="Enter material description" style="display:none;" />
+
+      <!-- Quantity -->
+      <label for="Quantity">Material Quantity:</label>
+      <select id="Quantity" name="Quantity">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="Other">Other</option>
+      </select>
+      <input type="text" id="otherQuantity" name="otherQuantity" placeholder="Enter material quantity" style="display:none;" />
+
+      <!-- Date Field -->
+      <label for="dateField">Date:</label>
+      <input type="date" id="dateField" name="dateField" required />
+
+      <!-- Uploads -->
+      <label for="photo">Upload or Take Photos (up to 5):</label>
+      <input type="file" id="photo" name="photo" accept="image/*" multiple />
+
+      <!-- Signature -->
+      <label for="signature">Signature:</label>
+      <canvas id="signature" class="signature-pad"></canvas>
+
+      <!-- Submit -->
       <button id="submitBtn" type="button" onclick="submitForm()">Submit</button>
       <div id="message" class="message"></div>
     </form>
 
     <footer>
-      <img class="footer-img" src="https://raw.githubusercontent.com/alkhooryengineering/ake_material_form/main/Footer.png" alt="Footer" />
-      <!-- 🔥 Replaced text with Footer.png -->
+      <p>P.O. Box:41, Dubai, UAE  Tel: +971 4 333 1317, Email: mahykeng@emirates.net.ae</p>
+      <p>ISO 9001, 45001, 14001 CERTIFIED</p>
     </footer>
   </div>
 
@@ -81,15 +246,32 @@
 
     document.getElementById("company").addEventListener("change", function() {
       const otherInput = document.getElementById("otherCompany");
-      otherInput.style.display = this.value === "Other" ? "block" : "none";
+      if (this.value === "Other") {
+        otherInput.style.display = "block";
+        this.style.display = "none";
+      } else {
+        otherInput.style.display = "none";
+      }
     });
+
     document.getElementById("material").addEventListener("change", function() {
       const otherInput = document.getElementById("otherMaterial");
-      otherInput.style.display = this.value === "Other" ? "block" : "none";
+      if (this.value === "Other") {
+        otherInput.style.display = "block";
+        this.style.display = "none";
+      } else {
+        otherInput.style.display = "none";
+      }
     });
+
     document.getElementById("Quantity").addEventListener("change", function() {
       const otherInput = document.getElementById("otherQuantity");
-      otherInput.style.display = this.value === "Other" ? "block" : "none";
+      if (this.value === "Other") {
+        otherInput.style.display = "block";
+        this.style.display = "none";
+      } else {
+        otherInput.style.display = "none";
+      }
     });
 
     async function submitForm() {
@@ -103,7 +285,7 @@
       }
 
       for (let i = 0; i < photos.length; i++) {
-        formData.append("photos", photos[i]); // 🔥 name photos[]
+        formData.append("photo" + i, photos[i]);
       }
 
       const { jsPDF } = window.jspdf;
@@ -123,11 +305,9 @@
 
       const signatureImage = signatureCanvas.toDataURL("image/png");
       doc.addImage(signatureImage, "PNG", 10, y + 10, 100, 50);
-
-      // 🔥 NEW: Convert the PDF to a Blob
       const pdfBlob = doc.output("blob");
-      const pdfFile = new File([pdfBlob], "order.pdf", { type: "application/pdf" });
-      formData.append("pdf", pdfFile);
+      formData.append("pdf", pdfBlob, "order.pdf");
+      formData.append("signature", signatureImage);
 
       const messageDiv = document.getElementById("message");
       try {
@@ -137,13 +317,11 @@
         });
 
         if (response.ok) {
-          messageDiv.textContent = "✅ Email Delivered Successfully!";
+          messageDiv.textContent = "✅ Email Delivered";
           messageDiv.style.color = "green";
-          document.getElementById("submitBtn").disabled = true;
+          document.getElementById("submitBtn").style.display = "none";
         } else {
-          const errorText = await response.text();
-          console.error(errorText);
-          messageDiv.textContent = "❌ Submission failed. Check console.";
+          messageDiv.textContent = "❌ Submission failed. Please try again.";
           messageDiv.style.color = "red";
         }
       } catch (error) {
