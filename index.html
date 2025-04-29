@@ -260,7 +260,7 @@
         margin: 0,
         filename: 'order_form.pdf',
         image: { type: 'jpeg', quality: 1 },
-        html2canvas: { scale: 3, dpi: 300, x: 0, y: 0 },
+        html2canvas: { scale: 3 },
         jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
       };
 
@@ -268,7 +268,6 @@
 
       // Wait for the image to load fully before creating the PDF
       const headerImg = document.getElementById("headerImg");
-
       headerImg.onload = function () {
         html2pdf().set(opt).from(formElement).toPdf().get('pdf').then(async function(pdf) {
           formElement.classList.remove('shrink'); // Reset shrink
