@@ -63,7 +63,15 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
       from: `"${displayName}" <${process.env.EMAIL_USER}>`,
       to: process.env.RECEIVER_EMAIL,
       subject: 'New Order Form Submission',
-      text: `A new order form has been submitted by ${displayName}.`,
+      text: `A new order form has been submitted by ${displayName}.\n
+Details:
+- Vehicle: ${req.body.Vehicle || 'Not provided'}
+- AKE Department: ${req.body['AKE Department'] || 'Not provided'}
+- Reason of Trip: ${req.body['Reason of Trip'] || 'Not provided'}
+- Date: ${req.body.Date || 'Not provided'}
+- Driver Name: ${req.body['Driver Name'] || 'Not provided'}
+`,
+
       attachments,
     };
 
