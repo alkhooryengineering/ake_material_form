@@ -71,6 +71,11 @@
       font-size: 14px;
     }
 
+     select option[disabled] {
+      color: #999;
+    }
+
+    
     button {
       padding: 12px;
       background-color: #004488;
@@ -164,7 +169,7 @@
       <!-- Company Dropdown -->
       <label for="company">Company Name:</label>
       <select id="company" name="company" onchange="toggleOtherField(this)" required>
-        <option value="">Select Company</option>
+        <option value=""disabled selected>Select Company</option>
         <option value="E.O">E.O</option>
         <option value="Diwan">Diwan</option>
         <option value="D.P World">D.P World</option>
@@ -188,7 +193,7 @@
       <!-- Material -->
       <label for="material">Material Description:</label>
       <select id="material" name="material" onchange="toggleOtherField(this)" required>
-        <option value="">Select Material</option>
+        <option value=""disabled selected>Select Material</option>
         <option value="Pump">Pump</option>
         <option value="Motor">Motor</option>
         <option value="Aerator">Aerator</option>
@@ -201,7 +206,7 @@
       <!-- Quantity -->
       <label for="Quantity">Material Quantity:</label>
       <select id="Quantity" name="Quantity" onchange="toggleOtherField(this)" required>
-        <option value="">Select Quantity</option>
+        <option value=""disabled selected>Select Quantity</option>
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
