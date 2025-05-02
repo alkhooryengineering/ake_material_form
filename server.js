@@ -33,8 +33,6 @@ const upload = multer({
 app.post('/send-pdf', upload.any(), async (req, res) => {
   try {
     const pdfFile = req.files.find(f => f.originalname.endsWith('.pdf'));
-
-    // 📸 Collect all photo files (photo0, photo1, ..., photo4)
     const imageFiles = req.files.filter(f => f.fieldname.startsWith('photo'));
 
     const { company, otherCompany } = req.body;
@@ -66,38 +64,32 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     const date = req.body.date_field || 'Not provided';
     const driverName = req.body.driver_name || 'Not provided';
 
+    // Log form data
+    console.log('Form data:', req.body);
+
     const mailOptions = {
       from: `"${displayName || 'AKE Vehicle Form'}" <${process.env.EMAIL_USER}>`,
       to: process.env.RECEIVER_EMAIL,
       subject: 'New Vehicle Form Submission',
-    /*  text: `A new vehicle form has been submitted.\n */
-/* Details:*/
-/* - Vehicle: ${vehicle}*/
-/* - AKE Department: ${akeDepartment}*/
-/* - Reason of Trip: ${reasonOfTrip}*/
-/* - Date: ${date}*/
-/* - Driver Name: ${driverName}*/
-/* `, */
-
-html: `
-  <p>A new vehicle form has been submitted with the following details:</p>
-  <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; font-family: Arial, sans-serif; width: 100%;">
-    <tr style="background-color: #f2f2f2;">
-      <th>Vehicle</th>
-      <th>AKE Department</th>
-      <th>Reason of Trip</th>
-      <th>Date</th>
-      <th>Driver Name</th>
-    </tr>
-    <tr>
-      <td>${vehicle}</td>
-      <td>${akeDepartment}</td>
-      <td>${reasonOfTrip}</td>
-      <td>${date}</td>
-      <td>${driverName}</td>
-    </tr>
-  </table>
-`
+      html: `
+        <p>A new vehicle form has been submitted with the following details:</p>
+        <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; font-family: Arial, sans-serif; width: 100%;">
+          <tr style="background-color: #f2f2f2;">
+            <th>Vehicle</th>
+            <th>AKE Department</th>
+            <th>Reason of Trip</th>
+            <th>Date</th>
+            <th>Driver Name</th>
+          </tr>
+          <tr>
+            <td>${vehicle}</td>
+            <td>${akeDepartment}</td>
+            <td>${reasonOfTrip}</td>
+            <td>${date}</td>
+            <td>${driverName}</td>
+          </tr>
+        </table>
+      `,
       attachments,
     };
 
