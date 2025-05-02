@@ -59,19 +59,25 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
       }))
     ];
 
-    const mailOptions = {
-      from: `"${displayName}" <${process.env.EMAIL_USER}>`,
-      to: process.env.RECEIVER_EMAIL,
-      subject: 'New Order Form Submission',
-      text: `A new order form has been submitted by ${displayName}.\n
-Details:
-- Vehicle: ${req.body.Vehicle || 'Not provided'}
-- AKE Department: ${req.body['AKE Department'] || 'Not provided'}
-- Reason of Trip: ${req.body['Reason of Trip'] || 'Not provided'}
-- Date: ${req.body.Date || 'Not provided'}
-- Driver Name: ${req.body['Driver Name'] || 'Not provided'}
-`,
+    // ✅ Extract required fields from form
+    const vehicle = req.body.vehicle || 'Not provided';
+    const akeDepartment = req.body.ake_department || req.body.other_department || 'Not provided';
+    const reasonOfTrip = req.body.reason_of_trip || 'Not provided';
+    const date = req.body.date_field || 'Not provided';
+    const driverName = req.body.driver_name || 'Not provided';
 
+    const mailOptions = {
+      from: `"${displayName || 'AKE Vehicle Form'}" <${process.env.EMAIL_USER}>`,
+      to: process.env.RECEIVER_EMAIL,
+      subject: 'New Vehicle Form Submission',
+      text: `A new vehicle form has been submitted.\n
+Details:
+- Vehicle: ${vehicle}
+- AKE Department: ${akeDepartment}
+- Reason of Trip: ${reasonOfTrip}
+- Date: ${date}
+- Driver Name: ${driverName}
+`,
       attachments,
     };
 
