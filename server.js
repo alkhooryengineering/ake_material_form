@@ -69,7 +69,7 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     console.log('Form data:', req.body);
 
     // Conditionally generate HTML for the table if all necessary fields are provided
-    const tableHtml = (vehicle !== 'Not provided' odometer !== 'Not provided' && akeDepartment !== 'Not provided' && reasonOfTrip !== 'Not provided' && date !== 'Not provided' && driverName !== 'Not provided') ?
+    const tableHtml = (vehicle !== 'Not provided' && odometer !== 'Not provided' && akeDepartment !== 'Not provided' && reasonOfTrip !== 'Not provided' && date !== 'Not provided' && driverName !== 'Not provided') ?
       `
         <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; font-family: Arial, sans-serif; width: 100%;">
           <tr style="background-color: #f2f2f2;">
