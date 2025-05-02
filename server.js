@@ -67,12 +67,9 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     // Log form data
     console.log('Form data:', req.body);
 
-    const mailOptions = {
-      from: `"${displayName || 'AKE Vehicle Form'}" <${process.env.EMAIL_USER}>`,
-      to: process.env.RECEIVER_EMAIL,
-      subject: 'New Vehicle Form Submission',
-      html: `
-        <p>A new vehicle form has been submitted with the following details:</p>
+    // Conditionally generate HTML for the table if all necessary fields are provided
+    const tableHtml = (vehicle !== 'Not provided' && akeDepartment !== 'Not provided' && reasonOfTrip !== 'Not provided' && date !== 'Not provided' && driverName !== 'Not provided') ?
+      `
         <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; font-family: Arial, sans-serif; width: 100%;">
           <tr style="background-color: #f2f2f2;">
             <th>Vehicle</th>
@@ -89,6 +86,15 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
             <td>${driverName}</td>
           </tr>
         </table>
+      ` : ''; // If any field is 'Not provided', don't show the table
+
+    const mailOptions = {
+      from: `"${displayName || 'AKE Vehicle Form'}" <${process.env.EMAIL_USER}>`,
+      to: process.env.RECEIVER_EMAIL,
+      subject: 'New Vehicle Form Submission',
+      html: `
+        <p>A new vehicle form has been submitted with the following details:</p>
+        ${tableHtml}
       `,
       attachments,
     };
