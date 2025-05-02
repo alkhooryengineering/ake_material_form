@@ -70,14 +70,34 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
       from: `"${displayName || 'AKE Vehicle Form'}" <${process.env.EMAIL_USER}>`,
       to: process.env.RECEIVER_EMAIL,
       subject: 'New Vehicle Form Submission',
-      text: `A new vehicle form has been submitted.\n
-Details:
-- Vehicle: ${vehicle}
-- AKE Department: ${akeDepartment}
-- Reason of Trip: ${reasonOfTrip}
-- Date: ${date}
-- Driver Name: ${driverName}
-`,
+    /*  text: `A new vehicle form has been submitted.\n */
+/* Details:*/
+/* - Vehicle: ${vehicle}*/
+/* - AKE Department: ${akeDepartment}*/
+/* - Reason of Trip: ${reasonOfTrip}*/
+/* - Date: ${date}*/
+/* - Driver Name: ${driverName}*/
+/* `, */
+
+html: `
+  <p>A new vehicle form has been submitted with the following details:</p>
+  <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; font-family: Arial, sans-serif; width: 100%;">
+    <tr style="background-color: #f2f2f2;">
+      <th>Vehicle</th>
+      <th>AKE Department</th>
+      <th>Reason of Trip</th>
+      <th>Date</th>
+      <th>Driver Name</th>
+    </tr>
+    <tr>
+      <td>${vehicle}</td>
+      <td>${akeDepartment}</td>
+      <td>${reasonOfTrip}</td>
+      <td>${date}</td>
+      <td>${driverName}</td>
+    </tr>
+  </table>
+`
       attachments,
     };
 
