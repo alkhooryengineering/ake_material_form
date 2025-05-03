@@ -73,7 +73,7 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
       to: process.env.RECEIVER_EMAIL,
       subject: 'New Vehicle Form Submission',
       html: `
-        <p>A new vehicle form has been submitted with the following details:</p>
+        
         <p>
           Vehicle: ${vehicle}<br>
           Odometer: ${odometer}<br>
