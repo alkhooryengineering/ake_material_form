@@ -57,15 +57,23 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
       }))
     ];
 
-    // ✅ Extract required fields from form
-    const vehicle = req.body.vehicle || '';
-    const odometer = req.body.odometer || '';
-    const akeDepartment = req.body.ake_department || req.body.other_department || '';
-    const reasonOfTrip = req.body.reason_of_trip || '';
-    const date = req.body.date_field || '';
-    const driverName = req.body.driver_name || '';
+    // ✅ Extract and conditionally build form content
+    const fields = [
+      { label: 'Vehicle', value: req.body.vehicle },
+      { label: 'Odometer', value: req.body.odometer },
+      { label: 'AKE Department', value: req.body.ake_department || req.body.other_department },
+      { label: 'Reason of Trip', value: req.body.reason_of_trip },
+      { label: 'Date', value: req.body.date_field },
+      { label: 'Driver Name', value: req.body.driver_name }
+    ];
 
-    const allFieldsFilled = vehicle && odometer && akeDepartment && reasonOfTrip && date && driverName;
+    let htmlContent = '<p>';
+    fields.forEach(field => {
+      if (field.value && field.value.trim() !== '') {
+        htmlContent += `${field.label}: ${field.value}<br>`;
+      }
+    });
+    htmlContent += '</p>';
 
     // Log form data
     console.log('Form data:', req.body);
@@ -74,16 +82,7 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
       from: `"${displayName || 'AKE Vehicle Form'}" <${process.env.EMAIL_USER}>`,
       to: process.env.RECEIVER_EMAIL,
       subject: 'New Vehicle Form Submission',
-      html: allFieldsFilled ? `
-        <p>
-          Vehicle: ${vehicle}<br>
-          Odometer: ${odometer}<br>
-          AKE Department: ${akeDepartment}<br>
-          Reason of Trip: ${reasonOfTrip}<br>
-          Date: ${date}<br>
-          Driver Name: ${driverName}
-        </p>
-      ` : '',
+      html: htmlContent,
       attachments,
     };
 
