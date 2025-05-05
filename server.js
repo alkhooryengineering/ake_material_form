@@ -58,23 +58,24 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     ];
 
     // ✅ Extract and conditionally build form content
-    const fields = [
-      { label: 'Trip Status', value: req.body.trip_status === 'start' ? 'Trip Start' : 'Trip End' },
-      { label: 'Vehicle', value: req.body.vehicle },
-      { label: 'Odometer', value: req.body.odometer },
-      { label: 'AKE Department', value: req.body.ake_department || req.body.other_department },
-      { label: 'Reason of Trip', value: req.body.reason_of_trip },
-      { label: 'Date', value: req.body.date_field },
-      { label: 'Driver Name', value: req.body.driver_name }
-    ];
+const fields = [
+  { label: 'Trip Status', value: req.body.trip_status === 'start' ? 'Trip Start' : 'Trip End' },
+  { label: 'Vehicle', value: req.body.vehicle },
+  { label: 'Odometer', value: req.body.odometer },
+  { label: 'AKE Department', value: req.body.ake_department || req.body.other_department },
+  { label: 'Reason of Trip', value: req.body.reason_of_trip },
+  { label: 'Date', value: req.body.date_field },
+  { label: 'Driver Name', value: req.body.driver_name }
+];
 
-    let htmlContent = '<p>';
-    fields.forEach(field => {
-      if (field.value && field.value.trim() !== '') {
-        htmlContent += `${field.label}: ${field.value}<br>`;
-      }
-    });
-    htmlContent += '</p>';
+let htmlContent = '<p>';
+fields.forEach(field => {
+  if (field.value && field.value.trim() !== '') {
+    htmlContent += `${field.label}: ${field.value}<br>`;
+  }
+});
+htmlContent += '</p>';
+
 
     // Log form data
     console.log('Form data:', req.body);
