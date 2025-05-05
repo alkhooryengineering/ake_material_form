@@ -59,7 +59,7 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
 
     // ✅ Extract and conditionally build form content
 const fields = [
-  { label: 'Trip Status', value: req.body.trip_status === 'start' ? 'Trip Start' : 'Trip End' },
+  { label: 'Trip Phase', value: req.body.trip_phase === 'start' ? 'Trip Start' : 'Trip End' },
   { label: 'Vehicle', value: req.body.vehicle },
   { label: 'Odometer', value: req.body.odometer },
   { label: 'AKE Department', value: req.body.ake_department || req.body.other_department },
