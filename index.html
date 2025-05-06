@@ -161,6 +161,58 @@
   </style>
 </head>
 <body>
+
+
+
+
+
+  <div id="passwordOverlay" style="
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;">
+  <div style="
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    text-align: center;
+    max-width: 300px;
+    width: 90%;">
+    <h2 style="margin-bottom: 15px; color: #003366;">Enter Password</h2>
+    <input type="password" id="passwordInput" placeholder="Password" style="
+      padding: 10px;
+      width: 100%;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 10px;">
+    <div id="passwordMessage" style="color: red; font-size: 14px; margin-bottom: 10px;"></div>
+    <button onclick="checkPassword()" style="
+      background: #004488;
+      color: white;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;">Submit</button>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+  
   <div class="container" id="formToPDF">
     <img class="header-image" src="https://raw.githubusercontent.com/alkhooryengineering/ake/main/AKE%20LOGO%20(1).jpg" alt="Header" />
     <h1>AKE Material In/Out Form</h1>
@@ -400,5 +452,60 @@
       });
     }
   </script>
+
+
+
+
+
+
+
+  <script>
+  const correctPassword = "ake#123";
+  const maxAttempts = 3;
+  const blockDuration = 5 * 60 * 1000; // 5 minutes
+
+  const overlay = document.getElementById("passwordOverlay");
+  const message = document.getElementById("passwordMessage");
+  const input = document.getElementById("passwordInput");
+
+  function checkPassword() {
+    const attempts = parseInt(localStorage.getItem("passwordAttempts") || "0");
+    const lockUntil = parseInt(localStorage.getItem("lockUntil") || "0");
+
+    if (Date.now() < lockUntil) {
+      message.textContent = "Too many attempts. Try again later.";
+      return;
+    }
+
+    if (input.value === correctPassword) {
+      localStorage.removeItem("passwordAttempts");
+      localStorage.removeItem("lockUntil");
+      overlay.style.display = "none";
+    } else {
+      const newAttempts = attempts + 1;
+      localStorage.setItem("passwordAttempts", newAttempts);
+      message.textContent = `Incorrect password. Attempt ${newAttempts} of ${maxAttempts}.`;
+      input.value = "";
+      if (newAttempts >= maxAttempts) {
+        localStorage.setItem("lockUntil", Date.now() + blockDuration);
+        message.textContent = "Too many wrong attempts. Account is locked out.";
+      }
+    }
+  }
+
+  window.onload = () => {
+    const lockUntil = parseInt(localStorage.getItem("lockUntil") || "0");
+    if (Date.now() < lockUntil) {
+      message.textContent = "Too many attempts. Try again later.";
+    }
+  };
+</script>
+
+
+
+
+
+
+  
 </body>
 </html>
