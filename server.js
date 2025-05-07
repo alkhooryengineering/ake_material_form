@@ -58,46 +58,51 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     ];
 
     // ✅ Extract and conditionally build form content
-const fields = [
-  { label: 'Trip Phase', value: req.body.trip_phase === 'start' ? 'Trip Start' : 'Trip End' },
-  { label: 'Vehicle', value: req.body.vehicle },
-  { label: 'Odometer', value: req.body.odometer },
-  { label: 'AKE Department', value: req.body.ake_department || req.body.other_department },
-  { label: 'Reason of Trip', value: req.body.reason_of_trip },
-  { label: 'Date', value: req.body.date_field },
-  { label: 'Driver Name', value: req.body.driver_name }
-];
+    const fields = [
+      { label: 'Trip Phase', value: req.body.trip_phase === 'start' ? 'Trip Start' : req.body.trip_phase === 'end' ? 'Trip End' : '' },
+      { label: 'Vehicle', value: req.body.vehicle },
+      { label: 'Odometer', value: req.body.odometer },
+      { label: 'AKE Department', value: req.body.ake_department || req.body.other_department },
+      { label: 'Reason of Trip', value: req.body.reason_of_trip },
+      { label: 'Date', value: req.body.date_field },
+      { label: 'Driver Name', value: req.body.driver_name }
+    ];
 
-let htmlContent = '<p>';
-fields.forEach(field => {
-  if (field.value && field.value.trim() !== '') {
-    htmlContent += `${field.label}: ${field.value}<br>`;
-  }
-});
-htmlContent += '</p>';
+    const hasContent = fields.some(field => field.value && field.value.trim() !== '');
 
+    let htmlContent = '';
+    if (hasContent) {
+      htmlContent = '<p>';
+      fields.forEach(field => {
+        if (field.value && field.value.trim() !== '') {
+          htmlContent += `${field.label}: ${field.value}<br>`;
+        }
+      });
+      htmlContent += '</p>';
+    }
 
     // Log form data
-console.log('Form data:', req.body);
+    console.log('Form data:', req.body);
 
-try {
-  const { driverName } = req.body; // 👈 Extract driver name
+    const subject = hasContent && req.body.driver_name
+      ? req.body.driver_name
+      : 'New form submitted';
 
-  const mailOptions = {
-    from: `"${displayName || 'AKE Vehicle Form'}" <${process.env.EMAIL_USER}>`,
-    to: process.env.RECEIVER_EMAIL,
-    subject: `New Vehicle Form Submission - Driver: ${driverName || 'Unknown'}`, // 👈 Dynamic subject
-    html: htmlContent,
-    attachments,
-  };
+    const mailOptions = {
+      from: `"${displayName || 'AKE Vehicle Form'}" <${process.env.EMAIL_USER}>`,
+      to: process.env.RECEIVER_EMAIL,
+      subject,
+      html: htmlContent,
+      attachments,
+    };
 
-  await transporter.sendMail(mailOptions);
-  res.status(200).send('Email sent successfully');
-} catch (error) {
-  console.error('Email sending failed:', error);
-  res.status(500).send('Email sending failed');
-}
-
+    await transporter.sendMail(mailOptions);
+    res.status(200).send('Email sent successfully');
+  } catch (error) {
+    console.error('Email sending failed:', error);
+    res.status(500).send('Email sending failed');
+  }
+});
 
 // Start server
 app.listen(port, () => {
