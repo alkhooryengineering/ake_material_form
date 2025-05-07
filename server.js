@@ -59,7 +59,7 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
 
     // ✅ Extract and conditionally build form content
     const fields = [
-      { label: 'Trip Phase', value: req.body.trip_phase === 'start' ? 'Trip Start' : req.body.trip_phase === 'end' ? 'Trip End' : '' },
+      { label: 'Trip Phase', value: req.body.trip_phase === 'start' ? 'Trip Start' : (req.body.trip_phase === 'end' ? 'Trip End' : '') },
       { label: 'Vehicle', value: req.body.vehicle },
       { label: 'Odometer', value: req.body.odometer },
       { label: 'AKE Department', value: req.body.ake_department || req.body.other_department },
@@ -68,28 +68,27 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
       { label: 'Driver Name', value: req.body.driver_name }
     ];
 
-    const hasContent = fields.some(field => field.value && field.value.trim() !== '');
+    const filledFields = fields.filter(f => f.value && f.value.trim() !== '');
 
-    let htmlContent = '';
-    if (hasContent) {
-      htmlContent = '<p>';
-      fields.forEach(field => {
-        if (field.value && field.value.trim() !== '') {
-          htmlContent += `${field.label}: ${field.value}<br>`;
-        }
-      });
-      htmlContent += '</p>';
+    // Base message (always included)
+    let htmlContent = `
+      <p>CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you recognize the sender and know the content is safe.<br>
+      IT HelpDesk</p>`;
+
+    // Add field data if any fields are filled
+    if (filledFields.length > 0) {
+      htmlContent = `
+        <p>${filledFields.map(field => `${field.label}: ${field.value}`).join('<br>')}</p>
+        <br>` + htmlContent;
     }
 
-    // Log form data
-    console.log('Form data:', req.body);
-
-    const subject = hasContent && req.body.driver_name
-      ? req.body.driver_name
-      : 'New form submitted';
+    // Subject line
+    const subject = filledFields.length > 0
+      ? `${req.body.driver_name || 'Driver Name'}`
+      : 'new form submitted';
 
     const mailOptions = {
-      from: `"${displayName || 'AKE Vehicle Form'}" <${process.env.EMAIL_USER}>`,
+      from: `${displayName || 'AKE Vehicle Form'} <${process.env.EMAIL_USER}>`,
       to: process.env.RECEIVER_EMAIL,
       subject,
       html: htmlContent,
@@ -98,6 +97,7 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
 
     await transporter.sendMail(mailOptions);
     res.status(200).send('Email sent successfully');
+
   } catch (error) {
     console.error('Email sending failed:', error);
     res.status(500).send('Email sending failed');
