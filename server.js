@@ -78,23 +78,26 @@ htmlContent += '</p>';
 
 
     // Log form data
-    console.log('Form data:', req.body);
+console.log('Form data:', req.body);
 
-    const mailOptions = {
-      from: `"${displayName || 'AKE Vehicle Form'}" <${process.env.EMAIL_USER}>`,
-      to: process.env.RECEIVER_EMAIL,
-      subject: 'New Vehicle Form Submission',
-      html: htmlContent,
-      attachments,
-    };
+try {
+  const { driverName } = req.body; // 👈 Extract driver name
 
-    await transporter.sendMail(mailOptions);
-    res.status(200).send('Email sent successfully');
-  } catch (error) {
-    console.error('Email sending failed:', error);
-    res.status(500).send('Email sending failed');
-  }
-});
+  const mailOptions = {
+    from: `"${displayName || 'AKE Vehicle Form'}" <${process.env.EMAIL_USER}>`,
+    to: process.env.RECEIVER_EMAIL,
+    subject: `New Vehicle Form Submission - Driver: ${driverName || 'Unknown'}`, // 👈 Dynamic subject
+    html: htmlContent,
+    attachments,
+  };
+
+  await transporter.sendMail(mailOptions);
+  res.status(200).send('Email sent successfully');
+} catch (error) {
+  console.error('Email sending failed:', error);
+  res.status(500).send('Email sending failed');
+}
+
 
 // Start server
 app.listen(port, () => {
