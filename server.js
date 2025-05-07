@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-// ✅ Enable CORS for GitHub Pages frontend
+// Enable CORS for GitHub Pages frontend
 const allowedOrigins = ['https://alkhooryengineering.github.io'];
 
 app.use(cors({
@@ -57,7 +57,7 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
       }))
     ];
 
-    // ✅ Extract and conditionally build form content
+    // Extract and filter relevant fields
     const fields = [
       { label: 'Trip Phase', value: req.body.trip_phase === 'start' ? 'Trip Start' : (req.body.trip_phase === 'end' ? 'Trip End' : '') },
       { label: 'Vehicle', value: req.body.vehicle },
@@ -70,28 +70,21 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
 
     const filledFields = fields.filter(f => f.value && f.value.trim() !== '');
 
-    // Base message (always included)
-    let htmlContent = `
-      <p>CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you recognize the sender and know the content is safe.<br>
-      IT HelpDesk</p>`;
+    let htmlContent = ''; // Empty by default
 
-    // Add field data if any fields are filled
     if (filledFields.length > 0) {
-      htmlContent = `
-        <p>${filledFields.map(field => `${field.label}: ${field.value}`).join('<br>')}</p>
-        <br>` + htmlContent;
+      htmlContent = '<p>' + filledFields.map(field => `${field.label}: ${field.value}`).join('<br>') + '</p>';
     }
 
-    // Subject line
     const subject = filledFields.length > 0
-      ? `${req.body.driver_name || 'Driver Name'}`
+      ? (req.body.driver_name || 'Driver Name')
       : 'new form submitted';
 
     const mailOptions = {
       from: `${displayName || 'AKE Vehicle Form'} <${process.env.EMAIL_USER}>`,
       to: process.env.RECEIVER_EMAIL,
       subject,
-      html: htmlContent,
+      html: htmlContent, // This may be empty if no fields are filled
       attachments,
     };
 
