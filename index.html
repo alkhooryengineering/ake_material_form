@@ -343,8 +343,10 @@
     }
 
     function toggleOtherDepartment(show) {
-      document.getElementById("otherDepartment").style.display = show ? "block" : "none";
-    }
+  document.getElementById("otherDepartment").style.display = show ? "block" : "none";
+  document.querySelector(".radio-group").style.display = show ? "none" : "flex";
+}
+
 
     function toggleOtherField(selectElement) {
       if (selectElement.value === "Other") {
