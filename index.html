@@ -406,6 +406,9 @@
     async function submitForm() {
       if (!validateForm()) return;
 
+         const submitBtn = document.getElementById("submitBtn");
+  submitBtn.disabled = true;
+
       const form = document.getElementById("orderForm");
       const formData = new FormData(form);
 
