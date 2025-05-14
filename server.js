@@ -62,6 +62,7 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
       { label: 'Trip Phase', value: req.body.trip_phase === 'start' ? 'Trip Start' : (req.body.trip_phase === 'end' ? 'Trip End' : '') },
       { label: 'Vehicle', value: req.body.vehicle },
       { label: 'Odometer', value: req.body.odometer },
+      { label: 'Job Card', value: req.body.odometer },
       { label: 'AKE Department', value: req.body.ake_department || req.body.other_department },
       { label: 'Reason of Trip', value: req.body.reason_of_trip },
       { label: 'Date', value: req.body.date_field },
