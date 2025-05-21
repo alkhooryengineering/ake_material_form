@@ -218,6 +218,23 @@
     <h1>AKE Material In/Out Form</h1>
 
     <form id="orderForm">
+
+
+
+
+<center>
+        <div style="display: inline-flex; align-items: center; gap: 20px; white-space: nowrap;">
+          <label style="display: inline-flex; align-items: center; gap: 5px;">
+            <input type="radio" name="material_phase" value="start"> <span>Material In</span>
+          </label>
+          <label style="display: inline-flex; align-items: center; gap: 5px;">
+            <input type="radio" name="material_phase" value="end"> <span>Material Out</span>
+          </label>
+        </div>
+</center>
+
+
+
       <!-- Company Dropdown -->
       <label for="company">Company Name:</label>
       <select id="company" name="company" onchange="toggleOtherField(this)" required>
@@ -361,22 +378,31 @@
       }
     }
 
-    function validateForm() {
-      const form = document.getElementById("orderForm");
-      const signature = document.getElementById("signature");
+  function validateForm() {
+  const form = document.getElementById("orderForm");
+  const signature = document.getElementById("signature");
 
-      if (!form.company.value || !form.akeDepartment.value || !form.material.value || !form.Quantity.value || !form.dateField.value) {
-        alert("Please fill in all the required fields.");
-        return false;
-      }
+  // Check if material_phase is selected
+  const materialPhaseSelected = document.querySelector('input[name="material_phase"]:checked');
+  if (!materialPhaseSelected) {
+    alert("Please select Material In or Material Out.");
+    return false;
+  }
 
-      if (signature.width === 0 || signature.height === 0) {
-        alert("Please provide a signature.");
-        return false;
-      }
+  // Check other required fields
+  if (!form.company.value || !form.akeDepartment.value || !form.material.value || !form.Quantity.value || !form.dateField.value) {
+    alert("Please fill in all the required fields.");
+    return false;
+  }
 
-      return true;
-    }
+  if (signature.width === 0 || signature.height === 0) {
+    alert("Please provide a signature.");
+    return false;
+  }
+
+  return true;
+}
+
 
     let selectedPhotos = [];
 
@@ -506,11 +532,6 @@
   };
 </script>
 
-
-
-
-
-
-  
+ 
 </body>
 </html>
