@@ -87,16 +87,30 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     ];
 
     // Extract and filter relevant fields
-    const fields = [
-      { label: 'Trip Phase', value: req.body.trip_phase === 'start' ? 'Trip Start' : (req.body.trip_phase === 'end' ? 'Trip End' : '') },
-      { label: 'Vehicle', value: req.body.vehicle },
-      { label: 'Odometer', value: req.body.odometer },
-      { label: 'Job Card', value: req.body.Job_Card || 'N/A' },
-      { label: 'AKE Department', value: req.body.ake_department || req.body.other_department },
-      { label: 'Reason of Trip', value: req.body.reason_of_trip },
-      { label: 'Date', value: req.body.date_field },
-      { label: 'Driver Name', value: req.body.driver_name }
-    ];
+  let fields = [];
+
+if (req.body.form_type === 'material') {
+  fields = [
+    { label: 'Material Phase', value: req.body.material_phase },
+    { label: 'Company', value: req.body.company },
+    { label: 'AKE Department', value: req.body.akeDepartment || req.body.otherDepartment },
+    { label: 'Material', value: req.body.material },
+    { label: 'Quantity', value: req.body.Quantity },
+    { label: 'Date & Time', value: req.body.date_field },
+  ];
+} else {
+  fields = [
+    { label: 'Trip Phase', value: req.body.trip_phase === 'start' ? 'Trip Start' : (req.body.trip_phase === 'end' ? 'Trip End' : '') },
+    { label: 'Vehicle', value: req.body.vehicle },
+    { label: 'Odometer', value: req.body.odometer },
+    { label: 'Job Card', value: req.body.Job_Card || 'N/A' },
+    { label: 'AKE Department', value: req.body.ake_department || req.body.other_department },
+    { label: 'Reason of Trip', value: req.body.reason_of_trip },
+    { label: 'Date & Time', value: req.body.date_field },
+    { label: 'Driver Name', value: req.body.driver_name }
+  ];
+}
+
 
     const filledFields = fields.filter(f => f.value && f.value.trim() !== '');
 
