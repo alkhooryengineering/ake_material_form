@@ -89,7 +89,8 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     // Extract and filter relevant fields
   let fields = [];
 
-if (req.body.form_type === 'material') {
+if (req.body.material_phase && req.body.material) {
+  // Heuristically it's a MATERIAL form
   fields = [
     { label: 'Material Phase', value: req.body.material_phase },
     { label: 'Company', value: req.body.company },
@@ -99,6 +100,7 @@ if (req.body.form_type === 'material') {
     { label: 'Date & Time', value: req.body.date_field },
   ];
 } else {
+  // Assume VEHICLE form
   fields = [
     { label: 'Trip Phase', value: req.body.trip_phase === 'start' ? 'Trip Start' : (req.body.trip_phase === 'end' ? 'Trip End' : '') },
     { label: 'Vehicle', value: req.body.vehicle },
@@ -110,6 +112,7 @@ if (req.body.form_type === 'material') {
     { label: 'Driver Name', value: req.body.driver_name }
   ];
 }
+
 
 
     const filledFields = fields.filter(f => f.value && f.value.trim() !== '');
