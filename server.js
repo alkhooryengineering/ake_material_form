@@ -79,20 +79,6 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
  
     
     
-  
-    const attachments = [
-  {
-    filename: pdfFileName, // use dynamic name here
-    content: pdfFile.buffer,
-  },
-  ...imageFiles.map(file => ({
-    filename: file.originalname,
-    content: file.buffer,
-  }))
-];
-
-
-
 
 
     
@@ -127,6 +113,24 @@ if (req.body.material_phase && req.body.material) {
 }
 
 
+
+
+   const attachments = [
+  {
+    filename: pdfFileName, // use dynamic name here
+    content: pdfFile.buffer,
+  },
+  ...imageFiles.map(file => ({
+    filename: file.originalname,
+    content: file.buffer,
+  }))
+];
+
+
+
+
+
+    
 
     const filledFields = fields.filter(f => f.value && f.value.trim() !== '');
 
