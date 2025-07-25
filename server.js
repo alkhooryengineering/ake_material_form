@@ -80,7 +80,12 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     
     
     // Read the first 300 bytes to catch longer headers
-const pdfTextStart = pdfFile.buffer.toString('utf8', 0, 300);
+const pdfParse = require('pdf-parse');
+const parsed = await pdfParse(pdfFile.buffer);
+const pdfTextStart = parsed.text;
+
+console.log('Parsed PDF text:', pdfTextStart);
+
 
 // Determine filename based on content
 let pdfFilename = 'order.pdf';
