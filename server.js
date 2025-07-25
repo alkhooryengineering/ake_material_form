@@ -3,6 +3,7 @@ const multer = require('multer');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
+const pdfParse = require('pdf-parse');
 
 dotenv.config();
 
