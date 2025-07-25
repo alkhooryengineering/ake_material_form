@@ -3,6 +3,7 @@ const multer = require('multer');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
+const pdfParse = require('pdf-parse');
 
 dotenv.config();
 
@@ -79,16 +80,42 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     
     
   
-    const attachments = [
-      {
-        filename: 'order.pdf',
-        content: pdfFile.buffer,
-      },
-      ...imageFiles.map(file => ({
-        filename: file.originalname,
-        content: file.buffer,
-      }))
-    ];
+    // Extract heading from PDF buffer
+let extractedHeading = 'AKE_Form'; // fallback filename if nothing found
+if (pdfFile && pdfFile.buffer) {
+  const pdfData = await pdfParse(pdfFile.buffer);
+  const lines = pdfData.text
+    .split('\n')
+    .map(line => line.trim())
+    .filter(Boolean);
+
+  // List of known form headings to match exactly
+  const knownHeadings = [
+    'AKE Material Form',
+    'AKE Vehicle Form',
+    'ANNEXURE'
+  ];
+
+  const foundHeading = lines.find(line => knownHeadings.includes(line));
+  if (foundHeading) {
+    extractedHeading = foundHeading.replace(/\s+/g, '_'); // e.g. "AKE_Material_Form"
+  }
+}
+
+const timestamp = new Date().toISOString().split('T')[0]; // e.g. 2025-07-25
+const customPdfName = `${extractedHeading}_${timestamp}.pdf`;
+
+const attachments = [
+  {
+    filename: customPdfName,
+    content: pdfFile.buffer,
+  },
+  ...imageFiles.map(file => ({
+    filename: file.originalname,
+    content: file.buffer,
+  }))
+];
+
 
 
 
