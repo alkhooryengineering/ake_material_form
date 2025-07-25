@@ -75,17 +75,39 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     const { company, otherCompany } = req.body;
     const displayName = company === 'Other' ? otherCompany : company;
 
-    const attachments = [
-      {
-        filename: 'order.pdf',
-        content: pdfFile.buffer,
-      },
-      ...imageFiles.map(file => ({
-        filename: file.originalname,
-        content: file.buffer,
-      }))
-    ];
+ 
+    
+    
+    
+    // Read the first 300 bytes to catch longer headers
+const pdfTextStart = pdfFile.buffer.toString('utf8', 0, 300);
 
+// Determine filename based on content
+let pdfFilename = 'order.pdf';
+if (/Annexure/i.test(pdfTextStart)) {
+  pdfFilename = 'AKE JCR.pdf';
+} else if (/AKE Material Form/i.test(pdfTextStart)) {
+  pdfFilename = 'AKE Material Form.pdf';
+} else if (/AKE Vehicle Form/i.test(pdfTextStart)) {
+  pdfFilename = 'AKE Vehicle Form.pdf';
+}
+
+const pdfAttachment = {
+  filename: pdfFilename,
+  content: pdfFile.buffer,
+};
+
+const attachments = [
+  pdfAttachment,
+  ...imageFiles.map(file => ({
+    filename: file.originalname,
+    content: file.buffer,
+  }))
+];
+
+
+
+    
     // Extract and filter relevant fields
   let fields = [];
 
