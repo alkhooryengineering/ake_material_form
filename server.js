@@ -3,7 +3,6 @@ const multer = require('multer');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
-const pdfParse = require('pdf-parse');
 
 dotenv.config();
 
@@ -80,14 +79,6 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     
     
     
-    // Read the first 300 bytes to catch longer headers
-const pdfParse = require('pdf-parse');
-const parsed = await pdfParse(pdfFile.buffer);
-const pdfTextStart = parsed.text;
-
-console.log('Parsed PDF text:', pdfTextStart);
-
-
 // Determine filename based on content
 let pdfFilename = 'order.pdf';
 if (/Annexure/i.test(pdfTextStart)) {
