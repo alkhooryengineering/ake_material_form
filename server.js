@@ -78,29 +78,17 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
  
     
     
-    
-// Determine filename based on content
-let pdfFilename = 'order.pdf';
-if (/Annexure/i.test(pdfTextStart)) {
-  pdfFilename = 'AKE JCR.pdf';
-} else if (/AKE Material Form/i.test(pdfTextStart)) {
-  pdfFilename = 'AKE Material Form.pdf';
-} else if (/AKE Vehicle Form/i.test(pdfTextStart)) {
-  pdfFilename = 'AKE Vehicle Form.pdf';
-}
-
-const pdfAttachment = {
-  filename: pdfFilename,
-  content: pdfFile.buffer,
-};
-
-const attachments = [
-  pdfAttachment,
-  ...imageFiles.map(file => ({
-    filename: file.originalname,
-    content: file.buffer,
-  }))
-];
+  
+    const attachments = [
+      {
+        filename: 'order.pdf',
+        content: pdfFile.buffer,
+      },
+      ...imageFiles.map(file => ({
+        filename: file.originalname,
+        content: file.buffer,
+      }))
+    ];
 
 
 
