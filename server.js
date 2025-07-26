@@ -3,7 +3,6 @@ const multer = require('multer');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
-const pdfParse = require('pdf-parse');
 
 dotenv.config();
 
@@ -76,15 +75,19 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     const { company, otherCompany } = req.body;
     const displayName = company === 'Other' ? otherCompany : company;
 
- 
-    
-    
+    const attachments = [
+      {
+        filename: 'order.pdf',
+        content: pdfFile.buffer,
+      },
+      ...imageFiles.map(file => ({
+        filename: file.originalname,
+        content: file.buffer,
+      }))
+    ];
 
-
-    
     // Extract and filter relevant fields
   let fields = [];
-  let pdfFileName = ''; // Default filename
 
 if (req.body.material_phase && req.body.material) {
   // Heuristically it's a MATERIAL form
@@ -95,8 +98,7 @@ if (req.body.material_phase && req.body.material) {
     { label: 'Material', value: req.body.material },
     { label: 'Quantity', value: req.body.Quantity },
     { label: 'Date & Time', value: req.body.date_field },
-  ]; 
-   pdfFileName = 'AKE Material Form.pdf';
+  ];
 } else {
   // Assume VEHICLE form
   fields = [
@@ -108,29 +110,10 @@ if (req.body.material_phase && req.body.material) {
     { label: 'Reason of Trip', value: req.body.reason_of_trip },
     { label: 'Date & Time', value: req.body.date_field },
     { label: 'Driver Name', value: req.body.driver_name }
-      ];
-     pdfFileName = 'AKE Vehicle Form.pdf';
+  ];
 }
 
 
-
-
-   const attachments = [
-  {
-    filename: pdfFileName, // use dynamic name here
-    content: pdfFile.buffer,
-  },
-  ...imageFiles.map(file => ({
-    filename: file.originalname,
-    content: file.buffer,
-  }))
-];
-
-
-
-
-
-    
 
     const filledFields = fields.filter(f => f.value && f.value.trim() !== '');
 
