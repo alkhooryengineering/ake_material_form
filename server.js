@@ -28,9 +28,10 @@ const sendEmailViaBrevo = async (mailOptions) => {
       data,
       {
         headers: {
-          "api-key": process.env.BREVO_API_KEY,
-          "Content-Type": "application/json",
-        },
+  'accept': 'application/json',
+  'api-key': process.env.BREVO_API_KEY,
+  'content-type': 'application/json',
+}
       }
     );
 
@@ -182,6 +183,7 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
 
 
 
