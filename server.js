@@ -55,7 +55,7 @@ const allowedOrigins = ['https://alkhooryengineering.github.io'];
 app.use(cors({
   origin: function (origin, callback) {
     console.log('Request origin:', origin); // optional debug
-    if (allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -168,5 +168,6 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
 
 
