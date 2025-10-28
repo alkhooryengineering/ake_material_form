@@ -1,8 +1,46 @@
 const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
-const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
+
+const axios = require("axios");
+
+// New Brevo API-based mail sender
+const sendEmailViaBrevo = async (mailOptions) => {
+  try {
+    const data = {
+      sender: {
+        email: process.env.EMAIL_USER,
+        name: mailOptions.fromName || "AKE Vehicle Form"
+      },
+      to: [{ email: process.env.RECEIVER_EMAIL }],
+      subject: mailOptions.subject,
+      htmlContent: mailOptions.html,
+      // Convert binary attachments into base64 strings
+      attachment: mailOptions.attachments?.map(file => ({
+        content: file.content.toString("base64"),
+        name: file.filename
+      })),
+    };
+
+    const response = await axios.post(
+      "https://api.brevo.com/v3/smtp/email",
+      data,
+      {
+        headers: {
+          "api-key": process.env.BREVO_API_KEY,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    console.log("✅ Email sent via Brevo!", response.data);
+  } catch (error) {
+    console.error("❌ Brevo email sending failed:", error.response?.data || error.message);
+    throw new Error("Email sending failed via Brevo");
+  }
+};
+
 
 dotenv.config();
 
@@ -29,42 +67,8 @@ const upload = multer({
   limits: { fileSize: 20 * 1024 * 1024 }, // 20MB limit
 });
 
-// Create both email transporters
-const primaryTransporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
 
-const secondaryTransporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER_SECONDARY,
-    pass: process.env.EMAIL_PASS_SECONDARY,
-  },
-});
 
-// Email sending function with failover
-const sendWithFailover = async (mailOptions) => {
-  try {
-    await primaryTransporter.sendMail(mailOptions);
-    console.log('Email sent with primary account');
-  } catch (error) {
-    console.warn('Primary email failed:', error.message);
-    console.log('Trying secondary account...');
-    try {
-      // Use secondary account as sender
-      mailOptions.from = mailOptions.from.replace(process.env.EMAIL_USER, process.env.EMAIL_USER_SECONDARY);
-      await secondaryTransporter.sendMail(mailOptions);
-      console.log('Email sent with secondary account');
-    } catch (error2) {
-      console.error('Secondary email failed:', error2.message);
-      throw new Error('Both email attempts failed.');
-    }
-  }
-};
 
 // POST endpoint to receive the form
 app.post('/send-pdf', upload.any(), async (req, res) => {
@@ -137,7 +141,17 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
       attachments,
     };
 
-    await sendWithFailover(mailOptions);
+
+    
+    await sendEmailViaBrevo({
+  fromName: displayName || "AKE Vehicle Form",
+  subject,
+  html: htmlContent,
+  attachments,
+});
+
+
+    
     res.status(200).send('Email sent successfully');
 
   } catch (error) {
@@ -150,3 +164,4 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
