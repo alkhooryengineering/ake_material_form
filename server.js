@@ -47,20 +47,24 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
+
+
 // Enable CORS for GitHub Pages frontend
 const allowedOrigins = ['https://alkhooryengineering.github.io'];
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    console.log('Request origin:', origin); // optional debug
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ['GET', 'POST'],
+  methods: ['GET','POST'],
   allowedHeaders: ['Content-Type']
 }));
+
 
 // Set up Multer for file uploads
 const upload = multer({
@@ -164,4 +168,5 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
 
