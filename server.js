@@ -21,7 +21,16 @@ const sendEmailViaBrevo = async (mailOptions) => {
         content: file.content.toString("base64"),
         name: file.filename
       })),
-    };
+
+ // ⚡ Add these to disable tracking
+  trackingSettings: {
+    clickTracking: false,
+    openTracking: false,
+    subscriptionTracking: false
+  }
+};
+
+
 
     const response = await axios.post(
       "https://api.brevo.com/v3/smtp/email",
@@ -204,6 +213,7 @@ app.get("/test-brevo", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
 
 
 
