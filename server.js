@@ -179,10 +179,32 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
   }
 });
 
+
+
+app.get("/test-brevo", async (req, res) => {
+  try {
+    const response = await fetch("https://api.brevo.com/v3/account", {
+      headers: { "api-key": process.env.BREVO_API_KEY },
+    });
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+
+
+
+
+
+
+
 // Start server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
 
 
 
