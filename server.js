@@ -42,13 +42,20 @@ const sendEmailViaBrevo = async (mailOptions) => {
 };
 
 
-dotenv.config();
+
+
+
+
+dotenv.config(); // Load environment variables
+
+// DEBUG: check if env variables are loaded
 console.log('BREVO_API_KEY loaded:', process.env.BREVO_API_KEY ? true : false);
+console.log('EMAIL_USER loaded:', process.env.EMAIL_USER ? true : false);
+console.log('RECEIVER_EMAIL loaded:', process.env.RECEIVER_EMAIL ? true : false);
+console.log('PORT loaded:', process.env.PORT ? true : false);
 
 const app = express();
 const port = process.env.PORT || 3000;
-
-
 
 // Enable CORS for GitHub Pages frontend
 const allowedOrigins = ['https://alkhooryengineering.github.io'];
@@ -65,6 +72,12 @@ app.use(cors({
   methods: ['GET','POST'],
   allowedHeaders: ['Content-Type']
 }));
+
+
+
+
+
+
 
 
 // Set up Multer for file uploads
@@ -169,6 +182,7 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
 
 
 
