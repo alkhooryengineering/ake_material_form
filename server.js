@@ -43,6 +43,7 @@ const sendEmailViaBrevo = async (mailOptions) => {
 
 
 dotenv.config();
+console.log('BREVO_API_KEY loaded:', process.env.BREVO_API_KEY ? true : false);
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -168,6 +169,7 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
 
 
 
