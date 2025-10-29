@@ -8,6 +8,10 @@ const axios = require("axios");
 // New Brevo API-based mail sender
 const sendEmailViaBrevo = async (mailOptions) => {
   try {
+
+
+
+
     const data = {
   sender: {
     email: process.env.EMAIL_USER,
@@ -17,18 +21,17 @@ const sendEmailViaBrevo = async (mailOptions) => {
   subject: mailOptions.subject,
   htmlContent: mailOptions.html,
 
-  // ✅ Attachments (converted to base64)
   attachment: mailOptions.attachments?.map(file => ({
     content: file.content.toString("base64"),
     name: file.filename
   })) || [],
 
-  // ✅ Properly placed tracking settings
-  trackingSettings: {
-    clickTracking: { enable: false },
-    openTracking: { enable: false },
-  }
+  // ✅ Correct tracking flags (per Brevo API)
+  trackOpens: false,
+  trackClicks: false
 };
+
+    
 
 
 
@@ -218,6 +221,7 @@ app.get("/test-brevo", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
 
 
 
