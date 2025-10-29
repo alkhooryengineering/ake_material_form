@@ -154,24 +154,51 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
       ];
     }
 
+
+
+
     const filledFields = fields.filter(f => f.value && f.value.trim() !== '');
 
-    let htmlContent = '';
-    if (filledFields.length > 0) {
-      htmlContent = '<p>' + filledFields.map(field => `${field.label}: ${field.value}`).join('<br>') + '</p>';
-    }
+// ✅ Prepare subject and fromName for Brevo
+const fromName = displayName || "AKE Vehicle Form";
 
-    const subject = filledFields.length > 0
-      ? (req.body.driver_name || 'Driver Name')
-      : 'new form submitted';
+// Subject = Driver name
+let subject = req.body.driver_name
+  ? req.body.driver_name.trim()
+  : "Driver Name Missing";
 
-    const mailOptions = {
-      from: `${displayName || 'AKE Vehicle Form'} <${process.env.EMAIL_USER}>`,
-      to: process.env.RECEIVER_EMAIL,
-      subject,
-      html: htmlContent,
-      attachments,
-    };
+// Description / first line = Material In or Out (if material form)
+let previewText = "";
+if (req.body.material_phase) {
+  previewText = `Material ${req.body.material_phase}`; // e.g. "Material In"
+} else if (req.body.trip_phase) {
+  previewText = req.body.trip_phase === "start" ? "Trip Start" : "Trip End";
+}
+
+// ✅ Build email HTML content (put previewText at top so it appears under subject)
+let htmlContent = `
+  <p><strong>${previewText}</strong></p>
+  <hr>
+  <p>${filledFields.map(field => `${field.label}: ${field.value}`).join("<br>")}</p>
+`;
+
+// ✅ Send email via Brevo
+await sendEmailViaBrevo({
+  fromName,          // shows as Company name
+  subject,           // shows as Driver name
+  html: htmlContent, // top line shows Material In / Out
+  attachments: attachments.map(file => ({
+    filename: file.filename,
+    content: file.content.toString("base64")
+  })),
+});
+
+
+
+
+
+
+    
 
 
     
@@ -215,3 +242,4 @@ app.get("/test-brevo", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
