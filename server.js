@@ -175,8 +175,12 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
   fromName: displayName || "AKE Vehicle Form",
   subject,
   html: htmlContent,
-  attachments,
+  attachments: attachments.map(file => ({
+    filename: file.filename,
+    content: file.content.toString('base64') // Convert buffer → base64 string
+  })),
 });
+
 
 
     
@@ -213,6 +217,7 @@ app.get("/test-brevo", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
 
 
 
