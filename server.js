@@ -133,12 +133,12 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     if (req.body.material_phase && req.body.material) {
       // Heuristically it's a MATERIAL form
       fields = [
-        { label: 'Material Phase', value: req.body.material_phase },
-        { label: 'Company', value: req.body.company },
-        { label: 'AKE Department', value: req.body.akeDepartment || req.body.otherDepartment },
-        { label: 'Material', value: req.body.material },
-        { label: 'Quantity', value: req.body.Quantity },
-        { label: 'Date & Time', value: req.body.date_field },
+        { label: 'Material Phase:', value: req.body.material_phase },
+        { label: 'Company:', value: req.body.company },
+        { label: 'AKE Department:', value: req.body.akeDepartment || req.body.otherDepartment },
+        { label: 'Material:', value: req.body.material },
+        { label: 'Quantity:', value: req.body.Quantity },
+        { label: 'Date & Time:', value: req.body.date_field },
       ];
     } else {
       // Assume VEHICLE form
@@ -221,6 +221,7 @@ app.get("/test-brevo", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
 
 
 
