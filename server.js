@@ -9,9 +9,6 @@ const axios = require("axios");
 const sendEmailViaBrevo = async (mailOptions) => {
   try {
 
-
-
-
     const data = {
   sender: {
     email: process.env.EMAIL_USER,
@@ -31,11 +28,7 @@ const sendEmailViaBrevo = async (mailOptions) => {
   trackClicks: false
 };
 
-    
-
-
-
-
+   
     const response = await axios.post(
       "https://api.brevo.com/v3/smtp/email",
       data,
@@ -54,10 +47,6 @@ const sendEmailViaBrevo = async (mailOptions) => {
     throw new Error("Email sending failed via Brevo");
   }
 };
-
-
-
-
 
 
 dotenv.config(); // Load environment variables
@@ -86,12 +75,6 @@ app.use(cors({
   methods: ['GET','POST'],
   allowedHeaders: ['Content-Type']
 }));
-
-
-
-
-
-
 
 
 // Set up Multer for file uploads
@@ -174,7 +157,7 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     };
 
 
-    
+  
     await sendEmailViaBrevo({
   fromName: displayName || "AKE Vehicle Form",
   subject,
@@ -184,8 +167,6 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     content: file.content.toString('base64') // Convert buffer → base64 string
   })),
 });
-
-
 
     
     res.status(200).send('Email sent successfully');
@@ -211,26 +192,9 @@ app.get("/test-brevo", async (req, res) => {
 });
 
 
-
-
-
-
-
-
 // Start server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-
-
-
-
-
-
-
-
-
-
-
 
 
