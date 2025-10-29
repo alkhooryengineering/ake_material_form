@@ -14,7 +14,7 @@ const sendEmailViaBrevo = async (mailOptions) => {
 
     const data = {
   sender: {
-    email: "abdul.rehman@mahykhoory.com",
+    email: process.env.EMAIL_USER,
     name: mailOptions.fromName || "AKE Vehicle Form"
   },
   to: [{ email: process.env.RECEIVER_EMAIL }],
@@ -154,51 +154,24 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
       ];
     }
 
-
-
-
     const filledFields = fields.filter(f => f.value && f.value.trim() !== '');
 
-// ✅ Prepare subject and fromName for Brevo
-const fromName = displayName || "AKE Vehicle Form";
+    let htmlContent = '';
+    if (filledFields.length > 0) {
+      htmlContent = '<p>' + filledFields.map(field => `${field.label}: ${field.value}`).join('<br>') + '</p>';
+    }
 
-// Subject = Driver name
-let subject = req.body.driver_name
-  ? req.body.driver_name.trim()
-  : "Driver Name Missing";
+    const subject = filledFields.length > 0
+      ? (req.body.driver_name || 'Driver Name')
+      : 'new form submitted';
 
-// Description / first line = Material In or Out (if material form)
-let previewText = "";
-if (req.body.material_phase) {
-  previewText = `Material ${req.body.material_phase}`; // e.g. "Material In"
-} else if (req.body.trip_phase) {
-  previewText = req.body.trip_phase === "start" ? "Trip Start" : "Trip End";
-}
-
-// ✅ Build email HTML content (put previewText at top so it appears under subject)
-let htmlContent = `
-  <p><strong>${previewText}</strong></p>
-  <hr>
-  <p>${filledFields.map(field => `${field.label}: ${field.value}`).join("<br>")}</p>
-`;
-
-// ✅ Send email via Brevo
-await sendEmailViaBrevo({
-  fromName,          // shows as Company name
-  subject,           // shows as Driver name
-  html: htmlContent, // top line shows Material In / Out
-  attachments: attachments.map(file => ({
-    filename: file.filename,
-    content: file.content.toString("base64")
-  })),
-});
-
-
-
-
-
-
-    
+    const mailOptions = {
+      from: `${displayName || 'AKE Vehicle Form'} <${process.env.EMAIL_USER}>`,
+      to: process.env.RECEIVER_EMAIL,
+      subject,
+      html: htmlContent,
+      attachments,
+    };
 
 
     
@@ -238,8 +211,15 @@ app.get("/test-brevo", async (req, res) => {
 });
 
 
+
+
+
+
+
+
 // Start server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
 
