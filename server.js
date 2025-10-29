@@ -5,33 +5,6 @@ const dotenv = require('dotenv');
 
 const axios = require("axios");
 
-// New Brevo API-based mail sender
-const sendEmailViaBrevo = async (mailOptions) => {
-  try {
-
-
-
-
-    const data = {
-  sender: {
-    email: process.env.EMAIL_USER,
-    name: mailOptions.fromName || "AKE Vehicle Form"
-  },
-  to: [{ email: process.env.RECEIVER_EMAIL }],
-  subject: mailOptions.subject,
-  htmlContent: mailOptions.html,
-
-  attachment: mailOptions.attachments?.map(file => ({
-    content: file.content.toString("base64"),
-    name: file.filename
-  })) || [],
-
-  // ✅ Correct tracking flags (per Brevo API)
-  trackOpens: false,
-  trackClicks: false
-};
-
-    
 
 
 
@@ -252,6 +225,7 @@ app.get("/test-brevo", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
 
 
 
