@@ -9,9 +9,12 @@ const axios = require("axios");
 const sendEmailViaBrevo = async (mailOptions) => {
   try {
 
+
+
+
     const data = {
   sender: {
-    email: process.env.EMAIL_USER,
+    email: "abdul.rehman@mahykhoory.com",
     name: mailOptions.fromName || "AKE Vehicle Form"
   },
   to: [{ email: process.env.RECEIVER_EMAIL }],
@@ -24,13 +27,15 @@ const sendEmailViaBrevo = async (mailOptions) => {
   })) || [],
 
   // ✅ Correct tracking flags (per Brevo API)
- "trackingSettings": {
-    "clickTracking": false,
-    "openTracking": false,
-    "subscriptionTracking": false
-}
+  trackOpens: false,
+  trackClicks: false
+};
 
-   
+    
+
+
+
+
     const response = await axios.post(
       "https://api.brevo.com/v3/smtp/email",
       data,
@@ -49,6 +54,10 @@ const sendEmailViaBrevo = async (mailOptions) => {
     throw new Error("Email sending failed via Brevo");
   }
 };
+
+
+
+
 
 
 dotenv.config(); // Load environment variables
@@ -77,6 +86,12 @@ app.use(cors({
   methods: ['GET','POST'],
   allowedHeaders: ['Content-Type']
 }));
+
+
+
+
+
+
 
 
 // Set up Multer for file uploads
@@ -150,12 +165,6 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
       ? (req.body.driver_name || 'Driver Name')
       : 'new form submitted';
 
-
-    
-htmlContent = htmlContent.replace(/<https:\/\/bababffa\.[^>]+>/gi, "");
-
-
-    
     const mailOptions = {
       from: `${displayName || 'AKE Vehicle Form'} <${process.env.EMAIL_USER}>`,
       to: process.env.RECEIVER_EMAIL,
@@ -165,7 +174,7 @@ htmlContent = htmlContent.replace(/<https:\/\/bababffa\.[^>]+>/gi, "");
     };
 
 
-  
+    
     await sendEmailViaBrevo({
   fromName: displayName || "AKE Vehicle Form",
   subject,
@@ -175,6 +184,8 @@ htmlContent = htmlContent.replace(/<https:\/\/bababffa\.[^>]+>/gi, "");
     content: file.content.toString('base64') // Convert buffer → base64 string
   })),
 });
+
+
 
     
     res.status(200).send('Email sent successfully');
@@ -204,8 +215,3 @@ app.get("/test-brevo", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-
-
-
-
-
