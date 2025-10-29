@@ -11,7 +11,7 @@ const sendEmailViaBrevo = async (mailOptions) => {
 
     const data = {
   sender: {
-    email: "abdul.rehman@mahykhoory.com",
+    email: process.env.EMAIL_USER,
     name: mailOptions.fromName || "AKE Vehicle Form"
   },
   to: [{ email: process.env.RECEIVER_EMAIL }],
@@ -204,6 +204,7 @@ app.get("/test-brevo", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
 
 
 
