@@ -175,15 +175,46 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
 
 
     
-    await sendEmailViaBrevo({
-  fromName: displayName || "AKE Vehicle Form",
-  subject,
-  html: htmlContent,
-  attachments: attachments.map(file => ({
-    filename: file.filename,
-    content: file.content.toString('base64') // Convert buffer → base64 string
-  })),
-});
+   const sendEmailViaBrevo = async ({ fromName, subject, html, attachments, senderEmail }) => {
+  try {
+    const data = {
+      sender: {
+        email: senderEmail || process.env.BREVO_VERIFIED_EMAIL, // must be verified in Brevo
+        name: fromName || "AKE Vehicle Form"
+      },
+      to: [{ email: process.env.RECEIVER_EMAIL }],
+      subject,
+      htmlContent: html,
+      attachment: attachments?.map(file => ({
+        content: file.content.toString("base64"),
+        name: file.filename
+      })),
+      trackingSettings: {
+        clickTracking: false,
+        openTracking: false,
+        subscriptionTracking: false
+      }
+    };
+
+    const response = await axios.post(
+      "https://api.brevo.com/v3/smtp/email",
+      data,
+      {
+        headers: {
+          'accept': 'application/json',
+          'api-key': process.env.BREVO_API_KEY,
+          'content-type': 'application/json',
+        }
+      }
+    );
+
+    console.log("✅ Email sent via Brevo!", response.data);
+  } catch (error) {
+    console.error("❌ Brevo email sending failed:", error.response?.data || error.message);
+    throw new Error("Email sending failed via Brevo");
+  }
+};
+
 
 
 
@@ -221,6 +252,7 @@ app.get("/test-brevo", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
 
 
 
