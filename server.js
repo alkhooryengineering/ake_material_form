@@ -24,9 +24,11 @@ const sendEmailViaBrevo = async (mailOptions) => {
   })) || [],
 
   // ✅ Correct tracking flags (per Brevo API)
-  trackOpens: false,
-  trackClicks: false
-};
+ "trackingSettings": {
+    "clickTracking": false,
+    "openTracking": false,
+    "subscriptionTracking": false
+}
 
    
     const response = await axios.post(
@@ -148,6 +150,12 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
       ? (req.body.driver_name || 'Driver Name')
       : 'new form submitted';
 
+
+    
+htmlContent = htmlContent.replace(/<https:\/\/bababffa\.[^>]+>/gi, "");
+
+
+    
     const mailOptions = {
       from: `${displayName || 'AKE Vehicle Form'} <${process.env.EMAIL_USER}>`,
       to: process.env.RECEIVER_EMAIL,
@@ -196,5 +204,6 @@ app.get("/test-brevo", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
 
 
