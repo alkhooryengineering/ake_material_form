@@ -2,15 +2,71 @@ const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
 const dotenv = require('dotenv');
+
 const axios = require("axios");
+
+// New Brevo API-based mail sender
+const sendEmailViaBrevo = async (mailOptions) => {
+  try {
+
+
+
+
+    const data = {
+  sender: {
+    email: process.env.EMAIL_USER,
+    name: mailOptions.fromName || "AKE Vehicle Form"
+  },
+  to: [{ email: process.env.RECEIVER_EMAIL }],
+  subject: mailOptions.subject,
+  htmlContent: mailOptions.html,
+
+  attachment: mailOptions.attachments?.map(file => ({
+    content: file.content.toString("base64"),
+    name: file.filename
+  })) || [],
+
+  // ✅ Correct tracking flags (per Brevo API)
+  trackOpens: false,
+  trackClicks: false
+};
+
+    
+
+
+
+
+    const response = await axios.post(
+      "https://api.brevo.com/v3/smtp/email",
+      data,
+      {
+        headers: {
+  'accept': 'application/json',
+  'api-key': process.env.BREVO_API_KEY,
+  'content-type': 'application/json',
+}
+      }
+    );
+
+    console.log("✅ Email sent via Brevo!", response.data);
+  } catch (error) {
+    console.error("❌ Brevo email sending failed:", error.response?.data || error.message);
+    throw new Error("Email sending failed via Brevo");
+  }
+};
+
+
+
+
+
 
 dotenv.config(); // Load environment variables
 
 // DEBUG: check if env variables are loaded
-console.log('BREVO_API_KEY loaded:', !!process.env.BREVO_API_KEY);
-console.log('EMAIL_USER loaded:', !!process.env.EMAIL_USER);
-console.log('RECEIVER_EMAIL loaded:', !!process.env.RECEIVER_EMAIL);
-console.log('PORT loaded:', !!process.env.PORT);
+console.log('BREVO_API_KEY loaded:', process.env.BREVO_API_KEY ? true : false);
+console.log('EMAIL_USER loaded:', process.env.EMAIL_USER ? true : false);
+console.log('RECEIVER_EMAIL loaded:', process.env.RECEIVER_EMAIL ? true : false);
+console.log('PORT loaded:', process.env.PORT ? true : false);
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -20,7 +76,7 @@ const allowedOrigins = ['https://alkhooryengineering.github.io'];
 
 app.use(cors({
   origin: function (origin, callback) {
-    console.log('Request origin:', origin);
+    console.log('Request origin:', origin); // optional debug
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -31,51 +87,20 @@ app.use(cors({
   allowedHeaders: ['Content-Type']
 }));
 
+
+
+
+
+
+
+
 // Set up Multer for file uploads
 const upload = multer({
   limits: { fileSize: 20 * 1024 * 1024 }, // 20MB limit
 });
 
-// ✅ Top-level Brevo email sender function
-const sendEmailViaBrevo = async ({ fromName, subject, html, attachments, senderEmail }) => {
-  try {
-    const data = {
-      sender: {
-        email: senderEmail || process.env.BREVO_VERIFIED_EMAIL, // must be verified in Brevo
-        name: fromName || "AKE Vehicle Form"
-      },
-      to: [{ email: process.env.RECEIVER_EMAIL }],
-      subject,
-      htmlContent: html,
-      attachment: attachments?.map(file => ({
-        content: file.content.toString("base64"),
-        name: file.filename
-      })),
-      trackingSettings: {
-        clickTracking: false,
-        openTracking: false,
-        subscriptionTracking: false
-      }
-    };
 
-    const response = await axios.post(
-      "https://api.brevo.com/v3/smtp/email",
-      data,
-      {
-        headers: {
-          'accept': 'application/json',
-          'api-key': process.env.BREVO_API_KEY,
-          'content-type': 'application/json',
-        }
-      }
-    );
 
-    console.log("✅ Email sent via Brevo!", response.data);
-  } catch (error) {
-    console.error("❌ Brevo email sending failed:", error.response?.data || error.message);
-    throw new Error("Email sending failed via Brevo");
-  }
-};
 
 // POST endpoint to receive the form
 app.post('/send-pdf', upload.any(), async (req, res) => {
@@ -88,17 +113,25 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
 
     // Generate dynamic PDF filename
     const now = new Date();
-    const dateStr = now.toISOString().split('T')[0];
+    const dateStr = now.toISOString().split('T')[0]; // e.g., "2025-07-26"
     const pdfFileName = `ake_${dateStr}.pdf`;
 
     const attachments = [
-      { filename: pdfFileName, content: pdfFile.buffer },
-      ...imageFiles.map(file => ({ filename: file.originalname, content: file.buffer }))
+      {
+        filename: pdfFileName,
+        content: pdfFile.buffer,
+      },
+      ...imageFiles.map(file => ({
+        filename: file.originalname,
+        content: file.buffer,
+      }))
     ];
 
-    // Extract relevant fields
+    // Extract and filter relevant fields
     let fields = [];
+
     if (req.body.material_phase && req.body.material) {
+      // Heuristically it's a MATERIAL form
       fields = [
         { label: 'Material Phase:', value: req.body.material_phase },
         { label: 'Company:', value: req.body.company },
@@ -108,6 +141,7 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
         { label: 'Date & Time:', value: req.body.date_field },
       ];
     } else {
+      // Assume VEHICLE form
       fields = [
         { label: 'Trip Phase', value: req.body.trip_phase === 'start' ? 'Trip Start' : (req.body.trip_phase === 'end' ? 'Trip End' : '') },
         { label: 'Vehicle', value: req.body.vehicle },
@@ -121,29 +155,49 @@ app.post('/send-pdf', upload.any(), async (req, res) => {
     }
 
     const filledFields = fields.filter(f => f.value && f.value.trim() !== '');
-    const htmlContent = filledFields.length
-      ? '<p>' + filledFields.map(f => `${f.label} ${f.value}`).join('<br>') + '</p>'
-      : '<p>New form submitted</p>';
 
-    const subject = filledFields.length ? (req.body.driver_name || 'Driver Name') : 'New form submitted';
+    let htmlContent = '';
+    if (filledFields.length > 0) {
+      htmlContent = '<p>' + filledFields.map(field => `${field.label}: ${field.value}`).join('<br>') + '</p>';
+    }
 
-    // ✅ Call the top-level function to actually send the email
-    await sendEmailViaBrevo({
-      fromName: displayName || 'AKE Vehicle Form',
+    const subject = filledFields.length > 0
+      ? (req.body.driver_name || 'Driver Name')
+      : 'new form submitted';
+
+    const mailOptions = {
+      from: `${displayName || 'AKE Vehicle Form'} <${process.env.EMAIL_USER}>`,
+      to: process.env.RECEIVER_EMAIL,
       subject,
       html: htmlContent,
       attachments,
-      senderEmail: process.env.BREVO_VERIFIED_EMAIL
-    });
+    };
 
+
+    
+    await sendEmailViaBrevo({
+  fromName: displayName || "AKE Vehicle Form",
+  subject,
+  html: htmlContent,
+  attachments: attachments.map(file => ({
+    filename: file.filename,
+    content: file.content.toString('base64') // Convert buffer → base64 string
+  })),
+});
+
+
+
+    
     res.status(200).send('Email sent successfully');
+
   } catch (error) {
     console.error('Email sending failed:', error);
     res.status(500).send('Email sending failed');
   }
 });
 
-// Test Brevo API connectivity
+
+
 app.get("/test-brevo", async (req, res) => {
   try {
     const response = await fetch("https://api.brevo.com/v3/account", {
@@ -156,7 +210,27 @@ app.get("/test-brevo", async (req, res) => {
   }
 });
 
+
+
+
+
+
+
+
 // Start server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
