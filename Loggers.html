@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Engineering Order Form</title>
-  <link rel="icon" href="https://raw.githubusercontent.com/alkhooryengineering/ake_material_form/c4da32d966f8d240c9040049e11066129f966ddc/AKE%20LOGO.png" type="image/png">
+  <title>Device Logger</title>
+  <link rel="icon" href="https://raw.githubusercontent.com/alkhooryengineering/ake_material_form/main/AKE%20LOGO.png" type="image/png">
+
   <style>
     body {
       margin: 0;
@@ -24,14 +25,12 @@
       padding: 20px;
       border-radius: 20px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-      position: relative;
-      z-index: 2;
     }
 
     h1 {
       text-align: center;
       color: #002244;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
       font-size: 22px;
     }
 
@@ -68,19 +67,22 @@
       background-color: #0066aa;
     }
 
-    #deviceTable {
+    table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
     }
 
-    #deviceTable th, #deviceTable td {
+    table, th, td {
       border: 1px solid #ccc;
-      padding: 8px;
+    }
+
+    th, td {
+      padding: 10px;
       text-align: center;
     }
 
-    #deviceTable img {
+    img.thumbnail {
       width: 50px;
       height: 50px;
       object-fit: cover;
@@ -91,56 +93,59 @@
 </head>
 <body>
   <div class="container">
-    <h1>AKE Loggers Management</h1>
+    <h1>Device Logger</h1>
     <form id="deviceForm">
-      <label>Device Name:</label>
-      <select id="device_name" onchange="toggleDeviceOther(this)" required>
-        <option value="" disabled selected>Select Device</option>
-        <option>Wifi-Elitech-1</option>
-        <option>Wifi-Elitech-2</option>
-        <option>Wifi-Elitech-3</option>
-        <option>Wifi-Elitech-4</option>
-        <option>Wifi-Elitech-5</option>
-        <option>Wifi-Elitech-6</option>
-        <option>Wifi-Elitech-7</option>
-        <option>Wifi-Elitech-8</option>
-        <option>Wifi-Elitech-9</option>
-        <option>Other</option>
-      </select>
-      <input type="text" id="device_other" placeholder="Enter device name" style="display:none;" />
-
-      <label>Serial Number:</label>
-      <input type="text" id="serial_number" required/>
-
-      <label>Location:</label>
-      <input type="text" id="location" required/>
-
-      <label>Person Adding Device:</label>
-      <select id="person_name" onchange="togglePersonOther(this)" required>
+      <label for="person">Person:</label>
+      <select id="person" name="person" required>
         <option value="" disabled selected>Select Person</option>
-        <option>Rehman</option>
-        <option>Sarfraz</option>
-        <option>Senthil</option>
-        <option>Yaship</option>
-        <option>Aruna</option>
-        <option>Other</option>
+        <option value="Rehman">Rehman</option>
+        <option value="Sarfraz">Sarfraz</option>
+        <option value="Senthil">Senthil</option>
+        <option value="Yaship">Yaship</option>
+        <option value="Aruna">Aruna</option>
+        <option value="Other">Other</option>
       </select>
-      <input type="text" id="person_other" placeholder="Enter name" style="display:none;" />
+      <input type="text" id="person_other" placeholder="Enter Name" style="display:none; margin-bottom:10px;">
 
-      <label>Photo:</label>
-      <input type="file" id="photo" accept="image/*" required />
+      <label for="device_name">Device:</label>
+      <select id="device_name" name="device_name" required>
+        <option value="" disabled selected>Select Device</option>
+        <option value="Wifi-Elitech-1">Wifi-Elitech-1</option>
+        <option value="Wifi-Elitech-2">Wifi-Elitech-2</option>
+        <option value="Wifi-Elitech-3">Wifi-Elitech-3</option>
+        <option value="Wifi-Elitech-4">Wifi-Elitech-4</option>
+        <option value="Wifi-Elitech-5">Wifi-Elitech-5</option>
+        <option value="Wifi-Elitech-6">Wifi-Elitech-6</option>
+        <option value="Wifi-Elitech-7">Wifi-Elitech-7</option>
+        <option value="Wifi-Elitech-8">Wifi-Elitech-8</option>
+        <option value="Wifi-Elitech-9">Wifi-Elitech-9</option>
+        <option value="Other">Other</option>
+      </select>
 
-      <button type="button" onclick="submitDevice()">Add / Update Device</button>
+      <input type="text" id="device_other" placeholder="Enter Device Name" style="display:none; margin-bottom:10px;">
+      <label for="device_id">Device ID:</label>
+      <input type="text" id="device_id" name="device_id" readonly placeholder="Auto-filled">
+
+      <label for="serial">Serial Number:</label>
+      <input type="text" id="serial" name="serial" required>
+
+      <label for="location">Location:</label>
+      <input type="text" id="location" name="location" required>
+
+      <label for="photo">Photo:</label>
+      <input type="file" id="photo" accept="image/*" required>
+
+      <button type="submit">Add Device</button>
     </form>
 
-    <h3>Devices Table</h3>
     <table id="deviceTable">
       <thead>
         <tr>
-          <th>Serial Number</th>
-          <th>Device Name</th>
-          <th>Location</th>
           <th>Person</th>
+          <th>Device Name</th>
+          <th>Device ID</th>
+          <th>Serial Number</th>
+          <th>Location</th>
           <th>Timestamp</th>
           <th>Photo</th>
         </tr>
@@ -149,73 +154,99 @@
     </table>
   </div>
 
-<script>
-let devices = [];
+  <script>
+    const deviceForm = document.getElementById("deviceForm");
+    const deviceTableBody = document.querySelector("#deviceTable tbody");
 
-function toggleDeviceOther(sel){ document.getElementById("device_other").style.display = sel.value==="Other"?"block":"none";}
-function togglePersonOther(sel){ document.getElementById("person_other").style.display = sel.value==="Other"?"block":"none";}
+    let devices = JSON.parse(localStorage.getItem("devices") || "[]");
 
-function submitDevice(){
-  const deviceSelect = document.getElementById("device_name");
-  const device = deviceSelect.value==="Other"?document.getElementById("device_other").value:deviceSelect.value;
-  const serial = document.getElementById("serial_number").value.trim();
-  const location = document.getElementById("location").value.trim();
-  const personSelect = document.getElementById("person_name");
-  const person = personSelect.value==="Other"?document.getElementById("person_other").value:personSelect.value;
-  const photoFile = document.getElementById("photo").files[0];
+    const deviceIDs = {
+      "Wifi-Elitech-1": "ID001",
+      "Wifi-Elitech-2": "ID002",
+      "Wifi-Elitech-3": "ID003",
+      "Wifi-Elitech-4": "ID004",
+      "Wifi-Elitech-5": "ID005",
+      "Wifi-Elitech-6": "ID006",
+      "Wifi-Elitech-7": "ID007",
+      "Wifi-Elitech-8": "ID008",
+      "Wifi-Elitech-9": "ID009"
+    };
 
-  if(!device||!serial||!location||!person||!photoFile){ alert("Fill all fields."); return;}
+    // Show Other fields if selected
+    document.getElementById("person").addEventListener("change", function(){
+      document.getElementById("person_other").style.display = this.value === "Other" ? "block" : "none";
+    });
 
-  const reader = new FileReader();
-  reader.onload = function(e){
-    const photoData = e.target.result;
+    document.getElementById("device_name").addEventListener("change", function(){
+      const other = document.getElementById("device_other");
+      const deviceIDField = document.getElementById("device_id");
+      if(this.value === "Other"){
+        other.style.display = "block";
+        deviceIDField.readOnly = false;
+        deviceIDField.value = "";
+      } else {
+        other.style.display = "none";
+        deviceIDField.readOnly = true;
+        deviceIDField.value = deviceIDs[this.value] || "";
+      }
+    });
 
-    const formData = new FormData();
-    formData.append("action","save");
-    formData.append("serial_number",serial);
-    formData.append("device_name",device);
-    formData.append("location",location);
-    formData.append("person_name",person);
-    formData.append("photo",photoData);
+    function renderTable(){
+      deviceTableBody.innerHTML = "";
+      devices.forEach(d => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${d.person}</td>
+          <td>${d.device}</td>
+          <td>${d.deviceID}</td>
+          <td>${d.serial}</td>
+          <td>${d.location}</td>
+          <td>${d.timestamp}</td>
+          <td>${d.photo ? `<img src="${d.photo}" class="thumbnail">` : ""}</td>
+        `;
+        deviceTableBody.appendChild(tr);
+      });
+    }
 
-    fetch('Loggers.php',{method:'POST',body:formData})
-    .then(res=>res.json())
-    .then(data=>{
-      devices = data;
-      renderTable();
-      document.getElementById("deviceForm").reset();
-      document.getElementById("device_other").style.display="none";
-      document.getElementById("person_other").style.display="none";
-    })
-    .catch(err=>console.error(err));
-  };
-  reader.readAsDataURL(photoFile);
-}
+    renderTable();
 
-function renderTable(){
-  const tbody = document.querySelector("#deviceTable tbody");
-  tbody.innerHTML="";
-  devices.forEach(d=>{
-    const tr = document.createElement("tr");
-    tr.innerHTML=`<td>${d.serial_number}</td>
-                  <td>${d.device_name}</td>
-                  <td>${d.location}</td>
-                  <td>${d.person_name}</td>
-                  <td>${d.timestamp}</td>
-                  <td><img src="${d.photo}" /></td>`;
-    tbody.appendChild(tr);
-  });
-}
+    deviceForm.addEventListener("submit", function(e){
+      e.preventDefault();
 
-// Fetch devices on load
-window.onload = function(){
-  const formData = new FormData();
-  formData.append("action","fetch");
-  fetch('Loggers.php',{method:'POST',body:formData})
-    .then(res=>res.json())
-    .then(data=>{ devices=data; renderTable(); })
-    .catch(err=>console.error(err));
-}
-</script>
+      let person = document.getElementById("person").value;
+      if(person === "Other") person = document.getElementById("person_other").value;
+
+      let device = document.getElementById("device_name").value;
+      if(device === "Other") device = document.getElementById("device_other").value;
+
+      const deviceID = document.getElementById("device_id").value;
+      const serial = document.getElementById("serial").value;
+      const location = document.getElementById("location").value;
+      const photoInput = document.getElementById("photo");
+
+      // Check duplicate serial
+      if(devices.some(d=>d.serial===serial)){
+        alert("Serial number already exists!");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(){
+        const newDevice = {
+          person, device, deviceID, serial, location,
+          timestamp: new Date().toLocaleString(),
+          photo: reader.result
+        };
+        devices.push(newDevice);
+        localStorage.setItem("devices", JSON.stringify(devices));
+        renderTable();
+        deviceForm.reset();
+        document.getElementById("person_other").style.display="none";
+        document.getElementById("device_other").style.display="none";
+        document.getElementById("device_id").readOnly = true;
+      }
+      reader.readAsDataURL(photoInput.files[0]);
+    });
+  </script>
 </body>
 </html>
