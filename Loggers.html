@@ -16,7 +16,7 @@ body {
 
 .container {
   background: rgba(255,255,255,0.95);
-  max-width: 900px;
+  max-width: 950px;
   margin: 20px auto;
   padding: 20px;
   border-radius: 20px;
@@ -37,7 +37,7 @@ input, select {
 }
 
 button {
-  width: 100%;
+  width: 48%;
   margin-top: 20px;
   padding: 12px;
   background: #004488;
@@ -46,6 +46,12 @@ button {
   border-radius: 10px;
   font-size: 16px;
   cursor: pointer;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 table {
@@ -103,11 +109,11 @@ th, td {
   <option>Other</option>
 </select>
 
-<label>Device ID</label>
-<input id="device_id" readonly>
+<label>Device ID (Unique)</label>
+<input id="device_id" required>
 
-<label>Serial Number</label>
-<input id="serial" required>
+<label>Serial Number (Optional)</label>
+<input id="serial">
 
 <label>Location</label>
 <input id="location" required>
@@ -115,7 +121,11 @@ th, td {
 <label>Photo</label>
 <input type="file" id="photo" accept="image/*" required>
 
-<button type="submit">Add Device</button>
+<div class="buttons">
+  <button type="button" onclick="addDevice()">Add Device</button>
+  <button type="button" onclick="updateDevice()">Update Device</button>
+</div>
+
 </form>
 
 <table>
@@ -135,9 +145,7 @@ th, td {
 </div>
 
 <script>
-const deviceForm = document.getElementById("deviceForm");
 const deviceTable = document.getElementById("deviceTable");
-
 let devices = JSON.parse(localStorage.getItem("devices") || "[]");
 
 const deviceIDs = {
@@ -160,11 +168,8 @@ document.getElementById("person").addEventListener("change", e=>{
 document.getElementById("device_name").addEventListener("change", e=>{
   const idField = document.getElementById("device_id");
   if(e.target.value === "Other"){
-    e.target.value = "";
-    idField.readOnly = false;
     idField.value = "";
   } else {
-    idField.readOnly = true;
     idField.value = deviceIDs[e.target.value] || "";
   }
 });
@@ -177,7 +182,7 @@ function renderTable(){
         <td>${d.person}</td>
         <td>${d.device}</td>
         <td>${d.deviceID}</td>
-        <td>${d.serial}</td>
+        <td>${d.serial || ""}</td>
         <td>${d.location}</td>
         <td>${d.time}</td>
         <td><img src="${d.photo}" class="thumbnail"></td>
@@ -186,9 +191,7 @@ function renderTable(){
 }
 renderTable();
 
-deviceForm.addEventListener("submit", function(e){
-  e.preventDefault();
-
+function getFormData(callback){
   let person = document.getElementById("person").value;
   if(person === "Other"){
     person = document.getElementById("person_other").value;
@@ -200,14 +203,14 @@ deviceForm.addEventListener("submit", function(e){
   const location = document.getElementById("location").value;
   const photoFile = document.getElementById("photo").files[0];
 
-  if(devices.some(d=>d.serial === serial)){
-    alert("Serial already exists");
+  if(!deviceID){
+    alert("Device ID is mandatory");
     return;
   }
 
   const reader = new FileReader();
   reader.onload = ()=>{
-    devices.push({
+    callback({
       person,
       device,
       deviceID,
@@ -216,14 +219,38 @@ deviceForm.addEventListener("submit", function(e){
       time: new Date().toLocaleString(),
       photo: reader.result
     });
-    localStorage.setItem("devices", JSON.stringify(devices));
-    renderTable();
-    deviceForm.reset();
-    document.getElementById("person_other").style.display="none";
-    document.getElementById("device_id").readOnly=true;
   };
   reader.readAsDataURL(photoFile);
-});
+}
+
+function addDevice(){
+  getFormData(data=>{
+    if(devices.some(d=>d.deviceID === data.deviceID)){
+      alert("Device ID already exists. Use Update instead.");
+      return;
+    }
+    devices.push(data);
+    localStorage.setItem("devices", JSON.stringify(devices));
+    renderTable();
+    document.getElementById("deviceForm").reset();
+    document.getElementById("person_other").style.display="none";
+  });
+}
+
+function updateDevice(){
+  getFormData(data=>{
+    const index = devices.findIndex(d=>d.deviceID === data.deviceID);
+    if(index === -1){
+      alert("Device ID not found. Use Add Device.");
+      return;
+    }
+    devices[index] = data;
+    localStorage.setItem("devices", JSON.stringify(devices));
+    renderTable();
+    document.getElementById("deviceForm").reset();
+    document.getElementById("person_other").style.display="none";
+  });
+}
 </script>
 
 </body>
