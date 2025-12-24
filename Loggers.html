@@ -42,7 +42,7 @@
   <div class="buttons">
     <button type="button" onclick="addDevice()">Add Device</button>
     <button type="button" onclick="updateDevice()">Update Device</button>
-    <button type="button" onclick="deleteSelectedDevices()">Delete ✅</button>
+    <button type="button" onclick="deleteSelectedDevices()">Delete</button>
   </div>
 
   <table id="deviceTable" border="1" style="margin-top:10px; width:100%;">
@@ -57,14 +57,14 @@
       </tr>
     </thead>
     <tbody>
-      <!-- Added devices will appear here -->
+      <!-- Rows added here -->
     </tbody>
   </table>
 
 </form>
 
 <script>
-const predefinedPassword = "1234"; // set your password here
+const predefinedPassword = "1234"; // change your password here
 
 function toggleOtherPerson() {
   const personSelect = document.getElementById('person');
@@ -139,6 +139,7 @@ function deleteSelectedDevices() {
 </script>
 
 <style>
+  /* Keep exactly like your original layout */
   #deviceForm select,
   #deviceForm input[type="text"],
   #deviceForm input[type="file"] {
@@ -153,13 +154,13 @@ function deleteSelectedDevices() {
   }
 
   .buttons {
-    margin-top: 15px;
+    margin-top: 10px;
   }
 
   .buttons button {
     margin-right: 5px;
-    padding: 6px 12px;
-    font-size: 14px;
+    padding: 5px 10px;
+    font-size: 13px;
   }
 
   .selectDevice {
