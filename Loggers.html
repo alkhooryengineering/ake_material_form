@@ -80,10 +80,13 @@ th, td {
 <div class="container">
 <h2 style="text-align:center;">Device Logger</h2>
 
-<form id="deviceForm">
+
+
+
+<form id="deviceForm" onsubmit="return validatePerson()">
 
   <label>Person</label>
-  <select id="person" required>
+  <select id="person" required onchange="toggleOtherPerson()">
     <option value="" disabled selected>Select</option>
     <option>Rehman</option>
     <option>Sarfraz</option>
@@ -122,11 +125,51 @@ th, td {
   <input type="file" id="photo" accept="image/*" required>
 
   <div class="buttons">
-    <button type="button" onclick="addDevice()">Add Device</button>
+    <button type="submit">Add Device</button>
     <button type="button" onclick="updateDevice()">Update Device</button>
   </div>
 
 </form>
+
+<script>
+function toggleOtherPerson() {
+  const personSelect = document.getElementById('person');
+  const otherInput = document.getElementById('person_other');
+  otherInput.style.display = (personSelect.value === 'Other') ? 'block' : 'none';
+}
+
+function validatePerson() {
+  const personSelect = document.getElementById('person');
+  const otherInput = document.getElementById('person_other');
+
+  if (personSelect.value === '') {
+    alert('Please select a person.');
+    return false;
+  }
+
+  if (personSelect.value === 'Other' && otherInput.value.trim() === '') {
+    alert('Please enter a name for "Other".');
+    return false;
+  }
+
+  return true; // validation passed
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
 
 
 <table>
