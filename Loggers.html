@@ -114,7 +114,7 @@ th, td {
 <input id="device_id" required>
 
 <label>Reminder Note</label>
-<input id="serial">
+<input id="reminder_note">
 
 <label>Location</label>
 <input id="location" required>
@@ -135,7 +135,7 @@ th, td {
   <th>Person</th>
   <th>Device</th>
   <th>Device ID</th>
-  <th>Serial</th>
+  <th>Reminder Note</th>
   <th>Location</th>
   <th>Time</th>
   <th>Photo</th>
@@ -200,7 +200,7 @@ function getFormData(callback){
 
   const device = document.getElementById("device_name").value;
   const deviceID = document.getElementById("device_id").value;
-  const serial = document.getElementById("serial").value;
+  const remindernote = document.getElementById("reminder_note").value;
   const location = document.getElementById("location").value;
   const photoFile = document.getElementById("photo").files[0];
 
@@ -215,7 +215,7 @@ function getFormData(callback){
       person,
       device,
       deviceID,
-      serial,
+      ReminderNote,
       location,
       time: new Date().toLocaleString(),
       photo: reader.result
