@@ -107,20 +107,20 @@
       </select>
       <input type="text" id="person_other" placeholder="Enter Name" style="display:none; margin-bottom:10px;">
 
-      <label for="device_name">Device:</label>
-      <select id="device_name" name="device_name" required>
-        <option value="" disabled selected>Select Device</option>
-        <option value="Wifi-Elitech-1">Wifi-Elitech-1</option>
-        <option value="Wifi-Elitech-2">Wifi-Elitech-2</option>
-        <option value="Wifi-Elitech-3">Wifi-Elitech-3</option>
-        <option value="Wifi-Elitech-4">Wifi-Elitech-4</option>
-        <option value="Wifi-Elitech-5">Wifi-Elitech-5</option>
-        <option value="Wifi-Elitech-6">Wifi-Elitech-6</option>
-        <option value="Wifi-Elitech-7">Wifi-Elitech-7</option>
-        <option value="Wifi-Elitech-8">Wifi-Elitech-8</option>
-        <option value="Wifi-Elitech-9">Wifi-Elitech-9</option>
-        <option value="Other">Other</option>
-      </select>
+ <select id="device_name" name="device_name" required>
+  <option value="" disabled selected>Select Device</option>
+  <option value="Wifi-Elitech-1">Wifi-Elitech-1</option>
+  <option value="Wifi-Elitech-2">Wifi-Elitech-2</option>
+  <option value="Wifi-Elitech-3">Wifi-Elitech-3</option>
+  <option value="Wifi-Elitech-4">Wifi-Elitech-4</option>
+  <option value="Wifi-Elitech-5">Wifi-Elitech-5</option>
+  <option value="Wifi-Elitech-6">Wifi-Elitech-6</option>
+  <option value="Wifi-Elitech-7">Wifi-Elitech-7</option>
+  <option value="Wifi-Elitech-8">Wifi-Elitech-8</option>
+  <option value="Wifi-Elitech-9">Wifi-Elitech-9</option>
+  <option value="Other">Other</option>
+</select>
+
 
       <input type="text" id="device_other" placeholder="Enter Device Name" style="display:none; margin-bottom:10px;">
       <label for="device_id">Device ID:</label>
@@ -174,19 +174,20 @@
       document.getElementById("person_other").style.display = this.value === "Other" ? "block" : "none";
     });
 
-    document.getElementById("device_name").addEventListener("change", function(){
-      const other = document.getElementById("device_other");
-      const deviceIDField = document.getElementById("device_id");
-      if(this.value === "Other"){
-        other.style.display = "block";
-        deviceIDField.readOnly = false;
-        deviceIDField.value = "";
-      } else {
-        other.style.display = "none";
-        deviceIDField.readOnly = true;
-        deviceIDField.value = deviceIDs[this.value] || "";
-      }
-    });
+  document.getElementById("device_name").addEventListener("change", function(){
+  const deviceIDField = document.getElementById("device_id");
+  if(this.value === "Other"){
+    // make the select editable
+    this.removeAttribute("readonly");
+    this.value = "";
+    deviceIDField.readOnly = false;
+    deviceIDField.value = "";
+  } else {
+    deviceIDField.readOnly = true;
+    deviceIDField.value = deviceIDs[this.value] || "";
+  }
+});
+
 
     function renderTable(){
       deviceTableBody.innerHTML = "";
