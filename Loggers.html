@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="https://raw.githubusercontent.com/alkhooryengineering/ake_material_form/c4da32d966f8d240c9040049e11066129f966ddc/AKE%20LOGO.png" type="image/png">
-<title>AKE Device Loggers</title>
+<title>Device Logger</title>
 
 <style>
 body {
@@ -110,11 +109,11 @@ th, td {
   <option>Other</option>
 </select>
 
-<label>Device ID (autofil)</label>
+<label>Device ID (Unique)</label>
 <input id="device_id" required>
 
-<label>Reminder Note</label>
-<input id="reminder_note">
+<label>Serial Number (Optional)</label>
+<input id="serial">
 
 <label>Location</label>
 <input id="location" required>
@@ -135,7 +134,7 @@ th, td {
   <th>Person</th>
   <th>Device</th>
   <th>Device ID</th>
-  <th>Reminder Note</th>
+  <th>Serial</th>
   <th>Location</th>
   <th>Time</th>
   <th>Photo</th>
@@ -183,7 +182,7 @@ function renderTable(){
         <td>${d.person}</td>
         <td>${d.device}</td>
         <td>${d.deviceID}</td>
-        <td>${d.reminder_note || ""}</td>
+        <td>${d.serial || ""}</td>
         <td>${d.location}</td>
         <td>${d.time}</td>
         <td><img src="${d.photo}" class="thumbnail"></td>
@@ -200,7 +199,7 @@ function getFormData(callback){
 
   const device = document.getElementById("device_name").value;
   const deviceID = document.getElementById("device_id").value;
-  const remindernote = document.getElementById("reminder_note").value;
+  const serial = document.getElementById("serial").value;
   const location = document.getElementById("location").value;
   const photoFile = document.getElementById("photo").files[0];
 
@@ -215,7 +214,7 @@ function getFormData(callback){
       person,
       device,
       deviceID,
-      ReminderNote,
+      serial,
       location,
       time: new Date().toLocaleString(),
       photo: reader.result
