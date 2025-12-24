@@ -178,7 +178,7 @@ function submitDevice(){
     formData.append("person_name",person);
     formData.append("photo",photoData);
 
-    fetch('save_device.php',{method:'POST',body:formData})
+    fetch('Loggers.php',{method:'POST',body:formData})
     .then(res=>res.json())
     .then(data=>{
       devices = data;
@@ -211,7 +211,7 @@ function renderTable(){
 window.onload = function(){
   const formData = new FormData();
   formData.append("action","fetch");
-  fetch('save_device.php',{method:'POST',body:formData})
+  fetch('Loggers.php',{method:'POST',body:formData})
     .then(res=>res.json())
     .then(data=>{ devices=data; renderTable(); })
     .catch(err=>console.error(err));
