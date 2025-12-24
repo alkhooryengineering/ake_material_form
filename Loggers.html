@@ -1,252 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Device Logger</title>
-  <link rel="icon" href="https://raw.githubusercontent.com/alkhooryengineering/ake_material_form/main/AKE%20LOGO.png" type="image/png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Device Logger</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #003366 0%, #005580 100%);
-      background-image: url("https://raw.githubusercontent.com/alkhooryengineering/ake-landing-page/main/AKE%20Street%20View.png");
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-image: url("https://raw.githubusercontent.com/alkhooryengineering/ake-landing-page/main/AKE%20Street%20View.png");
+  background-size: cover;
+  background-attachment: fixed;
+}
 
-    .container {
-      background-color: rgba(255, 255, 255, 0.95);
-      margin: 20px auto;
-      max-width: 900px;
-      padding: 20px;
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-    }
+.container {
+  background: rgba(255,255,255,0.95);
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 20px;
+}
 
-    h1 {
-      text-align: center;
-      color: #002244;
-      margin-bottom: 20px;
-      font-size: 22px;
-    }
+label {
+  font-weight: bold;
+  display: block;
+  margin-top: 10px;
+}
 
-    label {
-      margin-top: 10px;
-      font-weight: bold;
-      display: block;
-    }
+input, select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
 
-    select, input {
-      display: block;
-      margin: 8px 0;
-      padding: 10px;
-      width: 100%;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-      font-size: 14px;
-    }
+button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  background: #004488;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
 
-    button {
-      padding: 12px;
-      background-color: #004488;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      margin-top: 20px;
-      width: 100%;
-      font-size: 16px;
-    }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 25px;
+}
 
-    button:hover {
-      background-color: #0066aa;
-    }
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    table, th, td {
-      border: 1px solid #ccc;
-    }
-
-    th, td {
-      padding: 10px;
-      text-align: center;
-    }
-
-    img.thumbnail {
-      width: 50px;
-      height: 50px;
-      object-fit: cover;
-      border-radius: 5px;
-    }
-
-  </style>
+.thumbnail {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+</style>
 </head>
-<body>
-  <div class="container">
-    <h1>Device Logger</h1>
-    <form id="deviceForm">
-      <label for="person">Person:</label>
-      <select id="person" name="person" required>
-        <option value="" disabled selected>Select Person</option>
-        <option value="Rehman">Rehman</option>
-        <option value="Sarfraz">Sarfraz</option>
-        <option value="Senthil">Senthil</option>
-        <option value="Yaship">Yaship</option>
-        <option value="Aruna">Aruna</option>
-        <option value="Other">Other</option>
-      </select>
-      <input type="text" id="person_other" placeholder="Enter Name" style="display:none; margin-bottom:10px;">
 
- 
-      <label for="device_name">Logger:</label>
-      <select id="device_name" name="device_name" required>
-  <option value="" disabled selected>Select Device</option>
-  <option value="Wifi-Elitech-1">Wifi-Elitech-1</option>
-  <option value="Wifi-Elitech-2">Wifi-Elitech-2</option>
-  <option value="Wifi-Elitech-3">Wifi-Elitech-3</option>
-  <option value="Wifi-Elitech-4">Wifi-Elitech-4</option>
-  <option value="Wifi-Elitech-5">Wifi-Elitech-5</option>
-  <option value="Wifi-Elitech-6">Wifi-Elitech-6</option>
-  <option value="Wifi-Elitech-7">Wifi-Elitech-7</option>
-  <option value="Wifi-Elitech-8">Wifi-Elitech-8</option>
-  <option value="Wifi-Elitech-9">Wifi-Elitech-9</option>
-  <option value="Other">Other</option>
+<body>
+
+<div class="container">
+<h2 style="text-align:center;">Device Logger</h2>
+
+<form id="deviceForm">
+
+<label>Person</label>
+<select id="person" required>
+  <option value="" disabled selected>Select</option>
+  <option>Rehman</option>
+  <option>Sarfraz</option>
+  <option>Senthil</option>
+  <option>Yaship</option>
+  <option>Aruna</option>
+  <option>Other</option>
+</select>
+<input id="person_other" placeholder="Enter name" style="display:none;">
+
+<label>Device</label>
+<select id="device_name" required>
+  <option value="" disabled selected>Select</option>
+  <option>Wifi-Elitech-1</option>
+  <option>Wifi-Elitech-2</option>
+  <option>Wifi-Elitech-3</option>
+  <option>Wifi-Elitech-4</option>
+  <option>Wifi-Elitech-5</option>
+  <option>Wifi-Elitech-6</option>
+  <option>Wifi-Elitech-7</option>
+  <option>Wifi-Elitech-8</option>
+  <option>Wifi-Elitech-9</option>
+  <option>Other</option>
 </select>
 
+<label>Device ID</label>
+<input id="device_id" readonly>
 
-      <input type="text" id="device_other" placeholder="Enter Device Name" style="display:none; margin-bottom:10px;">
-      <label for="device_id">Device ID:</label>
-      <input type="text" id="device_id" name="device_id" readonly placeholder="Auto-filled">
+<label>Serial Number</label>
+<input id="serial" required>
 
-      <label for="location">Location:</label>
-      <input type="text" id="location" name="location" required>
+<label>Location</label>
+<input id="location" required>
 
-      <label for="photo">Photo:</label>
-      <input type="file" id="photo" accept="image/*" required>
+<label>Photo</label>
+<input type="file" id="photo" accept="image/*" required>
 
-      <button type="button" onclick="addDevice()">Add Device</button>
-    </form>
+<button type="submit">Add Device</button>
+</form>
 
-    <table id="deviceTable">
-      <thead>
-        <tr>
-          <th>Person</th>
-          <th>Device Name</th>
-          <th>Device ID</th>
-          <th>Serial Number</th>
-          <th>Location</th>
-          <th>Timestamp</th>
-          <th>Photo</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
+<table>
+<thead>
+<tr>
+  <th>Person</th>
+  <th>Device</th>
+  <th>Device ID</th>
+  <th>Serial</th>
+  <th>Location</th>
+  <th>Time</th>
+  <th>Photo</th>
+</tr>
+</thead>
+<tbody id="deviceTable"></tbody>
+</table>
+</div>
 
-  <script>
-    const deviceForm = document.getElementById("deviceForm");
-    const deviceTableBody = document.querySelector("#deviceTable tbody");
+<script>
+const deviceForm = document.getElementById("deviceForm");
+const deviceTable = document.getElementById("deviceTable");
 
-    let devices = JSON.parse(localStorage.getItem("devices") || "[]");
+let devices = JSON.parse(localStorage.getItem("devices") || "[]");
 
-    const deviceIDs = {
-      "Wifi-Elitech-1": "ID001",
-      "Wifi-Elitech-2": "ID002",
-      "Wifi-Elitech-3": "ID003",
-      "Wifi-Elitech-4": "ID004",
-      "Wifi-Elitech-5": "ID005",
-      "Wifi-Elitech-6": "ID006",
-      "Wifi-Elitech-7": "ID007",
-      "Wifi-Elitech-8": "ID008",
-      "Wifi-Elitech-9": "ID009"
-    };
+const deviceIDs = {
+  "Wifi-Elitech-1": "ID001",
+  "Wifi-Elitech-2": "ID002",
+  "Wifi-Elitech-3": "ID003",
+  "Wifi-Elitech-4": "ID004",
+  "Wifi-Elitech-5": "ID005",
+  "Wifi-Elitech-6": "ID006",
+  "Wifi-Elitech-7": "ID007",
+  "Wifi-Elitech-8": "ID008",
+  "Wifi-Elitech-9": "ID009"
+};
 
-    // Show Other fields if selected
-    document.getElementById("person").addEventListener("change", function(){
-      document.getElementById("person_other").style.display = this.value === "Other" ? "block" : "none";
-    });
+document.getElementById("person").addEventListener("change", e=>{
+  document.getElementById("person_other").style.display =
+    e.target.value === "Other" ? "block" : "none";
+});
 
-  document.getElementById("device_name").addEventListener("change", function(){
-  const deviceIDField = document.getElementById("device_id");
-  if(this.value === "Other"){
-    // make the select editable
-    this.removeAttribute("readonly");
-    this.value = "";
-    deviceIDField.readOnly = false;
-    deviceIDField.value = "";
+document.getElementById("device_name").addEventListener("change", e=>{
+  const idField = document.getElementById("device_id");
+  if(e.target.value === "Other"){
+    e.target.value = "";
+    idField.readOnly = false;
+    idField.value = "";
   } else {
-    deviceIDField.readOnly = true;
-    deviceIDField.value = deviceIDs[this.value] || "";
+    idField.readOnly = true;
+    idField.value = deviceIDs[e.target.value] || "";
   }
 });
 
+function renderTable(){
+  deviceTable.innerHTML = "";
+  devices.forEach(d=>{
+    deviceTable.innerHTML += `
+      <tr>
+        <td>${d.person}</td>
+        <td>${d.device}</td>
+        <td>${d.deviceID}</td>
+        <td>${d.serial}</td>
+        <td>${d.location}</td>
+        <td>${d.time}</td>
+        <td><img src="${d.photo}" class="thumbnail"></td>
+      </tr>`;
+  });
+}
+renderTable();
 
-    function renderTable(){
-      deviceTableBody.innerHTML = "";
-      devices.forEach(d => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${d.person}</td>
-          <td>${d.device}</td>
-          <td>${d.deviceID}</td>
-          <td>${d.serial}</td>
-          <td>${d.location}</td>
-          <td>${d.timestamp}</td>
-          <td>${d.photo ? `<img src="${d.photo}" class="thumbnail">` : ""}</td>
-        `;
-        deviceTableBody.appendChild(tr);
-      });
-    }
+deviceForm.addEventListener("submit", function(e){
+  e.preventDefault();
 
-    renderTable();
+  let person = document.getElementById("person").value;
+  if(person === "Other"){
+    person = document.getElementById("person_other").value;
+  }
 
-    deviceForm.addEventListener("submit", function(e){
-      e.preventDefault();
+  const device = document.getElementById("device_name").value;
+  const deviceID = document.getElementById("device_id").value;
+  const serial = document.getElementById("serial").value;
+  const location = document.getElementById("location").value;
+  const photoFile = document.getElementById("photo").files[0];
 
-      let person = document.getElementById("person").value;
-      if(person === "Other") person = document.getElementById("person_other").value;
+  if(devices.some(d=>d.serial === serial)){
+    alert("Serial already exists");
+    return;
+  }
 
-      let device = document.getElementById("device_name").value;
-      if(device === "Other") device = document.getElementById("device_other").value;
-
-      const deviceID = document.getElementById("device_id").value;
-      const serial = document.getElementById("serial").value;
-      const location = document.getElementById("location").value;
-      const photoInput = document.getElementById("photo");
-
-      // Check duplicate serial
-      if(devices.some(d=>d.serial===serial)){
-        alert("Serial number already exists!");
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = function(){
-        const newDevice = {
-          person, device, deviceID, serial, location,
-          timestamp: new Date().toLocaleString(),
-          photo: reader.result
-        };
-        devices.push(newDevice);
-        localStorage.setItem("devices", JSON.stringify(devices));
-        renderTable();
-        deviceForm.reset();
-        document.getElementById("person_other").style.display="none";
-        document.getElementById("device_other").style.display="none";
-        document.getElementById("device_id").readOnly = true;
-      }
-      reader.readAsDataURL(photoInput.files[0]);
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    devices.push({
+      person,
+      device,
+      deviceID,
+      serial,
+      location,
+      time: new Date().toLocaleString(),
+      photo: reader.result
     });
-  </script>
+    localStorage.setItem("devices", JSON.stringify(devices));
+    renderTable();
+    deviceForm.reset();
+    document.getElementById("person_other").style.display="none";
+    document.getElementById("device_id").readOnly=true;
+  };
+  reader.readAsDataURL(photoFile);
+});
+</script>
+
 </body>
 </html>
