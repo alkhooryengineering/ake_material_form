@@ -1,115 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AKE Loggers</title>
+  <meta charset="UTF-8">
+  <title>Device Form</title>
+  <style>
+    /* Make all input and select fields consistent */
+    #deviceForm select,
+    #deviceForm input[type="text"],
+    #deviceForm input[type="file"] {
+      width: 200px;  /* same width as Person/Device */
+      padding: 5px;
+      box-sizing: border-box;
+    }
 
-<style>
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-image: url("https://raw.githubusercontent.com/alkhooryengineering/ake-landing-page/main/AKE%20Street%20View.png");
-  background-size: cover;
-  background-attachment: fixed;
-}
+    #deviceForm label {
+      display: block;
+      margin-top: 10px;
+    }
 
-.container {
-  background: rgba(255,255,255,0.95);
-  max-width: 950px;
-  margin: 20px auto;
-  padding: 20px;
-  border-radius: 20px;
-}
+    /* Buttons styling */
+    .buttons {
+      margin-top: 15px;
+    }
 
-label {
-  font-weight: bold;
-  display: block;
-  margin-top: 10px;
-}
+    .buttons button {
+      margin-right: 5px;
+      padding: 6px 12px;
+      font-size: 14px;
+    }
 
-input, select {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
+    /* Delete button smaller */
+    .buttons button.delete-btn {
+      padding: 6px 10px;
+      font-size: 13px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
 
-button {
-  width: 48%;
-  margin-top: 20px;
-  padding: 12px;
-  background: #004488;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  cursor: pointer;
-}
+    .buttons button.delete-btn:hover {
+      background-color: #d32f2f;
+    }
 
-.buttons {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-}
+    /* Table styling */
+    #deviceTable {
+      margin-top: 15px;
+      width: 100%;
+      border-collapse: collapse;
+    }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 25px;
-}
+    #deviceTable th, #deviceTable td {
+      border: 1px solid #ccc;
+      padding: 5px;
+      text-align: left;
+    }
 
-th, td {
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: center;
-}
+    #deviceTable th {
+      background-color: #f0f0f0;
+    }
 
-.thumbnail {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 6px;
-}
-
-
-
-
-
-   #deviceForm select,
-  #deviceForm input[type="text"],
-  #deviceForm input[type="file"] {
-    width: 200px;
-    padding: 5px;
-    box-sizing: border-box;
-  }
-
-  #deviceForm label {
-    display: block;
-    margin-top: 10px;
-  }
-
-
-
-
-
-
-
-
-  
-</style>
+    .selectDevice {
+      transform: scale(1.2); /* bigger tick mark */
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="container">
-<h2 style="text-align:center;">AKE Loggers</h2>
-
-
-
-
-<form id="deviceForm" onsubmit="return validatePerson()">
+<form id="deviceForm" onsubmit="return false;">
 
   <label>Person</label>
   <select id="person" required onchange="toggleOtherPerson()">
@@ -151,13 +112,33 @@ th, td {
   <input type="file" id="photo" accept="image/*" required>
 
   <div class="buttons">
-    <button type="submit">Add Device</button>
+    <button type="button" onclick="addDevice()">Add Device</button>
     <button type="button" onclick="updateDevice()">Update Device</button>
+    <button type="button" class="delete-btn" onclick="deleteSelectedDevices()">Delete ✅</button>
   </div>
+
+  <!-- Table to show devices -->
+  <table id="deviceTable">
+    <thead>
+      <tr>
+        <th>Select</th>
+        <th>Person</th>
+        <th>Device</th>
+        <th>Device ID</th>
+        <th>Location</th>
+        <th>Photo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Added devices will appear here -->
+    </tbody>
+  </table>
 
 </form>
 
 <script>
+const predefinedPassword = "1234"; // change this to your preferred password
+
 function toggleOtherPerson() {
   const personSelect = document.getElementById('person');
   const otherInput = document.getElementById('person_other');
@@ -178,148 +159,59 @@ function validatePerson() {
     return false;
   }
 
-  return true; // validation passed
+  return true;
 }
-</script>
 
+function addDevice() {
+  if (!validatePerson()) return;
 
+  const person = document.getElementById('person').value;
+  const personOther = document.getElementById('person_other').value;
+  const device = document.getElementById('device_name').value;
+  const deviceId = document.getElementById('device_id').value;
+  const location = document.getElementById('location').value;
+  const photo = document.getElementById('photo').files[0]?.name || "";
 
+  if (!device) { alert("Please select a device."); return; }
+  if (!deviceId) { alert("Please enter Device ID."); return; }
+  if (!location) { alert("Please enter Location."); return; }
+  if (!photo) { alert("Please select a Photo."); return; }
 
+  const table = document.getElementById('deviceTable').getElementsByTagName('tbody')[0];
 
-
-
-
-
-
-
-
-
-
-  
-
-
-<table>
-<thead>
-<tr>
-  <th>Person</th>
-  <th>Device</th>
-  <th>Device ID</th>
-  <th>Reminder</th>
-  <th>Location</th>
-  <th>Time</th>
-  <th>Photo</th>
-</tr>
-</thead>
-<tbody id="deviceTable"></tbody>
-</table>
-</div>
-
-<script>
-const deviceTable = document.getElementById("deviceTable");
-let devices = JSON.parse(localStorage.getItem("devices") || "[]");
-
-const deviceIDs = {
-  "Wifi-Elitech-1": "ID001",
-  "Wifi-Elitech-2": "ID002",
-  "Wifi-Elitech-3": "ID003",
-  "Wifi-Elitech-4": "ID004",
-  "Wifi-Elitech-5": "ID005",
-  "Wifi-Elitech-6": "ID006",
-  "Wifi-Elitech-7": "ID007",
-  "Wifi-Elitech-8": "ID008",
-  "Wifi-Elitech-9": "ID009"
-};
-
-document.getElementById("person").addEventListener("change", e=>{
-  document.getElementById("person_other").style.display =
-    e.target.value === "Other" ? "block" : "none";
-});
-
-document.getElementById("device_name").addEventListener("change", e=>{
-  const idField = document.getElementById("device_id");
-  if(e.target.value === "Other"){
-    idField.value = "";
-  } else {
-    idField.value = deviceIDs[e.target.value] || "";
-  }
-});
-
-function renderTable(){
-  deviceTable.innerHTML = "";
-  devices.forEach(d=>{
-    deviceTable.innerHTML += `
-      <tr>
-        <td>${d.person}</td>
-        <td>${d.device}</td>
-        <td>${d.deviceID}</td>
-        <td>${d.serial || ""}</td>
-        <td>${d.location}</td>
-        <td>${d.time}</td>
-        <td><img src="${d.photo}" class="thumbnail"></td>
-      </tr>`;
-  });
+  const row = table.insertRow();
+  row.innerHTML = `
+    <td><input type="checkbox" class="selectDevice"></td>
+    <td>${person === 'Other' ? personOther : person}</td>
+    <td>${device}</td>
+    <td>${deviceId}</td>
+    <td>${location}</td>
+    <td>${photo}</td>
+  `;
 }
-renderTable();
 
-function getFormData(callback){
-  let person = document.getElementById("person").value;
-  if(person === "Other"){
-    person = document.getElementById("person_other").value;
-  }
+function updateDevice() {
+  alert("Update functionality not implemented yet.");
+}
 
-  const device = document.getElementById("device_name").value;
-  const deviceID = document.getElementById("device_id").value;
-  const serial = document.getElementById("serial").value;
-  const location = document.getElementById("location").value;
-  const photoFile = document.getElementById("photo").files[0];
-
-  if(!deviceID){
-    alert("Device ID is mandatory");
+function deleteSelectedDevices() {
+  const password = prompt("Enter password to delete selected devices:");
+  if (password !== predefinedPassword) {
+    alert("Incorrect password. Cannot delete devices.");
     return;
   }
 
-  const reader = new FileReader();
-  reader.onload = ()=>{
-    callback({
-      person,
-      device,
-      deviceID,
-      serial,
-      location,
-      time: new Date().toLocaleString(),
-      photo: reader.result
-    });
-  };
-  reader.readAsDataURL(photoFile);
-}
+  const table = document.getElementById('deviceTable').getElementsByTagName('tbody')[0];
+  const checkboxes = table.querySelectorAll('.selectDevice');
 
-function addDevice(){
-  getFormData(data=>{
-    if(devices.some(d=>d.deviceID === data.deviceID)){
-      alert("Device ID already exists. Use Update instead.");
-      return;
+  // Loop backwards to safely delete rows
+  for (let i = checkboxes.length - 1; i >= 0; i--) {
+    if (checkboxes[i].checked) {
+      table.deleteRow(i);
     }
-    devices.push(data);
-    localStorage.setItem("devices", JSON.stringify(devices));
-    renderTable();
-    document.getElementById("deviceForm").reset();
-    document.getElementById("person_other").style.display="none";
-  });
-}
+  }
 
-function updateDevice(){
-  getFormData(data=>{
-    const index = devices.findIndex(d=>d.deviceID === data.deviceID);
-    if(index === -1){
-      alert("Device ID not found. Use Add Device.");
-      return;
-    }
-    devices[index] = data;
-    localStorage.setItem("devices", JSON.stringify(devices));
-    renderTable();
-    document.getElementById("deviceForm").reset();
-    document.getElementById("person_other").style.display="none";
-  });
+  alert("Selected devices deleted successfully.");
 }
 </script>
 
