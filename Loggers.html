@@ -1,86 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Device Form</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-
-    form#deviceForm {
-      max-width: 600px;
-    }
-
-    label {
-      display: block;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-
-    select, input[type="text"], input[type="file"], input[type="password"] {
-      width: 100%;
-      padding: 6px 8px;
-      margin-top: 4px;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 14px;
-    }
-
-    .buttons {
-      margin-top: 15px;
-      display: flex;
-      gap: 10px;
-    }
-
-    .buttons button {
-      padding: 7px 14px;
-      font-size: 14px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .buttons button:hover {
-      opacity: 0.9;
-    }
-
-    button.add-btn { background-color: #4CAF50; color: white; }
-    button.update-btn { background-color: #2196F3; color: white; }
-    button.delete-btn { background-color: #f44336; color: white; }
-
-    table#deviceTable {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    table#deviceTable th, table#deviceTable td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-      font-size: 14px;
-    }
-
-    table#deviceTable th {
-      background-color: #f2f2f2;
-    }
-
-    .selectDevice {
-      display: block;
-      margin: 0 auto;
-      transform: scale(1.2);
-    }
-
-    #person_other {
-      display: none;
-    }
-  </style>
-</head>
-<body>
-
 <form id="deviceForm" onsubmit="return false;">
 
   <label>Person</label>
@@ -93,7 +10,7 @@
     <option>Aruna</option>
     <option>Other</option>
   </select>
-  <input id="person_other" placeholder="Enter name">
+  <input id="person_other" placeholder="Enter name" style="display:none;">
 
   <label>Device</label>
   <select id="device_name" required>
@@ -123,12 +40,12 @@
   <input type="file" id="photo" accept="image/*" required>
 
   <div class="buttons">
-    <button type="button" class="add-btn" onclick="addDevice()">Add Device</button>
-    <button type="button" class="update-btn" onclick="updateDevice()">Update Device</button>
-    <button type="button" class="delete-btn" onclick="deleteSelectedDevices()">Delete ✅</button>
+    <button type="button" onclick="addDevice()">Add Device</button>
+    <button type="button" onclick="updateDevice()">Update Device</button>
+    <button type="button" onclick="deleteSelectedDevices()">Delete ✅</button>
   </div>
 
-  <table id="deviceTable">
+  <table id="deviceTable" border="1" style="margin-top:10px; width:100%;">
     <thead>
       <tr>
         <th>Select</th>
@@ -140,14 +57,14 @@
       </tr>
     </thead>
     <tbody>
-      <!-- Rows will be added here -->
+      <!-- Added devices will appear here -->
     </tbody>
   </table>
 
 </form>
 
 <script>
-const predefinedPassword = "1234"; // change this to your preferred password
+const predefinedPassword = "1234"; // set your password here
 
 function toggleOtherPerson() {
   const personSelect = document.getElementById('person');
@@ -221,5 +138,33 @@ function deleteSelectedDevices() {
 }
 </script>
 
-</body>
-</html>
+<style>
+  #deviceForm select,
+  #deviceForm input[type="text"],
+  #deviceForm input[type="file"] {
+    width: 200px;
+    padding: 5px;
+    box-sizing: border-box;
+  }
+
+  #deviceForm label {
+    display: block;
+    margin-top: 10px;
+  }
+
+  .buttons {
+    margin-top: 15px;
+  }
+
+  .buttons button {
+    margin-right: 5px;
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+
+  .selectDevice {
+    display: block;
+    margin: 0 auto;
+    transform: scale(1.2);
+  }
+</style>
