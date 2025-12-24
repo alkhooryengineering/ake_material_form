@@ -4,67 +4,78 @@
   <meta charset="UTF-8">
   <title>Device Form</title>
   <style>
-    /* Make all input and select fields consistent */
-    #deviceForm select,
-    #deviceForm input[type="text"],
-    #deviceForm input[type="file"] {
-      width: 200px;  /* same width as Person/Device */
-      padding: 5px;
-      box-sizing: border-box;
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
     }
 
-    #deviceForm label {
+    form#deviceForm {
+      max-width: 600px;
+    }
+
+    label {
       display: block;
       margin-top: 10px;
+      font-weight: bold;
     }
 
-    /* Buttons styling */
-    .buttons {
-      margin-top: 15px;
-    }
-
-    .buttons button {
-      margin-right: 5px;
-      padding: 6px 12px;
+    select, input[type="text"], input[type="file"], input[type="password"] {
+      width: 100%;
+      padding: 6px 8px;
+      margin-top: 4px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
       font-size: 14px;
     }
 
-    /* Delete button smaller */
-    .buttons button.delete-btn {
-      padding: 6px 10px;
-      font-size: 13px;
-      background-color: #f44336;
-      color: white;
+    .buttons {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .buttons button {
+      padding: 7px 14px;
+      font-size: 14px;
       border: none;
+      border-radius: 4px;
       cursor: pointer;
     }
 
-    .buttons button.delete-btn:hover {
-      background-color: #d32f2f;
+    .buttons button:hover {
+      opacity: 0.9;
     }
 
-    /* Table styling */
-    #deviceTable {
-      margin-top: 15px;
+    button.add-btn { background-color: #4CAF50; color: white; }
+    button.update-btn { background-color: #2196F3; color: white; }
+    button.delete-btn { background-color: #f44336; color: white; }
+
+    table#deviceTable {
       width: 100%;
       border-collapse: collapse;
+      margin-top: 20px;
     }
 
-    #deviceTable th, #deviceTable td {
-      border: 1px solid #ccc;
-      padding: 5px;
+    table#deviceTable th, table#deviceTable td {
+      border: 1px solid #ddd;
+      padding: 8px;
       text-align: left;
+      font-size: 14px;
     }
 
-    #deviceTable th {
-      background-color: #f0f0f0;
+    table#deviceTable th {
+      background-color: #f2f2f2;
     }
 
     .selectDevice {
-      transform: scale(1.2); /* bigger tick mark */
-      margin-left: auto;
-      margin-right: auto;
       display: block;
+      margin: 0 auto;
+      transform: scale(1.2);
+    }
+
+    #person_other {
+      display: none;
     }
   </style>
 </head>
@@ -82,7 +93,7 @@
     <option>Aruna</option>
     <option>Other</option>
   </select>
-  <input id="person_other" placeholder="Enter name" style="display:none;">
+  <input id="person_other" placeholder="Enter name">
 
   <label>Device</label>
   <select id="device_name" required>
@@ -112,12 +123,11 @@
   <input type="file" id="photo" accept="image/*" required>
 
   <div class="buttons">
-    <button type="button" onclick="addDevice()">Add Device</button>
-    <button type="button" onclick="updateDevice()">Update Device</button>
+    <button type="button" class="add-btn" onclick="addDevice()">Add Device</button>
+    <button type="button" class="update-btn" onclick="updateDevice()">Update Device</button>
     <button type="button" class="delete-btn" onclick="deleteSelectedDevices()">Delete ✅</button>
   </div>
 
-  <!-- Table to show devices -->
   <table id="deviceTable">
     <thead>
       <tr>
@@ -130,7 +140,7 @@
       </tr>
     </thead>
     <tbody>
-      <!-- Added devices will appear here -->
+      <!-- Rows will be added here -->
     </tbody>
   </table>
 
@@ -149,16 +159,14 @@ function validatePerson() {
   const personSelect = document.getElementById('person');
   const otherInput = document.getElementById('person_other');
 
-  if (personSelect.value === '') {
+  if (!personSelect.value) {
     alert('Please select a person.');
     return false;
   }
-
   if (personSelect.value === 'Other' && otherInput.value.trim() === '') {
     alert('Please enter a name for "Other".');
     return false;
   }
-
   return true;
 }
 
@@ -178,7 +186,6 @@ function addDevice() {
   if (!photo) { alert("Please select a Photo."); return; }
 
   const table = document.getElementById('deviceTable').getElementsByTagName('tbody')[0];
-
   const row = table.insertRow();
   row.innerHTML = `
     <td><input type="checkbox" class="selectDevice"></td>
@@ -204,7 +211,6 @@ function deleteSelectedDevices() {
   const table = document.getElementById('deviceTable').getElementsByTagName('tbody')[0];
   const checkboxes = table.querySelectorAll('.selectDevice');
 
-  // Loop backwards to safely delete rows
   for (let i = checkboxes.length - 1; i >= 0; i--) {
     if (checkboxes[i].checked) {
       table.deleteRow(i);
