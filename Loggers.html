@@ -268,25 +268,24 @@ function getFormData(callback){
   reader.readAsDataURL(photoFile);
 }
 
-// Add or update device
-function addDevice(){
+
+
+
+
+function addDevice(isAdd = true){  
   getFormData(data=>{
+    if(isAdd){
+      const exists = devices.some(d => d.deviceID.trim().toLowerCase() === data.deviceID.trim().toLowerCase());
+      if(exists){
+        alert("Same Device ID Already Exist, Please Use Update Function");
+        return;
+      }
+    }
 
-
-    const exists = devices.some(d => d.deviceID === data.deviceID);
-if(exists){
-  alert("Same Device ID Already Exist, Please Use Update Function");
-  return;
-}
-
-
-
-       
     fetch(SHEET_URL, { method:"POST", body:JSON.stringify(data) })
       .then(res=>res.text())
       .then(msg=>{
         alert("Device saved/updated successfully!");
-        // Update local devices array
         const index = devices.findIndex(d=>d.deviceID===data.deviceID);
         if(index!==-1) devices[index]=data;
         else devices.push(data);
@@ -297,6 +296,14 @@ if(exists){
       .catch(err=>{ console.error("Error:",err); alert("Failed to save device. Check console."); });
   });
 }
+
+
+
+
+
+
+
+  
 
 // Update button (calls same addDevice because Apps Script handles update)
 function updateDevice(){
