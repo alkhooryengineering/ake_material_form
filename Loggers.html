@@ -330,7 +330,7 @@ function handleSubmit() {
 
 
 
-function deleteDevice(deviceID) {
+/*function deleteDevice(deviceID) {
   if(!confirm("Are you sure you want to delete this device?")) return;
 
   // Remove from local array
@@ -345,8 +345,30 @@ function deleteDevice(deviceID) {
   .then(res => res.text())
   .then(msg => alert("Device deleted successfully!"))
   .catch(err => console.error(err));
-}
+}*/
 
+function deleteDevice(deviceID) {
+  const password = prompt("Enter password to delete this device:");
+  if(password !== "YOUR_PASSWORD_HERE") {  // <-- replace with your password
+    alert("Incorrect password! You cannot delete this device.");
+    return;
+  }
+
+  if(!confirm("Are you sure you want to delete this device?")) return;
+
+  // Remove from local array
+  devices = devices.filter(d => d.deviceID !== deviceID);
+  renderTable();
+
+  // Send DELETE request to Google Sheet
+  fetch(SHEET_URL, {
+    method: "POST",
+    body: JSON.stringify({ action: "delete", deviceID })
+  })
+  .then(res => res.text())
+  .then(msg => alert("Device deleted successfully!"))
+  .catch(err => console.error(err));
+}
 
 
 
