@@ -143,29 +143,9 @@ th, td {
 
 <script>
 // Google Sheet Web App URL
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbykOqFH2uhYr-r_miwsTHHLt_liLDRdVCS2tMvFpgAVfgh02ofQTYJQkzxMZDdIzyAj/exec";
+const SHEET_URL = "YOUR_WEB_APP_URL_HERE";
 
 let devices = [];
-
-function toggleOtherPerson() {
-  const personSelect = document.getElementById('person');
-  const otherInput = document.getElementById('person_other');
-  otherInput.style.display = (personSelect.value === 'Other') ? "block" : "none";
-}
-
-function validatePerson() {
-  const personSelect = document.getElementById('person');
-  const otherInput = document.getElementById('person_other');
-  if(personSelect.value === '') { alert('Please select a person.'); return false; }
-  if(personSelect.value === 'Other' && otherInput.value.trim() === '') { alert('Please enter a name for "Other".'); return false; }
-  return true;
-}
-
-function handleSubmit() {
-  if (!validatePerson()) return false;
-  addDevice();
-  return false;
-}
 
 const deviceIDs = {
   "Wifi-Elitech-1": "ID001",
@@ -179,22 +159,38 @@ const deviceIDs = {
   "Wifi-Elitech-9": "ID009"
 };
 
-document.getElementById("device_name").addEventListener("change", e => {
-  const idField = document.getElementById("device_id");
-  idField.value = (e.target.value === "Other") ? "" : (deviceIDs[e.target.value] || "");
+// Show/hide Other person input
+function toggleOtherPerson() {
+  document.getElementById('person_other').style.display =
+    document.getElementById('person').value === "Other" ? "block" : "none";
+}
+
+// Validate form
+function validatePerson() {
+  const person = document.getElementById('person').value;
+  const other = document.getElementById('person_other').value;
+  if (!person) { alert("Select a person"); return false; }
+  if (person==="Other" && !other.trim()) { alert("Enter name for 'Other'"); return false; }
+  return true;
+}
+
+// Autofill device ID
+document.getElementById("device_name").addEventListener("change", e=>{
+  document.getElementById("device_id").value =
+    e.target.value==="Other" ? "" : deviceIDs[e.target.value] || "";
 });
 
 // Render table
 const deviceTable = document.getElementById("deviceTable");
 function renderTable() {
   deviceTable.innerHTML = "";
-  devices.forEach(d => {
+  devices.forEach(d=>{
     deviceTable.innerHTML += `
       <tr>
         <td>${d.person}</td>
         <td>${d.device}</td>
         <td>${d.deviceID}</td>
-        <td>${d.serial || ""}</td>
+        <td>${d.serial||""}</td>
         <td>${d.location}</td>
         <td>${d.time}</td>
         <td><img src="${d.photo}" class="thumbnail"></td>
@@ -202,7 +198,7 @@ function renderTable() {
   });
 }
 
-// Load existing devices from Google Sheets
+// Load devices from Google Sheet
 function loadDevices() {
   fetch(SHEET_URL)
     .then(res => res.json())
@@ -217,14 +213,17 @@ function loadDevices() {
         photo: d[6]
       }));
       renderTable();
-    });
+    })
+    .catch(err => console.error("Failed to load devices:", err));
 }
-loadDevices();
+
+// Call on page load
+document.addEventListener("DOMContentLoaded", loadDevices);
 
 // Get form data
 function getFormData(callback){
   let person = document.getElementById("person").value;
-  if(person === "Other") person = document.getElementById("person_other").value;
+  if(person==="Other") person=document.getElementById("person_other").value;
   const device = document.getElementById("device_name").value;
   const deviceID = document.getElementById("device_id").value;
   const serial = document.getElementById("serial").value;
@@ -232,48 +231,43 @@ function getFormData(callback){
   const photoFile = document.getElementById("photo").files[0];
   if(!deviceID){ alert("Device ID is mandatory"); return; }
   const reader = new FileReader();
-  reader.onload = ()=>{ callback({ person, device, deviceID, serial, location, time: new Date().toLocaleString(), photo: reader.result }); };
+  reader.onload = ()=>{ 
+    callback({ person, device, deviceID, serial, location, time:new Date().toLocaleString(), photo:reader.result }); 
+  };
   reader.readAsDataURL(photoFile);
 }
 
-// Add Device
+// Add or update device
 function addDevice(){
   getFormData(data=>{
-    if(devices.some(d=>d.deviceID === data.deviceID)){
-      alert("Device ID already exists. Use Update instead."); return;
-    }
-    fetch(SHEET_URL, {
-      method: "POST",
-      body: JSON.stringify(data)
-    })
-    .then(res=>res.text())
-    .then(msg=>{
-      alert("Device saved successfully!");
-      devices.push(data);
-      renderTable();
-      document.getElementById("deviceForm").reset();
-      document.getElementById("person_other").style.display="none";
-    })
-    .catch(err=>{
-      console.error("Error saving device:", err);
-      alert("Failed to save device. Check console.");
-    });
+    fetch(SHEET_URL, { method:"POST", body:JSON.stringify(data) })
+      .then(res=>res.text())
+      .then(msg=>{
+        alert("Device saved/updated successfully!");
+        // Update local devices array
+        const index = devices.findIndex(d=>d.deviceID===data.deviceID);
+        if(index!==-1) devices[index]=data;
+        else devices.push(data);
+        renderTable();
+        document.getElementById("deviceForm").reset();
+        document.getElementById("person_other").style.display="none";
+      })
+      .catch(err=>{ console.error("Error:",err); alert("Failed to save device. Check console."); });
   });
 }
 
-// Update Device
+// Update button (calls same addDevice because Apps Script handles update)
 function updateDevice(){
-  getFormData(data=>{
-    const index = devices.findIndex(d=>d.deviceID===data.deviceID);
-    if(index === -1){ alert("Device ID not found. Use Add Device."); return; }
-    // Update local table
-    devices[index] = data;
-    renderTable();
-    // Optional: update in Google Sheets (requires more code)
-    document.getElementById("deviceForm").reset();
-    document.getElementById("person_other").style.display="none";
-  });
+  addDevice();
+}
+
+// Form submit
+function handleSubmit() {
+  if (!validatePerson()) return false;
+  addDevice();
+  return false;
 }
 </script>
+
 </body>
 </html>
