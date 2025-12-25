@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AKE Loggers</title>
-
 <style>
 body {
   margin: 0;
@@ -13,7 +12,6 @@ body {
   background-size: cover;
   background-attachment: fixed;
 }
-
 .container {
   background: rgba(255,255,255,0.95);
   max-width: 950px;
@@ -21,13 +19,11 @@ body {
   padding: 20px;
   border-radius: 20px;
 }
-
 label {
   font-weight: bold;
   display: block;
   margin-top: 10px;
 }
-
 input, select {
   width: 100%;
   padding: 10px;
@@ -35,7 +31,6 @@ input, select {
   border-radius: 8px;
   border: 1px solid #ccc;
 }
-
 button {
   width: 48%;
   margin-top: 20px;
@@ -47,90 +42,44 @@ button {
   font-size: 16px;
   cursor: pointer;
 }
-
 .buttons {
   display: flex;
   justify-content: space-between;
   gap: 10px;
 }
-
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 25px;
 }
-
 th, td {
   border: 1px solid #ccc;
   padding: 8px;
   text-align: center;
 }
-
 .thumbnail {
   width: 50px;
   height: 50px;
   object-fit: cover;
   border-radius: 6px;
 }
-
-
-
-
-
-  /* #deviceForm select,
-  #deviceForm input[type="text"],
-  #deviceForm input[type="file"] {
-    width: 200px;
-    padding: 5px;
-    box-sizing: border-box;
-  }
-*/
-  
-  #deviceForm label {
-    display: block;
-    margin-top: 10px;
-  }
-
-
-#deviceForm {
-  width: 100%;
-}
-
-#deviceForm label {
-  margin-top: 12px;
-}
-
-#deviceForm input,
-#deviceForm select {
-  width: 100%;
-  padding: 10px 12px;
+#deviceForm select,
+#deviceForm input[type="text"],
+#deviceForm input[type="file"] {
+  width: 200px;
+  padding: 5px;
   box-sizing: border-box;
 }
-
-#deviceForm input[type="file"] {
-  padding: 6px;
+#deviceForm label {
+  display: block;
+  margin-top: 10px;
 }
-
-
-
-
-
-
-  
 </style>
 </head>
-
 <body>
-
 <div class="container">
 <h2 style="text-align:center;">AKE Loggers</h2>
-
-
-
-
 <form id="deviceForm" onsubmit="return handleSubmit()">
-
-
   <label>Person</label>
   <select id="person" required onchange="toggleOtherPerson()">
     <option value="" disabled selected>Select</option>
@@ -158,7 +107,7 @@ th, td {
     <option>Other</option>
   </select>
 
-  <label>Device ID (autofil)</label>
+  <label>Device ID (autofill)</label>
   <input id="device_id" required>
 
   <label>Reminder</label>
@@ -174,49 +123,7 @@ th, td {
     <button type="submit">Add Device</button>
     <button type="button" onclick="updateDevice()">Update Device</button>
   </div>
-
 </form>
-
-<script>
-function toggleOtherPerson() {
-  const personSelect = document.getElementById('person');
-  const otherInput = document.getElementById('person_other');
-  otherInput.style.display = (personSelect.value === 'Other') ? 'block' : 'none';
-}
-
-function validatePerson() {
-  const personSelect = document.getElementById('person');
-  const otherInput = document.getElementById('person_other');
-
-  if (personSelect.value === '') {
-    alert('Please select a person.');
-    return false;
-  }
-
-  if (personSelect.value === 'Other' && otherInput.value.trim() === '') {
-    alert('Please enter a name for "Other".');
-    return false;
-  }
-
-  return true; // validation passed
-}
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
 
 <table>
 <thead>
@@ -235,8 +142,30 @@ function validatePerson() {
 </div>
 
 <script>
-const deviceTable = document.getElementById("deviceTable");
-let devices = JSON.parse(localStorage.getItem("devices") || "[]");
+// Google Sheet Web App URL
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbykOqFH2uhYr-r_miwsTHHLt_liLDRdVCS2tMvFpgAVfgh02ofQTYJQkzxMZDdIzyAj/exec";
+
+let devices = [];
+
+function toggleOtherPerson() {
+  const personSelect = document.getElementById('person');
+  const otherInput = document.getElementById('person_other');
+  otherInput.style.display = (personSelect.value === 'Other') ? "block" : "none";
+}
+
+function validatePerson() {
+  const personSelect = document.getElementById('person');
+  const otherInput = document.getElementById('person_other');
+  if(personSelect.value === '') { alert('Please select a person.'); return false; }
+  if(personSelect.value === 'Other' && otherInput.value.trim() === '') { alert('Please enter a name for "Other".'); return false; }
+  return true;
+}
+
+function handleSubmit() {
+  if (!validatePerson()) return false;
+  addDevice();
+  return false;
+}
 
 const deviceIDs = {
   "Wifi-Elitech-1": "ID001",
@@ -250,23 +179,16 @@ const deviceIDs = {
   "Wifi-Elitech-9": "ID009"
 };
 
-document.getElementById("person").addEventListener("change", e=>{
-  document.getElementById("person_other").style.display =
-    e.target.value === "Other" ? "block" : "none";
-});
-
-document.getElementById("device_name").addEventListener("change", e=>{
+document.getElementById("device_name").addEventListener("change", e => {
   const idField = document.getElementById("device_id");
-  if(e.target.value === "Other"){
-    idField.value = "";
-  } else {
-    idField.value = deviceIDs[e.target.value] || "";
-  }
+  idField.value = (e.target.value === "Other") ? "" : (deviceIDs[e.target.value] || "");
 });
 
-function renderTable(){
+// Render table
+const deviceTable = document.getElementById("deviceTable");
+function renderTable() {
   deviceTable.innerHTML = "";
-  devices.forEach(d=>{
+  devices.forEach(d => {
     deviceTable.innerHTML += `
       <tr>
         <td>${d.person}</td>
@@ -279,130 +201,79 @@ function renderTable(){
       </tr>`;
   });
 }
-renderTable();
 
+// Load existing devices from Google Sheets
+function loadDevices() {
+  fetch(SHEET_URL)
+    .then(res => res.json())
+    .then(data => {
+      devices = data.map(d => ({
+        person: d[0],
+        device: d[1],
+        deviceID: d[2],
+        serial: d[3],
+        location: d[4],
+        time: d[5],
+        photo: d[6]
+      }));
+      renderTable();
+    });
+}
+loadDevices();
+
+// Get form data
 function getFormData(callback){
   let person = document.getElementById("person").value;
-  if(person === "Other"){
-    person = document.getElementById("person_other").value;
-  }
-
+  if(person === "Other") person = document.getElementById("person_other").value;
   const device = document.getElementById("device_name").value;
   const deviceID = document.getElementById("device_id").value;
   const serial = document.getElementById("serial").value;
   const location = document.getElementById("location").value;
   const photoFile = document.getElementById("photo").files[0];
-
-  if(!deviceID){
-    alert("Device ID is mandatory");
-    return;
-  }
-
+  if(!deviceID){ alert("Device ID is mandatory"); return; }
   const reader = new FileReader();
-  reader.onload = ()=>{
-    callback({
-      person,
-      device,
-      deviceID,
-      serial,
-      location,
-      time: new Date().toLocaleString(),
-      photo: reader.result
-    });
-  };
+  reader.onload = ()=>{ callback({ person, device, deviceID, serial, location, time: new Date().toLocaleString(), photo: reader.result }); };
   reader.readAsDataURL(photoFile);
 }
 
+// Add Device
 function addDevice(){
   getFormData(data=>{
     if(devices.some(d=>d.deviceID === data.deviceID)){
-      alert("Device ID already exists. Use Update instead.");
-      return;
+      alert("Device ID already exists. Use Update instead."); return;
     }
+    fetch(SHEET_URL, {
+      method: "POST",
+      body: JSON.stringify(data)
+    })
+    .then(res=>res.text())
+    .then(msg=>{
+      alert("Device saved successfully!");
+      devices.push(data);
+      renderTable();
+      document.getElementById("deviceForm").reset();
+      document.getElementById("person_other").style.display="none";
+    })
+    .catch(err=>{
+      console.error("Error saving device:", err);
+      alert("Failed to save device. Check console.");
+    });
+  });
+}
 
-
-
-fetch("https://script.google.com/macros/s/AKfycbykOqFH2uhYr-r_miwsTHHLt_liLDRdVCS2tMvFpgAVfgh02ofQTYJQkzxMZDdIzyAj/exec", {
-  method: "POST",
-  body: JSON.stringify(data)
-})
-.then(res => res.text())
-.then(msg => {
-  alert("Device saved online successfully!");
-});
-
-
-    
-
-
-
-
-
-
-    
+// Update Device
+function updateDevice(){
+  getFormData(data=>{
+    const index = devices.findIndex(d=>d.deviceID===data.deviceID);
+    if(index === -1){ alert("Device ID not found. Use Add Device."); return; }
+    // Update local table
+    devices[index] = data;
+    renderTable();
+    // Optional: update in Google Sheets (requires more code)
     document.getElementById("deviceForm").reset();
     document.getElementById("person_other").style.display="none";
   });
 }
-
-function updateDevice(){
-  getFormData(data=>{
-    const index = devices.findIndex(d=>d.deviceID === data.deviceID);
-    if(index === -1){
-      alert("Device ID not found. Use Add Device.");
-      return;
-    }
- fetch("PASTE_YOUR_WEB_APP_URL_HERE", { // your Web App URL
-  method: "POST",
-  body: JSON.stringify(data)
-})
-.then(res => res.text())
-.then(msg => {
-  alert("Device saved successfully!"); // confirmation
-  devices.push(data);  // update local table
-  renderTable();
-  document.getElementById("deviceForm").reset();
-  document.getElementById("person_other").style.display="none";
-});
-
-  });
-}
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
-function handleSubmit() {
-  // 1. Check person validation
-  if (!validatePerson()) {
-    return false;
-  }
-
-  // 2. Call addDevice (THIS WAS MISSING)
-  addDevice();
-
-  // 3. Stop page reload
-  return false;
-}
-</script>
-
-
-
-
-
-
-
-
-
-  
 </body>
 </html>
