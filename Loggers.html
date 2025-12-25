@@ -128,7 +128,8 @@ th, td {
 
 
 
-<form id="deviceForm" onsubmit="return validatePerson()">
+<form id="deviceForm" onsubmit="return handleSubmit()">
+
 
   <label>Person</label>
   <select id="person" required onchange="toggleOtherPerson()">
@@ -342,5 +343,40 @@ function updateDevice(){
 }
 </script>
 
+
+
+
+
+
+
+
+
+
+
+
+<script>
+function handleSubmit() {
+  // 1. Check person validation
+  if (!validatePerson()) {
+    return false;
+  }
+
+  // 2. Call addDevice (THIS WAS MISSING)
+  addDevice();
+
+  // 3. Stop page reload
+  return false;
+}
+</script>
+
+
+
+
+
+
+
+
+
+  
 </body>
 </html>
