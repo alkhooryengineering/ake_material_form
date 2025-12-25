@@ -319,9 +319,27 @@ function addDevice(){
       alert("Device ID already exists. Use Update instead.");
       return;
     }
-    devices.push(data);
-    localStorage.setItem("devices", JSON.stringify(devices));
-    renderTable();
+
+
+
+fetch("https://script.google.com/macros/s/AKfycbykOqFH2uhYr-r_miwsTHHLt_liLDRdVCS2tMvFpgAVfgh02ofQTYJQkzxMZDdIzyAj/exec", {
+  method: "POST",
+  body: JSON.stringify(data)
+})
+.then(res => res.text())
+.then(msg => {
+  alert("Device saved online successfully!");
+});
+
+
+    
+
+
+
+
+
+
+    
     document.getElementById("deviceForm").reset();
     document.getElementById("person_other").style.display="none";
   });
