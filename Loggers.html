@@ -173,7 +173,7 @@ th, td {
   <th>Location</th>
   <th>Time</th>
   <th>Photo</th>
-  <center><th>Del</th>
+  <center><th>Delete</th>
 </tr>
 </thead>
 <tbody id="deviceTable"></tbody>
@@ -233,7 +233,7 @@ function renderTable() {
         <td>${d.location}</td>
         <td>${d.time}</td>
         <td><img src="${d.photo}" class="thumbnail"></td>
-        <td><button onclick="deleteDevice('${d.deviceID}')">Delete</button></td>
+        <td><button onclick="deleteDevice('${d.deviceID}')">Del</button><center></td>
       </tr>`;
   });
 }
