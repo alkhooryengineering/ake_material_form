@@ -254,7 +254,7 @@ function renderTable() {
         <td>${d.deviceID}</td>
         <td>${d.serial||""}</td>
         <td>${d.location}</td>
-        <td>${d.time}</td>
+        <td>${d.time ? new Date(d.time).toLocaleString() : ""}</td>
         <td><img src="${d.photo}" class="thumbnail"></td>
         <td><button class="delete-btn" onclick="deleteDevice('${d.deviceID}')">🗑️</button></td>
       </tr>`;
