@@ -271,6 +271,17 @@ function getFormData(callback){
 // Add or update device
 function addDevice(){
   getFormData(data=>{
+
+
+    const exists = devices.some(d => d.deviceID === data.deviceID);
+if(exists){
+  alert("Same Device ID Already Exist, Please Use Update Function");
+  return;
+}
+
+
+
+       
     fetch(SHEET_URL, { method:"POST", body:JSON.stringify(data) })
       .then(res=>res.text())
       .then(msg=>{
