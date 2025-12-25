@@ -100,22 +100,6 @@ th, td {
 }
 
 
-/* Delete button styling */
-.delete-btn {
-  padding: 6px 12px;       /* smaller padding to fit cell */
-  font-size: 14px;         /* slightly smaller font */
-  background-color: #d9534f; /* red color for delete */
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  white-space: nowrap;     /* prevents wrapping */
-}
-
-.delete-btn:hover {
-  background-color: #c9302c; /* darker red on hover */
-}
-
 
 
 
@@ -249,7 +233,7 @@ function renderTable() {
         <td>${d.location}</td>
         <td>${d.time}</td>
         <td><img src="${d.photo}" class="thumbnail"></td>
-        <button onclick="deleteDevice('${d.deviceID}')">Delete</button>
+        <td><button onclick="deleteDevice('${d.deviceID}')">Delete</button></td>
       </tr>`;
   });
 }
