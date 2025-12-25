@@ -272,7 +272,7 @@ function getFormData(callback){
 
 
 
-function addDevice(isAdd = true){  
+  function addDevice(isAdd = true){  
   getFormData(data=>{
     if(isAdd){
       const exists = devices.some(d => d.deviceID.trim().toLowerCase() === data.deviceID.trim().toLowerCase());
@@ -297,18 +297,17 @@ function addDevice(isAdd = true){
   });
 }
 
-
-
+// Update button (calls same addDevice but tells it it's an update)
+function updateDevice(){
+  addDevice(false);  // <-- pass false here
+}
 
 
 
 
   
 
-// Update button (calls same addDevice because Apps Script handles update)
-function updateDevice(){
-  addDevice();
-}
+
 
 // Form submit
 function handleSubmit() {
