@@ -352,11 +352,19 @@ function updateDevice(){
       alert("Device ID not found. Use Add Device.");
       return;
     }
-    devices[index] = data;
-    localStorage.setItem("devices", JSON.stringify(devices));
-    renderTable();
-    document.getElementById("deviceForm").reset();
-    document.getElementById("person_other").style.display="none";
+ fetch("PASTE_YOUR_WEB_APP_URL_HERE", { // your Web App URL
+  method: "POST",
+  body: JSON.stringify(data)
+})
+.then(res => res.text())
+.then(msg => {
+  alert("Device saved successfully!"); // confirmation
+  devices.push(data);  // update local table
+  renderTable();
+  document.getElementById("deviceForm").reset();
+  document.getElementById("person_other").style.display="none";
+});
+
   });
 }
 </script>
