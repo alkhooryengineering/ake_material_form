@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AKE Loggers</title>
+
+
+
 <style>
 body {
   margin: 0;
@@ -12,25 +15,30 @@ body {
   background-size: cover;
   background-attachment: fixed;
 }
+
 .container {
   background: rgba(255,255,255,0.95);
   max-width: 950px;
   margin: 20px auto;
-  padding: 20px;
+  padding: 40px 30px; /* increased padding to prevent touching edges */
   border-radius: 20px;
 }
+
 label {
   font-weight: bold;
   display: block;
-  margin-top: 10px;
+  margin-top: 15px;
 }
-input, select {
-  width: 100%;
-  padding: 10px;
+
+input, select, input[type="file"] {
+  width: calc(100% - 20px); /* leaves a 10px gap on each side */
+  padding: 12px;
   margin-top: 5px;
   border-radius: 8px;
   border: 1px solid #ccc;
+  box-sizing: border-box;
 }
+
 button {
   width: 48%;
   margin-top: 20px;
@@ -42,39 +50,48 @@ button {
   font-size: 16px;
   cursor: pointer;
 }
+
 .buttons {
   display: flex;
   justify-content: space-between;
   gap: 10px;
 }
+
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 25px;
 }
+
 th, td {
   border: 1px solid #ccc;
   padding: 8px;
   text-align: center;
 }
+
 .thumbnail {
   width: 50px;
   height: 50px;
   object-fit: cover;
   border-radius: 6px;
 }
+
+/* Device form specific */
 #deviceForm select,
 #deviceForm input[type="text"],
 #deviceForm input[type="file"] {
-  width: 200px;
-  padding: 5px;
+  width: 100%; /* full width minus container padding */
+  padding: 12px;
   box-sizing: border-box;
 }
-#deviceForm label {
-  display: block;
-  margin-top: 10px;
-}
 </style>
+
+
+  
+
+
+
+  
 </head>
 <body>
 <div class="container">
