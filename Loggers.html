@@ -30,14 +30,26 @@ label {
   margin-top: 15px;
 }
 
-input, select, input[type="file"] {
-  width: calc(100% - 20px); /* leaves a 10px gap on each side */
+
+
+
+
+/* Make all inputs and selects same width */
+#deviceForm input,
+#deviceForm select,
+#deviceForm input[type="file"] {
+  width: 100%;   /* full width of the container */
   padding: 12px;
-  margin-top: 5px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
+  box-sizing: border-box; /* ensures padding is included in width */
 }
+
+
+  
+
+
+
+
+  
 
 button {
   width: 48%;
