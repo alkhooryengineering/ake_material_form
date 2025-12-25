@@ -179,9 +179,6 @@ th, td {
     <button type="button" onclick="updateDevice()">Update Device</button>
   </div>
 
-<td>
-  <button class="delete-btn" onclick="deleteDevice('${d.deviceID}')">🗑️</button>
-</td>
 
 
 
@@ -258,7 +255,7 @@ function renderTable() {
         <td>${d.location}</td>
         <td>${d.time}</td>
         <td><img src="${d.photo}" class="thumbnail"></td>
-        <td><button onclick="deleteDevice('${d.deviceID}')">🗑️</button></td>
+        <td><button class="delete-btn" onclick="deleteDevice('${d.deviceID}')">🗑️</button></td>
       </tr>`;
   });
 }
