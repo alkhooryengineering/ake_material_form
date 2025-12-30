@@ -133,6 +133,28 @@ th, td {
   
 </head>
 <body>
+
+
+<script>
+(function () {
+  const password = "ake@123";
+  const userInput = prompt("Enter password:");
+
+  if (userInput !== password) {
+    document.body.innerHTML = "";
+    alert("Incorrect Password");
+    throw new Error("Access Denied");
+  }
+})();
+</script>
+
+
+
+
+
+
+
+  
 <div class="container">
 <h2 style="text-align:center;">AKE Loggers</h2>
 <form id="deviceForm" onsubmit="return handleSubmit()">
