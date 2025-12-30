@@ -163,6 +163,9 @@ th, td {
     <option>Other</option>
   </select>
 
+  <input id="device_other" placeholder="Enter device name" style="display:none;">
+
+
   <label>Device ID (autofill)</label>
   <input id="device_id" required>
 
@@ -238,9 +241,12 @@ function validatePerson() {
 
 // Autofill device ID
 document.getElementById("device_name").addEventListener("change", e=>{
+  const isOther = e.target.value === "Other";
+  document.getElementById("device_other").style.display = isOther ? "block" : "none";
   document.getElementById("device_id").value =
-    e.target.value==="Other" ? "" : deviceIDs[e.target.value] || "";
+    isOther ? "" : deviceIDs[e.target.value] || "";
 });
+
 
 // Render table
 const deviceTable = document.getElementById("deviceTable");
@@ -287,7 +293,10 @@ document.addEventListener("DOMContentLoaded", loadDevices);
 function getFormData(callback){
   let person = document.getElementById("person").value;
   if(person==="Other") person=document.getElementById("person_other").value;
-  const device = document.getElementById("device_name").value;
+  
+  let device = document.getElementById("device_name").value;
+if(device === "Other") device = document.getElementById("device_other").value;
+
   const deviceID = document.getElementById("device_id").value;
   const serial = document.getElementById("serial").value;
   const location = document.getElementById("location").value;
