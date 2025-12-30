@@ -9,6 +9,8 @@
 
 
 <style>
+
+  body { display: none; }
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -134,23 +136,19 @@ th, td {
 </head>
 <body>
 
-
-<script>
+  <script>
 (function () {
   const password = "ake@123";
   const userInput = prompt("Enter password:");
 
-  if (userInput !== password) {
-    document.body.innerHTML = "";
+  if (userInput === password) {
+    document.body.style.display = "block";
+  } else {
     alert("Incorrect Password");
-    throw new Error("Access Denied");
+    document.body.innerHTML = "";
   }
 })();
 </script>
-
-
-
-
 
 
 
